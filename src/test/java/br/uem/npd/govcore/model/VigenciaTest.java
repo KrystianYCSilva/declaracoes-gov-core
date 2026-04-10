@@ -24,7 +24,18 @@ public class VigenciaTest {
             LocalDate.of(2026, 1, 1),
             LocalDate.of(2026, 12, 31)
         );
+        assertFalse(vigencia.isVigenteEm(LocalDate.of(2025, 12, 31)));
         assertFalse(vigencia.isVigenteEm(LocalDate.of(2027, 1, 1)));
+    }
+
+    @Test
+    public void testRangeIncludesBoundaries() {
+        Vigencia<LocalDate> vigencia = vigencia(
+            LocalDate.of(2026, 1, 1),
+            LocalDate.of(2026, 12, 31)
+        );
+        assertTrue(vigencia.isVigenteEm(LocalDate.of(2026, 1, 1)));
+        assertTrue(vigencia.isVigenteEm(LocalDate.of(2026, 12, 31)));
     }
 
     @Test

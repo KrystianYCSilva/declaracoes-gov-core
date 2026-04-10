@@ -3,8 +3,10 @@ package br.uem.npd.govcore.crypto;
 import br.uem.npd.govcore.exception.GovSecurityException;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Pkcs11ProviderTest {
 
@@ -20,7 +22,12 @@ public class Pkcs11ProviderTest {
 
     @Test(expected = GovSecurityException.class)
     public void testMissingConfigurationFile() {
-        new Pkcs11Provider(Path.of("arquivo-inexistente.cfg"), "1234".toCharArray());
+        new Pkcs11Provider(Paths.get("arquivo-inexistente.cfg"), "1234".toCharArray());
+    }
+
+    @Test(expected = GovSecurityException.class)
+    public void testNullConfigurationFile() {
+        new Pkcs11Provider((Path) null, "1234".toCharArray());
     }
 
     @Test(expected = GovSecurityException.class)
@@ -31,7 +38,7 @@ public class Pkcs11ProviderTest {
     @Test(expected = GovSecurityException.class)
     public void testInvalidConfigurationFileContent() throws Exception {
         Path tempFile = Files.createTempFile("govcore-pkcs11-", ".cfg");
-        Files.write(tempFile, "name = Token\nlibrary = C:/arquivo-que-nao-existe.dll".getBytes());
+        Files.write(tempFile, "name = Token\nlibrary = C:/arquivo-que-nao-existe.dll".getBytes(StandardCharsets.UTF_8));
         try {
             new Pkcs11Provider(tempFile, "1234".toCharArray());
         } finally {

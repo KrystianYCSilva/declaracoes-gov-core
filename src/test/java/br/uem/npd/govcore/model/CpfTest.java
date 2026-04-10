@@ -24,9 +24,12 @@ public class CpfTest {
         Cpf right = Cpf.of("12345678909");
         Cpf other = Cpf.of("00000000191");
 
+        assertEquals(left, left);
         assertEquals(left, right);
         assertEquals(left.hashCode(), right.hashCode());
         assertNotEquals(left, other);
+        assertNotEquals(left, null);
+        assertNotEquals(left, "12345678909");
     }
 
     @Test(expected = InvalidDocumentException.class)

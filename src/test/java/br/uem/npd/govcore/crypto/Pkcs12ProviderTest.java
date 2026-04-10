@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,9 +18,14 @@ public class Pkcs12ProviderTest {
         new Pkcs12Provider((Path) null, null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullInputStream() {
+        new Pkcs12Provider((InputStream) null, null);
+    }
+
     @Test(expected = GovSecurityException.class)
     public void testFileNotFound() {
-        new Pkcs12Provider(Path.of("arquivo-inexistente.p12"), "senha".toCharArray());
+        new Pkcs12Provider(Paths.get("arquivo-inexistente.p12"), "senha".toCharArray());
     }
 
     @Test

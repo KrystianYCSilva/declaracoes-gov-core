@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @param <T> O tipo de dado que representa a unidade de tempo (ex: YearMonth, LocalDate).
  */
-public interface Vigencia<T extends Comparable<T>> extends Serializable {
+public interface Vigencia<T extends Comparable<? super T>> extends Serializable {
 
     T getInicioValidade();
 

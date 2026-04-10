@@ -74,6 +74,12 @@ public class XmlDsigSignerTest {
     }
 
     @Test(expected = GovSignatureException.class)
+    public void testRejectsNullXml() {
+        XmlDsigSigner signer = new XmlDsigSigner(TestCertificateSupport.generateCertificate());
+        signer.sign(null);
+    }
+
+    @Test(expected = GovSignatureException.class)
     public void testRejectsInvalidXml() {
         XmlDsigSigner signer = new XmlDsigSigner(TestCertificateSupport.generateCertificate());
         signer.sign("<evento>");

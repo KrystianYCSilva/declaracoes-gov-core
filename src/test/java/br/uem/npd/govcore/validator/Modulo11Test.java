@@ -52,6 +52,16 @@ public class Modulo11Test {
         Modulo11.computeDv(new int[]{1, 2}, new int[]{1});
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testComputeDvRejectsNullValuesWithExplicitWeights() {
+        Modulo11.computeDv(null, new int[]{2});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testComputeDvRejectsNullWeights() {
+        Modulo11.computeDv(new int[]{1}, null);
+    }
+
     private int[] toValues(String value) {
         int[] values = new int[value.length()];
         for (int i = 0; i < value.length(); i++) {

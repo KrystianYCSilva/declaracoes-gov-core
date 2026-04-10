@@ -26,6 +26,21 @@ public class XmlDocumentsTest {
         XmlDocuments.parse("<root><unclosed>");
     }
 
+    @Test(expected = GovCoreException.class)
+    public void testParseNull() {
+        XmlDocuments.parse(null);
+    }
+
+    @Test(expected = GovCoreException.class)
+    public void testParseBlank() {
+        XmlDocuments.parse("   ");
+    }
+
+    @Test(expected = GovCoreException.class)
+    public void testParseRejectsDoctype() {
+        XmlDocuments.parse("<!DOCTYPE root [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><root>&xxe;</root>");
+    }
+
     @Test
     public void testHasSignature() {
         String xmlSigned = "<root><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"></Signature></root>";
@@ -38,6 +53,13 @@ public class XmlDocumentsTest {
     }
 
     @Test
+    public void testHasSignatureFallbackWithoutXmlDsigNamespace() {
+        String xmlSigned = "<root><Signature xmlns=\"urn:custom\"></Signature></root>";
+        Document document = XmlDocuments.parse(xmlSigned);
+        assertTrue(XmlDocuments.hasSignature(document.getDocumentElement()));
+    }
+
+    @Test
     public void testFindFirstElementWithAttribute() {
         String xml = "<eSocial><evtTabRubrica Id=\"ID10000000000000000000000000000001\"><ideEvento/></evtTabRubrica></eSocial>";
         Document doc = XmlDocuments.parse(xml);
@@ -45,5 +67,14 @@ public class XmlDocumentsTest {
         
         assertNotNull(found);
         assertEquals("evtTabRubrica", found.getNodeName());
+    }
+
+    @Test
+    public void testFindFirstElementWithAttributeOnRootAndMissingAttribute() {
+        Document docWithRootAttribute = XmlDocuments.parse("<evento Id=\"ID1\"><filho/></evento>");
+        assertEquals("evento", XmlDocuments.findFirstElementWithAttribute(docWithRootAttribute.getDocumentElement(), "Id").getNodeName());
+
+        Document docWithoutAttribute = XmlDocuments.parse("<evento><filho/></evento>");
+        assertNull(XmlDocuments.findFirstElementWithAttribute(docWithoutAttribute.getDocumentElement(), "Id"));
     }
 }

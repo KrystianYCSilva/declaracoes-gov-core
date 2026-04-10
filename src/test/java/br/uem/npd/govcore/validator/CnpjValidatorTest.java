@@ -2,6 +2,7 @@ package br.uem.npd.govcore.validator;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -39,5 +40,13 @@ public class CnpjValidatorTest {
         assertFalse(alfaValidator.isValid("12ABC34501DEXX"));
         assertFalse(alfaValidator.isValid("12#BC34501DE35"));
         assertFalse(alfaValidator.isValid("12ABC34501DE3"));
+    }
+
+    @Test
+    public void testStripImplementations() {
+        assertEquals("", numValidator.strip(null));
+        assertEquals("11222333000181", numValidator.strip("11.222.333/0001-81"));
+        assertEquals("", alfaValidator.strip(null));
+        assertEquals("12ABC34501DE35", alfaValidator.strip("12.ABC.345/01DE-35"));
     }
 }
