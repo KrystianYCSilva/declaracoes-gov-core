@@ -18,6 +18,7 @@ public final class GovValidators {
     );
 
     private static final DocumentValidator CPF_VALIDATOR = new CpfValidator();
+    private static final DocumentValidator NIS_VALIDATOR = new NisValidator();
 
     private GovValidators() {
         // Prevents instantiation
@@ -46,6 +47,13 @@ public final class GovValidators {
      */
     public static boolean isCpfValid(String cpf) {
         return CPF_VALIDATOR.isValid(cpf);
+    }
+
+    /**
+     * Valida um NIS/PIS/PASEP/NIT (Módulo 11 específico).
+     */
+    public static boolean isNisValid(String nis) {
+        return NIS_VALIDATOR.isValid(nis);
     }
 
     /**

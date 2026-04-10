@@ -48,6 +48,16 @@ Status: ✅ COMPLETE
 | Cursor | `.cursor/rules/00-project-bootstrap.mdc` | ✅ Created |
 | Copilot | `.github/copilot-instructions.md` | ✅ Created |
 
+### Skills Library
+
+| Category | Skills | Status |
+|----------|--------|--------|
+| Spec Kit | 13 skills (speckit-*) | ✅ Copied |
+| Development | 8 skills | ✅ Copied |
+| CLI Guides | 9 skills | ✅ Copied |
+| Advanced Topics | 8 skills | ✅ Copied |
+| **Total** | **38 skills** | ✅ **177 files** |
+
 ## Key Adaptations for Gov-Core
 
 ### 1. Library Focus
@@ -100,6 +110,50 @@ Unlike NPD services (WAR applications), gov-core is a library (JAR):
 3. Update project name and descriptions
 4. Adjust technology stack if needed
 5. Keep T0 rules consistent across all projects
+
+## Statistics
+
+| Category | Count |
+|----------|-------|
+| Context files | 12 |
+| Agent configs | 11 |
+| Skills modules | 38 |
+| Skill files | 177 |
+| Prompts | 1 |
+| Agent definitions | 1 |
+| **Total files** | **~200** |
+
+## Skills Quick Reference
+
+### Spec Kit (Feature Development)
+```
+speckit-specify → Create feature specifications
+speckit-clarify → Clarify requirements  
+speckit-plan → Create implementation plans
+speckit-tasks → Generate task lists
+speckit-analyze → Cross-artifact analysis
+speckit-checklist → Quality checklists
+speckit-implement → Execute implementation
+```
+
+### Development Tools
+```
+coding-agent-tools → CLI tools and workflows
+markdown-expert → Documentation writing
+mermaid-expert → Diagram creation
+quality-assurance → Testing and QA
+skill-creator → Create custom skills
+```
+
+### Usage
+```bash
+# List available skills
+ls .agents/skills/
+
+# Use with Kimi CLI
+kimi /skill.speckit-specify "Create CNPJ validator spec"
+kimi /skill.markdown-expert "Format this documentation"
+```
 
 ## Maintenance
 

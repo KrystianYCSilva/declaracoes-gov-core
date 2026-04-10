@@ -144,6 +144,61 @@ Troubleshooting:
 - Checkstyle: `mvn -q checkstyle:check`
 - PMD: `mvn -q pmd:check`
 
+## Shared Skills Library
+
+The `.agents/skills/` directory contains reusable skill modules for AI-assisted development:
+
+### Spec Kit Skills (Feature Development)
+- `speckit-specify/` - Create feature specifications
+- `speckit-clarify/` - Clarify requirements
+- `speckit-plan/` - Create implementation plans
+- `speckit-tasks/` - Generate task lists
+- `speckit-analyze/` - Cross-artifact consistency analysis
+- `speckit-checklist/` - Quality checklists
+- `speckit-implement/` - Execute implementation
+- `speckit-constitution/` - Project constitution management
+
+### Development Skills
+- `coding-agent-tools/` - CLI tools and workflows
+- `prompt-engineering-advanced/` - Prompt design patterns
+- `context-engineering-basics/` - Context management
+- `markdown-expert/` - Documentation writing
+- `mermaid-expert/` - Diagram creation
+- `quality-assurance/` - Testing and QA
+
+### CLI Introductions
+- `kimi-introductions/` - Kimi CLI guide
+- `claude-introduction/` - Claude Code guide
+- `codex-introduction/` - Codex CLI guide
+- `gemini-introduction/` - Gemini CLI guide
+- `qwen-introduction/` - Qwen Code guide
+- `cursor-introduction/` - Cursor IDE guide
+- `copilot-cli-introduction/` - Copilot CLI guide
+- `opencode-guide/` - OpenCode guide
+- `codebuddy-introduction/` - CodeBuddy guide
+
+### Advanced Topics
+- `cognitive-architectures/` - Agent design patterns
+- `cognitive-systems-engineering/` - System design
+- `agent-memory-management/` - Memory strategies
+- `model-context-protocol/` - MCP integration
+- `multi-llm-cli-delegation/` - Multi-agent workflows
+- `requirements-engineering/` - Requirements management
+- `rigorous-research/` - Research methodologies
+
+### Usage
+```bash
+# Use a skill with your CLI
+kimi /skill.skill-creator
+kimi /skill.speckit-specify
+kimi /skill.markdown-expert
+```
+
+## Prompts & Agents
+
+- `.agents/prompts/sdd-flow-orchestrator.prompt.md` - SDD flow orchestration
+- `.agents/sdd-flow-orchestrator.agents.md` - Agent configuration
+
 ## Shared References
 
 - `.context/_meta/project-overview.md`
