@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex CLI Guide"
+  short_description: "Complete Codex CLI usage and extension guide"
+  default_prompt: "Use $codex-introduction to explain how Codex CLI works, how to use skills, subagents, AGENTS.md, prompts, and repo-level workflows."
