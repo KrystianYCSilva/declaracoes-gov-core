@@ -3,8 +3,12 @@ package br.uem.npd.govcore.crypto;
 import br.uem.npd.govcore.exception.GovSecurityException;
 import org.junit.Test;
 
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class Pkcs12ProviderTest {
 
@@ -12,13 +16,54 @@ public class Pkcs12ProviderTest {
     public void testNullPath() {
         new Pkcs12Provider((Path) null, null);
     }
-    
+
     @Test(expected = GovSecurityException.class)
     public void testFileNotFound() {
-        new Pkcs12Provider(Paths.get("/caminho/invalido/certificado.pfx"), "senha".toCharArray());
+        new Pkcs12Provider(Path.of("arquivo-inexistente.p12"), "senha".toCharArray());
     }
-    
-    // O teste feliz requereria um .pfx físico real gerado via Bouncy Castle
-    // ou disponibilizado no src/test/resources, o qual omitimos para simplicidade
-    // e limpeza do histórico de commits. A cobertura do mock de falhas já atesta o comportamento de borda.
+
+    @Test
+    public void testLoadFromFileAndInputStream() throws Exception {
+        TestCertificateSupport.GeneratedCertificate generated = TestCertificateSupport.generateCertificate();
+        Path tempFile = Files.createTempFile("govcore-", ".p12");
+        generated.writePkcs12(tempFile);
+
+        Pkcs12Provider fromFile = new Pkcs12Provider(tempFile, generated.getPassword());
+        assertEquals(generated.getAlias(), fromFile.getKeyAlias());
+        assertNotNull(fromFile.getPrivateKey());
+        assertNotNull(fromFile.getCertificate());
+
+        try (InputStream inputStream = Files.newInputStream(tempFile)) {
+            Pkcs12Provider fromStream = new Pkcs12Provider(inputStream, generated.getPassword());
+            assertEquals(generated.getAlias(), fromStream.getKeyAlias());
+            assertNotNull(fromStream.getPrivateKey());
+            assertNotNull(fromStream.getCertificate());
+        }
+
+        Files.deleteIfExists(tempFile);
+    }
+
+    @Test(expected = GovSecurityException.class)
+    public void testWrongPassword() throws Exception {
+        TestCertificateSupport.GeneratedCertificate generated = TestCertificateSupport.generateCertificate();
+        Path tempFile = Files.createTempFile("govcore-", ".p12");
+        generated.writePkcs12(tempFile);
+        try {
+            new Pkcs12Provider(tempFile, "senha-incorreta".toCharArray());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test(expected = GovSecurityException.class)
+    public void testCertificateOnlyStoreIsRejected() throws Exception {
+        TestCertificateSupport.GeneratedCertificate generated = TestCertificateSupport.generateCertificate();
+        Path tempFile = Files.createTempFile("govcore-cert-only-", ".p12");
+        generated.writeCertificateOnlyPkcs12(tempFile, "cert-only");
+        try {
+            new Pkcs12Provider(tempFile, generated.getPassword());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+    }
 }

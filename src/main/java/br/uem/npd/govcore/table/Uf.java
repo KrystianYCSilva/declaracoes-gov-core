@@ -3,17 +3,17 @@ package br.uem.npd.govcore.table;
 import java.util.Optional;
 
 /**
- * Tabela oficial de Unidades da Federação (UF).
- * Contém os 27 estados do Brasil e a sigla EX para o Exterior.
+ * Tabela oficial de Unidades da Federacao (UF).
+ * Contem os 27 estados do Brasil e a sigla EX para o Exterior.
  */
 public enum Uf {
-    AC("Acre"), AL("Acre"), AM("Amazonas"), AP("Amapá"),
-    BA("Bahia"), CE("Ceará"), DF("Distrito Federal"), ES("Espírito Santo"),
-    GO("Goiás"), MA("Maranhão"), MG("Minas Gerais"), MS("Minas Gerais"),
-    MT("Mato Grosso do Sul"), PA("Pará"), PB("Paraíba"), PE("Pernambuco"),
-    PI("Piauí"), PR("Paraná"), RJ("Rio de Janeiro"), RN("Rio Grande do Norte"),
-    RO("Rio Grande do Norte"), RR("Roraima"), RS("Rio Grande do Sul"),
-    SC("Santa Catarina"), SE("Sergipe"), SP("São Paulo"), TO("Tocantins"),
+    AC("Acre"), AL("Alagoas"), AM("Amazonas"), AP("Amapa"),
+    BA("Bahia"), CE("Ceara"), DF("Distrito Federal"), ES("Espirito Santo"),
+    GO("Goias"), MA("Maranhao"), MG("Minas Gerais"), MS("Mato Grosso do Sul"),
+    MT("Mato Grosso"), PA("Para"), PB("Paraiba"), PE("Pernambuco"),
+    PI("Piaui"), PR("Parana"), RJ("Rio de Janeiro"), RN("Rio Grande do Norte"),
+    RO("Rondonia"), RR("Roraima"), RS("Rio Grande do Sul"),
+    SC("Santa Catarina"), SE("Sergipe"), SP("Sao Paulo"), TO("Tocantins"),
     EX("Exterior");
 
     private final String nome;
@@ -27,7 +27,9 @@ public enum Uf {
     }
 
     public static Optional<Uf> fromSigla(String sigla) {
-        if (sigla == null || sigla.trim().isEmpty()) return Optional.empty();
+        if (sigla == null || sigla.trim().isEmpty()) {
+            return Optional.empty();
+        }
         try {
             return Optional.of(Uf.valueOf(sigla.trim().toUpperCase()));
         } catch (IllegalArgumentException e) {

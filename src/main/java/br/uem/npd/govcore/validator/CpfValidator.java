@@ -1,9 +1,7 @@
 package br.uem.npd.govcore.validator;
 
 /**
- * Validador para o Cadastro de Pessoas Físicas (CPF).
- * Aplica o Módulo 11 duplo sobre os 11 dígitos, protegendo contra
- * sequências de dígitos repetidos que são matematicamente válidas mas logicamente proibidas.
+ * Validador para o Cadastro de Pessoas Fisicas (CPF).
  */
 public class CpfValidator implements DocumentValidator {
 
@@ -12,20 +10,23 @@ public class CpfValidator implements DocumentValidator {
 
     @Override
     public boolean isValid(String value) {
-        if (value == null) return false;
-        String digits = strip(value);
-
-        if (digits.length() != 11 || !digits.matches("\\d{11}")) {
+        if (value == null) {
             return false;
         }
 
-        // Rejeita sequências com todos os dígitos iguais (ex: 11111111111)
+        String digits = strip(value);
+        if (digits.length() != 11 || !digits.matches("\\d{11}")) {
+            return false;
+        }
         if (digits.matches("(\\d)\\1{10}")) {
             return false;
         }
 
-        return calculateDigit(digits, WEIGHT_DV1) == Character.getNumericValue(digits.charAt(9))
-            && calculateDigit(digits, WEIGHT_DV2) == Character.getNumericValue(digits.charAt(10));
+        int dv1 = Modulo11.computeDv(toNumericValues(digits.substring(0, 9)), WEIGHT_DV1);
+        int dv2 = Modulo11.computeDv(toNumericValues(digits.substring(0, 10)), WEIGHT_DV2);
+
+        return dv1 == Character.getNumericValue(digits.charAt(9))
+            && dv2 == Character.getNumericValue(digits.charAt(10));
     }
 
     @Override
@@ -33,12 +34,11 @@ public class CpfValidator implements DocumentValidator {
         return value == null ? "" : value.replaceAll("[^0-9]", "");
     }
 
-    private int calculateDigit(String digits, int[] weights) {
-        int sum = 0;
-        for (int i = 0; i < weights.length; i++) {
-            sum += Character.getNumericValue(digits.charAt(i)) * weights[i];
+    private int[] toNumericValues(String digits) {
+        int[] values = new int[digits.length()];
+        for (int i = 0; i < digits.length(); i++) {
+            values[i] = Modulo11.charToValue(digits.charAt(i));
         }
-        int remainder = sum % 11;
-        return remainder < 2 ? 0 : 11 - remainder;
+        return values;
     }
 }

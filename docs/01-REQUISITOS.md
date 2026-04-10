@@ -1,38 +1,152 @@
-# Requisitos do Módulo: Declaracoes Gov Core
+# Documento de Requisitos - v1.0.0
 
-## 1. Introdução
-Este documento descreve os requisitos funcionais e não funcionais específicos da biblioteca `declaracoes-gov-core`. Esta biblioteca é o alicerce criptográfico e de domínio (Value Objects) para todo o ecossistema de integrações com a Receita Federal do Brasil (SPED e Integra Contador).
+## 1. Introducao
 
-## 2. Requisitos Não Funcionais (Técnicos)
+### 1.1 Proposito
+Biblioteca Java fundacional para o ecossistema `declaracoes-*`, reutilizavel por ERPs fiscais e contabeis brasileiros para documentos, periodos, normalizacao, XML e criptografia compartilhada.
 
-### RNF01: Agnóstico e Sem Frameworks Invasivos
-A biblioteca **não deve** depender de frameworks de validação como Hibernate Validator ou Java EE (JSR 380). Toda validação deve ser realizada programaticamente (matemática pura) dentro das próprias classes de valor. Apenas as bibliotecas `jackson-databind` (opcional), `slf4j-api` e `xmlsec` são permitidas.
+### 1.2 Escopo
+A biblioteca fornece:
 
-### RNF02: Thread-Safety
-Todos os validadores, conversores JSON/XML e utilitários de assinatura digital devem ser estritamente *stateless* ou imutáveis para suportar uso simultâneo por múltiplas threads em servidores de alta concorrência.
+- tipos de dominio brasileiro reutilizaveis;
+- validacao de documentos com classificacao explicita de confianca normativa;
+- parse, mascara, normalizacao e formatacao;
+- utilitarios de XML em modulo opcional;
+- certificados digitais e `SSLContext` em modulo opcional.
 
-### RNF03: Compatibilidade Java
-O código deve ser compatível com **Java 8**, visando maximizar a adoção em sistemas legados.
+Transporte HTTP/SOAP/REST, OAuth2, entrega de declaracoes, regras especificas de leiaute e orquestracao ficam fora do escopo.
 
-### RNF04: Cobertura de Testes
-O projeto deve possuir uma cobertura de código aferida pelo JaCoCo de no mínimo **90%**, com testes englobando cenários válidos, inválidos e condições de contorno (ex: CNPJ alfanumérico).
+### 1.3 Publico-alvo
+- desenvolvedores Java que integram ERPs e servicos a Receita Federal, SPED, eSocial, EFD-Reinf e sistemas correlatos;
+- mantenedores das bibliotecas `declaracoes-*`;
+- times que precisam de componentes brasileiros reutilizaveis sem depender de frameworks pesados.
 
-## 3. Requisitos Funcionais
+### 1.4 Referencias
+- `CODEX-PLAN-V1.md`
+- `PLANO-UNIFICADO-V1.md`
+- `PRE-DOCUMENTO-DE-REQUISITOS-V1.md`
+- Manual do Desenvolvedor eSocial
+- Portal SPED EFD-Reinf
+- Documentos tecnicos da Receita Federal sobre CNPJ e CNPJ alfanumerico
+- Documentacao oficial de CAEPF, CNO, CEI e codigos territoriais quando aplicavel
 
-### RF01: Validação Estratégica de Documentos Fiscais
-A biblioteca deve validar CNPJ e CPF em tempo de instanciação, implementando o padrão *Strategy* para os algoritmos. O validador de CNPJ deve prever a transição para a regra de "CNPJ Alfanumérico" (prevista para meados de 2026), baseando o cálculo Módulo 11 na conversão de caracteres ASCII.
+---
 
-### RF02: Modelagem via Value Objects
-Entidades fiscais (CNPJ, CPF, Período de Apuração) devem ser representadas por Value Objects (ex: `Cnpj.java`). É proibido que essas classes assumam um estado inválido; a falha na validação em seu construtor deve lançar a exceção específica `InvalidDocumentException`.
+## 2. Requisitos Funcionais
 
-### RF03: Carregamento Modular de Certificados
-Deve existir uma abstração (`CertificateProvider`) capaz de carregar de forma segura e padronizada as chaves criptográficas (ICP-Brasil), independentemente da origem ser um arquivo físico (PKCS12 / A1) ou um Token/Smartcard (PKCS11 / A3).
+### RF-01: Fechamento controlado do baseline v0.1.0
+- **Descricao**: O estado atual deve ser reconhecido como baseline funcional da `v0.1.0` antes da reestruturacao da `v1.0.0`.
+- **Criterio**: baseline identificado, riscos conhecidos registrados, tag `v0.1.0` prevista e branch `develop` prevista para a nova linha.
+- **Status**: Em planejamento
 
-### RF04: Geração de Contexto SSL Seguro (mTLS)
-A biblioteca deve oferecer uma fábrica (`SslContextBuilder`) para criação de instâncias `javax.net.ssl.SSLContext` estritamente configuradas para uso com TLS 1.2 ou superior, embutindo o certificado do cliente (`CertificateProvider`) para autenticação mútua (mTLS) exigida pelos portais e-CAC e SPED.
+### RF-02: Arquitetura multi-modulo
+- **Descricao**: A `v1.0.0` deve separar nucleo minimo e capacidades opcionais em modulos Maven independentes.
+- **Criterio**: arquitetura alvo com `domain`, `format`, `xml`, `crypto`, mais parent e BOM.
+- **Status**: Planejado
 
-### RF05: Assinatura de XML Padrão ICP-Brasil (XMLDSIG)
-Deve ser disponibilizado um utilitário de assinatura XML (`XmlDsigSigner`) configurado rigidamente com os parâmetros exigidos pela RFB: Canonicalização *C14N*, Transformação *Enveloped*, Algoritmo de Assinatura *RSA-SHA256* e Digest *SHA-256*.
+### RF-03: Nucleo minimo de dominio brasileiro
+- **Descricao**: O nucleo deve oferecer pelo menos `Cnpj`, `Cpf`, `Nis` ou `PisPasep`, `CodigoMunicipio`, `Uf`, `TipoInscricao`, `TipoAmbiente`, `PeriodoApuracao` e `Vigencia`.
+- **Criterio**: tipos publicos reutilizaveis, imutaveis quando aplicavel, com contratos claros.
+- **Status**: Parcialmente implementado
 
-### RF06: Formatação Padronizada de JSON para a Receita (GovJsonFactory)
-O módulo deve prover mecanismos de customização de conversores JSON (Jackson `ObjectMapper`) que cumpram com a padronização do Serpro: supressão estrita de campos nulos (`NON_NULL`), inibição de notação científica em campos financeiros numéricos (`BigDecimal`) e formatação de datas alinhada à ISO-8601, reduzindo assim falhas nas APIs REST.
+### RF-04: Politica explicita para validadores
+- **Descricao**: Toda validacao deve ser classificada como `oficial`, `provisoria` ou `estrutural`.
+- **Criterio**: documentacao e API deixam claro o nivel de confianca normativa de cada tipo suportado.
+- **Status**: Planejado
+
+### RF-05: Suporte estrutural para documentos sem algoritmo oficial
+- **Descricao**: Quando nao houver regra oficial mapeada, a biblioteca deve oferecer apenas parse, mascara, formato, tamanho e normalizacao basica.
+- **Criterio**: o consumidor nao e induzido a acreditar em uma validacao normativa inexistente.
+- **Status**: Planejado
+
+### RF-06: Modulo de formatacao e normalizacao
+- **Descricao**: A biblioteca deve oferecer mascaras, remocao de mascara, uppercase/sanitizacao normativa e formatos reutilizaveis de string, data e numero.
+- **Criterio**: contratos leves e agnosticos, sem dependencia de framework.
+- **Status**: Parcialmente implementado
+
+### RF-07: Modulo XML opcional
+- **Descricao**: A biblioteca deve prover parsing XML seguro, utilitarios DOM e assinatura XML configuravel sem acoplamento a uma declaracao especifica.
+- **Criterio**: APIs reutilizaveis e configuraveis, com comportamento explicito para alvo de assinatura e atributo ID.
+- **Status**: Parcialmente implementado
+
+### RF-08: Modulo crypto opcional
+- **Descricao**: A biblioteca deve prover certificados A1/A3, `SSLContext` e suporte a PKCS11 em modulo opcional.
+- **Criterio**: suporte a `CertificateProvider`, A1/A3 e tratamento claro de erros operacionais.
+- **Status**: Parcialmente implementado
+
+### RF-09: Reuso de algoritmo compartilhado de Modulo 11
+- **Descricao**: Validadores baseados em Modulo 11 devem convergir para um utilitario compartilhado e testado com vetores oficiais.
+- **Criterio**: ausencia de duplicacao desnecessaria em CPF, CNPJ, NIS e futuros validadores oficiais baseados no mesmo mecanismo.
+- **Status**: Planejado
+
+### RF-10: Documentacao de adocao e rastreabilidade
+- **Descricao**: A biblioteca deve publicar requisitos, design, plano de testes e implantacao com rastreabilidade para o escopo da `v1.0.0`.
+- **Criterio**: documentos em `docs/` alinhados com o workflow cascata e com a politica de validadores.
+- **Status**: Em elaboracao
+
+---
+
+## 3. Requisitos Nao-Funcionais
+
+### RNF-01: Compatibilidade Java 8
+- **Descricao**: Todo o codigo da `v1.0.0` deve permanecer compativel com Java 8.
+- **Criterio**: compilacao com `source/target 1.8`.
+- **Status**: Obrigatorio
+
+### RNF-02: Agnosticidade
+- **Descricao**: O produto nao deve depender de Spring, Jakarta EE, Bean Validation ou stack equivalente.
+- **Criterio**: runtime leve e uso possivel em qualquer aplicacao Java.
+- **Status**: Obrigatorio
+
+### RNF-03: Thread-safety
+- **Descricao**: Value objects, validadores e factories devem ser imutaveis ou stateless sempre que aplicavel.
+- **Criterio**: ausencia de estado compartilhado mutavel sem controle explicito.
+- **Status**: Obrigatorio
+
+### RNF-04: Cobertura de testes
+- **Descricao**: A `v1.0.0` deve atingir cobertura minima de 90% em linhas e branches no codigo mantido pelo projeto, sem esconder modulos criticos por exclusoes amplas.
+- **Criterio**: JaCoCo >= 90% no escopo proprio do produto.
+- **Status**: Nao atendido no baseline atual
+
+### RNF-05: Transparencia sobre confianca normativa
+- **Descricao**: Toda validacao deve ter fonte, nivel de confianca e limitacoes explicitadas.
+- **Criterio**: matriz publica de validadores e Javadoc consistente.
+- **Status**: Planejado
+
+### RNF-06: Reuso de bibliotecas maduras
+- **Descricao**: A implementacao deve reutilizar bibliotecas maduras quando isso reduzir custo e risco.
+- **Criterio**: uso preferencial de libs como Apache Commons Lang3, Jackson e Santuario em vez de reimplementacoes inferiores.
+- **Status**: Obrigatorio
+
+### RNF-07: YAGNI e controle de volatilidade
+- **Descricao**: Tabelas, clientes e utilitarios altamente volateis ou especificos nao devem entrar na `v1.0.0` sem justificativa forte.
+- **Criterio**: escopo controlado e custo de manutencao previsivel.
+- **Status**: Obrigatorio
+
+---
+
+## 4. Baseline Atual e Gaps
+
+### 4.1 Baseline identificado
+- 31 classes principais no codigo fonte atual
+- 17 suites de teste
+- 47 testes executados com sucesso no baseline local
+- cobertura agregada atual aproximada: 71.63% de instrucoes e 53.23% de branches no report completo
+
+### 4.2 Gaps conhecidos
+- `Uf` contem nomes incorretos para alguns estados
+- `GovValidators` possui heuristicas provisiorias para alguns tipos sem base oficial forte
+- a regra de JaCoCo atual nao reflete a exigencia final da `v1.0.0`
+- `GovJsonFactory` hoje escreve `BigDecimal` como string para integracoes gov, o que exige contrato explicito
+- `XmlDsigSigner` depende de comportamento implicito para localizacao do atributo `Id`
+
+---
+
+## 5. Fora do Escopo da v1.0.0
+
+- clientes HTTP, SOAP, REST ou OAuth2
+- transporte de eventos e declaracoes
+- regras de negocio especificas de cada declaracao
+- IDs e protocolos especificos por sistema
+- grandes tabelas volateis sem estrategia propria de manutencao
+- utilitarios genericos sem valor brasileiro claro

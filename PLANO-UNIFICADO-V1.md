@@ -48,6 +48,13 @@ Houve convergencia real entre os planos nos seguintes pontos:
 - acertou ao proteger o core de tabelas que exigiriam versionamento constante;
 - reforcou a necessidade de amadurecer crypto/signature sem transformar isso no centro da lib.
 
+`Claude`
+
+- trouxe o melhor diagnostico do baseline atual, incluindo bugs factuais, debito de cobertura e riscos contratuais;
+- reforcou a necessidade de endurecer testes de `crypto` e `signature` antes de chamar a linha de `1.0.0`;
+- adicionou uma direcao tecnica valida ao propor um utilitario compartilhado de `Modulo11`;
+- foi util ao separar backlog YAGNI do que realmente deve entrar na primeira entrega.
+
 ### 2.3 Pontos rejeitados ou postergados
 
 Os itens abaixo apareceram em parte dos planos, mas ficam fora da `v1.0.0`:
@@ -59,6 +66,22 @@ Os itens abaixo apareceram em parte dos planos, mas ficam fora da `v1.0.0`:
 - tabelas volateis amplas como CST, CFOP, NCM e natureza de rendimentos no nucleo base;
 - SPI ampla antes de consolidar contratos estaveis;
 - modulos criados apenas por analogia com Apache Commons, sem conteudo suficiente.
+
+## 2.4 Ajustes apos confronto com Claude
+
+Pontos incorporados ao plano unificado:
+
+- registrar explicitamente os bugs atuais de `Uf`;
+- assumir como divida real o estado fraco de cobertura em `crypto` e `signature`;
+- tratar a regra atual de JaCoCo como insuficiente para a `v1.0.0`;
+- aceitar `Modulo11` compartilhado como melhoria de alta coerencia com o escopo;
+- iniciar imediatamente a cascata documental em `docs/`.
+
+Pontos ajustados, e nao aceitos literalmente:
+
+- `InscricaoEstadual` continua expansao condicional, nao compromisso obrigatorio da primeira entrega;
+- a arquitetura segue multi-modulo, mesmo que parte do plano do Claude ainda opere como evolucao de modulo unico;
+- `commons-lang3` e aceito como dependencia valida, mas somente para casos de reuso real e sem inflar a API publica.
 
 ## 3. Decisoes finais
 

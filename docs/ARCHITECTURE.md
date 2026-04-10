@@ -1,54 +1,101 @@
-# Arquitetura: Declaracoes Gov Core
+# Arquitetura Complementar - gov-core v1.0.0
 
-A biblioteca `declaracoes-gov-core` foi concebida para atuar como o "anel isolante" entre a lógica de negócios de ERPs consumindo o ecossistema brasileiro de tributos (SPED e Integra Contador) e as burocracias de criptografia e validação da Receita Federal.
+Este documento complementa o [02-DESIGN.md](./02-DESIGN.md) com uma visao macro da arquitetura alvo e da transicao entre a linha `v0.1.0` e a linha `v1.0.0`.
 
-## 1. Diagrama de Módulos (Macro)
+## 1. Papel da biblioteca
+
+A `declaracoes-gov-core` e a camada de estabilizacao do ecossistema `declaracoes-*`.
+
+Ela deve isolar dos consumidores:
+
+- documentos e identificadores brasileiros;
+- periodos, vigencias e tipos transversais;
+- normalizacao, parse e formatacao;
+- burocracias tecnicas de XML e certificados digitais.
+
+Ela nao deve absorver:
+
+- clientes HTTP/SOAP/REST;
+- OAuth2;
+- entrega de eventos;
+- regras especificas de leiaute;
+- orquestracao de declaracoes.
+
+## 2. Visao macro da arquitetura alvo
 
 ```mermaid
 graph TD
-    %% Módulos Core
-    subgraph Declaracoes_Gov_Core [declaracoes-gov-core]
-        DOM[Domain / Model<br/>Value Objects imutáveis]
-        VAL[Validators<br/>Strategy Pattern]
-        SEC[Security / Crypto<br/>mTLS, KeyStore]
-        SIG[Signature<br/>XMLDSIG RSA-SHA256]
-        UTL[Util<br/>Parsers, JSON Factory]
-        EXC[Exception<br/>Hierarquia Base]
+    subgraph GOVCORE[declaracoes-gov-core v1.0.0]
+        PARENT[parent/bom]
+        DOMAIN[domain]
+        FORMAT[format]
+        XML[xml]
+        CRYPTO[crypto]
     end
 
-    %% Consumidores Internos do Ecossistema
-    subgraph Ecossistema_Dependente [Consumidores do Core]
-        LAY_ES[esocial-leiautes]
-        TX_ES[esocial-transmissor]
-        LAY_REINF[reinf-leiautes]
-        TX_REINF[reinf-transmissor]
-        TX_SERPRO[serpro-transmissor]
+    subgraph CONSUMIDORES[Consumidores]
+        LEIAUTES[libs de leiaute]
+        TRANSMISSORES[libs de transmissao]
+        ERP[ERPs fiscais e contabeis]
     end
 
-    %% Relacionamentos
-    DOM -->|Depende| VAL
-    SIG -->|Usa| SEC
-    SIG -->|Usa| UTL
+    PARENT --> DOMAIN
+    PARENT --> FORMAT
+    PARENT --> XML
+    PARENT --> CRYPTO
 
-    %% Relacionamentos Externos
-    LAY_ES -.->|Valida Documentos| DOM
-    LAY_REINF -.->|Valida Documentos| DOM
-    TX_ES -.->|SslContext / Assinatura| SEC
-    TX_REINF -.->|Assinatura| SIG
-    TX_SERPRO -.->|SslContext (OAuth2/mTLS)| SEC
+    LEIAUTES --> DOMAIN
+    LEIAUTES --> FORMAT
+    TRANSMISSORES --> DOMAIN
+    TRANSMISSORES --> XML
+    TRANSMISSORES --> CRYPTO
+    ERP --> DOMAIN
+    ERP --> FORMAT
 ```
 
-## 2. Pacotes Principais
+## 3. Fronteiras arquiteturais
 
-### `br.uem.npd.govcore.model` e `br.uem.npd.govcore.validator`
-As classes em `model` (`Cnpj`, `Cpf`) atuam como o contrato público. O cliente instancia `Cnpj.of("123")` e se a string for inválida, ele falha imediatamente. O pacote `validator` embute as regras de negócio voláteis (Ex: `CnpjValidator` com a verificação de formato Módulo 11 e suporte ao CNPJ Alfanumérico via padrão *Strategy*).
+### 3.1 `domain`
+- value objects e tipos do contexto brasileiro;
+- contratos de validacao;
+- contratos de normalizacao;
+- periodos, vigencias e territorio.
 
-### `br.uem.npd.govcore.crypto`
-Envolve a complexidade da JCA (Java Cryptography Architecture).
-Interfaces como `CertificateProvider` são essenciais para que os `*-transmissores` possam lidar de forma agnóstica com a obtenção do certificado digital do cliente, abstraindo o acesso aos arquivos físicos `.p12` ou a tokens A3.
+### 3.2 `format`
+- mascaras e desmascaramento;
+- texto fiscal;
+- formatos de data, periodo e numero;
+- configuracoes reutilizaveis voltadas a integracao governamental.
 
-### `br.uem.npd.govcore.signature`
-Isola o motor *Apache Santuario* para prover Assinatura Digital do tipo *XMLDSIG Enveloped*. O eSocial e EFD-Reinf enviam eventos síncronos e assíncronos que **obrigatoriamente** devem passar por este pacote.
+### 3.3 `xml`
+- parsing seguro;
+- utilitarios DOM;
+- assinatura XML configuravel e agnostica ao leiaute.
 
-### `br.uem.npd.govcore.util` e `br.uem.npd.govcore.table`
-Provê os enums de metadados como Ambiente de Produção/Restrita (`TipoAmbiente`) e utilitários que formatam Data/Hora e JSON/XML mitigando os notórios erros de parse (`MS0030`, `400 Bad Request`) comuns ao tentar enviar dados formatados incorretamente (ex: nulls ou notação científica) à Receita Federal.
+### 3.4 `crypto`
+- certificados A1/A3;
+- PKCS11;
+- `SSLContext`;
+- diagnosticos operacionais.
+
+## 4. Regra central de confianca
+
+Toda validacao suportada pelo core deve caber em uma destas categorias:
+
+- `oficial`
+- `provisoria`
+- `estrutural`
+
+Isso nao e apenas uma regra de documentacao. E uma regra arquitetural:
+
+- somente algoritmos oficiais podem sustentar garantias fortes no nucleo;
+- algoritmos provisorios exigem tratamento opt-in e aviso explicito;
+- suporte estrutural existe para nao bloquear o consumidor quando a regra oficial nao estiver consolidada.
+
+## 5. Estado atual da transicao
+
+- a tag `v0.1.0` ja existe;
+- a branch atual de trabalho e `develop`;
+- a linha `develop` ja divergiu da tag `v0.1.0`;
+- o `pom.xml` da linha de trabalho passa a refletir `1.0.0-SNAPSHOT`;
+- a cascata documental em `docs/` passa a ser a fonte principal de especificacao da `v1.0.0`.

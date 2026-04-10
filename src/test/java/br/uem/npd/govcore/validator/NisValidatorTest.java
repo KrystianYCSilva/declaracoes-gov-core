@@ -1,7 +1,9 @@
 package br.uem.npd.govcore.validator;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class NisValidatorTest {
 
@@ -9,17 +11,16 @@ public class NisValidatorTest {
 
     @Test
     public void testNisValid() {
-        // NIS matematicamente válidos
         assertTrue(validator.isValid("17033259504"));
         assertTrue(validator.isValid("13575510651"));
     }
 
     @Test
     public void testNisInvalid() {
-        assertFalse(validator.isValid("17033259505")); // DV Errado
-        assertFalse(validator.isValid("11111111111")); // Tudo igual
-        assertFalse(validator.isValid("00000000000")); // Tudo zero
-        assertFalse(validator.isValid("12345"));       // Menos de 11 dígitos
-        assertFalse(validator.isValid(null));          // Nulo
+        assertFalse(validator.isValid("17033259505"));
+        assertFalse(validator.isValid("11111111111"));
+        assertFalse(validator.isValid("00000000000"));
+        assertFalse(validator.isValid("12345"));
+        assertFalse(validator.isValid(null));
     }
 }
