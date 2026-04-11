@@ -30,6 +30,9 @@ public abstract class AbstractKeyStoreProvider implements CertificateProvider {
     private final X509Certificate[] certificateChain;
 
     protected AbstractKeyStoreProvider(KeyStore keyStore, char[] keyPassword, String preferredAlias) {
+        if (keyStore == null) {
+            throw new GovSecurityException("O KeyStore carregado nao pode ser nulo.");
+        }
         this.keyStore = keyStore;
         this.keyPassword = keyPassword == null ? new char[0] : Arrays.copyOf(keyPassword, keyPassword.length);
         

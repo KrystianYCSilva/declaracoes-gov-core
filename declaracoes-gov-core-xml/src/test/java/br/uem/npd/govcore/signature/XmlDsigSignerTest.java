@@ -24,6 +24,11 @@ public class XmlDsigSignerTest {
         new XmlDsigSigner(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorRejectsNullOptions() {
+        new XmlDsigSigner(TestCertificateSupport.generateCertificate(), null);
+    }
+
     @Test
     public void testSignsXmlWithId() throws Exception {
         TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
@@ -65,6 +70,123 @@ public class XmlDsigSignerTest {
         assertEquals("", ((Reference) xmlSignature.getSignedInfo().getReferences().get(0)).getURI());
         assertTrue(xmlSignature.validate(validateContext));
         assertEquals(signedXml, signer.sign(signedXml));
+    }
+
+    @Test
+    public void testSignsXmlWithExplicitElementAndCustomIdAttribute() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forElement("info", "IdEvento")
+        );
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info IdEvento=\"EVT123\"><valor>abc</valor></info></evento>");
+        Document document = XmlDocuments.parse(signedXml);
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+        Element target = XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), "info");
+
+        assertNotNull(signatureElement);
+        assertNotNull(target);
+
+        target.setIdAttribute("IdEvento", true);
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        assertEquals("#EVT123", ((Reference) xmlSignature.getSignedInfo().getReferences().get(0)).getURI());
+        assertTrue(xmlSignature.validate(validateContext));
+    }
+
+    @Test
+    public void testSignsXmlWithCustomIdAttributeLookup() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forIdAttribute("Identificador", false)
+        );
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info Identificador=\"ID-900\"><valor>abc</valor></info></evento>");
+        Document document = XmlDocuments.parse(signedXml);
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+        Element target = XmlDocuments.findFirstElementWithAttribute(document.getDocumentElement(), "Identificador");
+
+        assertNotNull(signatureElement);
+        assertNotNull(target);
+
+        target.setIdAttribute("Identificador", true);
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        assertEquals("#ID-900", ((Reference) xmlSignature.getSignedInfo().getReferences().get(0)).getURI());
+        assertTrue(xmlSignature.validate(validateContext));
+    }
+
+    @Test
+    public void testFallsBackToRootWhenExplicitElementIsMissing() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forElement("eventoAssinavel", "IdEvento", true)
+        );
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info><valor>abc</valor></info></evento>");
+        Document document = XmlDocuments.parse(signedXml);
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        assertEquals("", ((Reference) xmlSignature.getSignedInfo().getReferences().get(0)).getURI());
+        assertTrue(xmlSignature.validate(validateContext));
+    }
+
+    @Test
+    public void testFallsBackToRootWhenExplicitElementExistsWithoutConfiguredId() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forElement("info", "IdEvento", true)
+        );
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info><valor>abc</valor></info></evento>");
+        Document document = XmlDocuments.parse(signedXml);
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        assertEquals("", ((Reference) xmlSignature.getSignedInfo().getReferences().get(0)).getURI());
+        assertTrue(xmlSignature.validate(validateContext));
+    }
+
+    @Test(expected = GovSignatureException.class)
+    public void testRejectsMissingExplicitIdWithoutFallback() {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forElement("info", "IdEvento", false)
+        );
+
+        signer.sign("<evento xmlns=\"urn:test\"><info><valor>abc</valor></info></evento>");
+    }
+
+    @Test(expected = GovSignatureException.class)
+    public void testRejectsMissingExplicitElementWithoutFallback() {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forElement("eventoAssinavel", "IdEvento", false)
+        );
+
+        signer.sign("<evento xmlns=\"urn:test\"><info><valor>abc</valor></info></evento>");
+    }
+
+    @Test(expected = GovSignatureException.class)
+    public void testRejectsMissingConfiguredIdLookupWithoutFallback() {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+            certificate,
+            XmlSignatureOptions.forIdAttribute("Identificador", false)
+        );
+
+        signer.sign("<evento xmlns=\"urn:test\"><info><valor>abc</valor></info></evento>");
     }
 
     @Test(expected = GovSignatureException.class)

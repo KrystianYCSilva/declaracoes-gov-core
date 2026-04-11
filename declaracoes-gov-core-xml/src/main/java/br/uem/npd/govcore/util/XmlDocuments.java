@@ -110,4 +110,37 @@ public final class XmlDocuments {
         }
         return null;
     }
+
+    /**
+     * Busca recursivamente o primeiro elemento pelo nome local informado.
+     */
+    public static Element findFirstElementByLocalName(Element node, String localName) {
+        if (node == null || localName == null || localName.trim().isEmpty()) {
+            return null;
+        }
+
+        if (matchesLocalName(node, localName)) {
+            return node;
+        }
+
+        NodeList children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                Element found = findFirstElementByLocalName((Element) child, localName);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean matchesLocalName(Element node, String localName) {
+        String elementLocalName = node.getLocalName();
+        if (localName.equals(elementLocalName)) {
+            return true;
+        }
+        return localName.equals(node.getNodeName());
+    }
 }

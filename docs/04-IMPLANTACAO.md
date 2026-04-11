@@ -37,6 +37,12 @@
 3. estabilizar pacotes publicos;
 4. atualizar guias de consumo.
 
+### 2.5 Passo 4 - Fechamento da release
+1. ajustar os POMs para `1.0.0`;
+2. validar `mvn clean verify`;
+3. publicar README e guia de migracao;
+4. preparar a tag Git final conforme o fluxo do repositorio.
+
 ## 3. Build e verificacao
 
 ### 3.1 Baseline atual
@@ -57,24 +63,16 @@ mvn clean package
 ## 4. Sequencia recomendada para implementacao
 
 ### Fase A - Documentacao e rastreabilidade
-- consolidar os documentos atuais;
-- revisar os contratos publicos existentes;
-- publicar matriz de validadores.
+- concluida
 
 ### Fase B - Testes e confianca
-- ampliar cobertura de `crypto` e `signature`;
-- introduzir testes para `Modulo11`;
-- eliminar sucesso artificial por exclusao ampla de cobertura.
+- concluida
 
 ### Fase C - Modularizacao
-- criar parent/BOM;
-- separar codigo atual nos modulos corretos;
-- manter compatibilidade de Java 8 e contratos essenciais.
+- concluida
 
 ### Fase D - Expansao controlada
-- formatacao e normalizacao;
-- documentos adicionais com politica de confianca normativa;
-- melhorias de XML e crypto.
+- concluida para o escopo `1.0.0`
 
 ## 5. Integracao futura nos projetos consumidores
 
@@ -95,5 +93,5 @@ mvn clean package
 |-------|---------|-----------|
 | confundir heuristica com regra oficial | alto | matriz de validadores e Javadoc explicitos |
 | modularizacao quebrar imports consumidores | medio | migracao faseada e guias de adocao |
-| manter cobertura artificialmente inflada | alto | revisar JaCoCo antes de fechar a v1.0.0 |
+| manter cobertura artificialmente inflada | alto | gate JaCoCo real e sem exclusoes amplas |
 | aumentar escopo demais | alto | aplicar YAGNI e manter backlog fora do core |

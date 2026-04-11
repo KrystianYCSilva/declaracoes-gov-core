@@ -33,6 +33,14 @@ public final class SslContextBuilder {
      * @throws GovSecurityException caso ocorra falha de handshake interno.
      */
     public static SSLContext build(CertificateProvider certProvider) {
+        return build(certProvider, null);
+    }
+
+    /**
+     * Constrói o contexto usando um TrustStore explícito quando o consumidor
+     * precisa controlar a cadeia confiável da integração.
+     */
+    public static SSLContext build(CertificateProvider certProvider, KeyStore trustStore) {
         if (certProvider == null) {
             throw new IllegalArgumentException("O CertificateProvider é obrigatório para construir um SslContext governamental.");
         }
@@ -44,7 +52,7 @@ public final class SslContextBuilder {
 
             // Confia na cadeia local nativa do JRE (Cacerts)
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init((KeyStore) null);
+            tmf.init(trustStore);
 
             SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
             sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);

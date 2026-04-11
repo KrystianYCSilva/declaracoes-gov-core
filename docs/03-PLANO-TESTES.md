@@ -14,11 +14,10 @@
 - BouncyCastle em escopo de teste
 - JaCoCo para cobertura
 
-### 1.3 Baseline atual observado
-- 17 suites de teste
-- 47 testes executados
-- 0 falhas e 0 erros no baseline local
-- cobertura agregada atual do report completo: `71.63%` de instrucoes e `53.23%` de branches
+### 1.3 Estado atual da validacao
+- reactor multi-modulo validado com `mvn -q verify`
+- gate JaCoCo ativo em `domain`, `format`, `xml` e `crypto`
+- `xml` e `crypto` entram no mesmo fluxo de confianca do restante do produto
 
 ### 1.4 Meta da v1.0.0
 - cobertura minima de `90%` em linhas e branches no codigo mantido pelo projeto;
@@ -125,17 +124,14 @@
 ## 4. Divida de Testes do Baseline
 
 ### 4.1 Riscos mais relevantes
-- `crypto/` ainda esta abaixo do nivel exigido para um artefato fundacional;
-- `signature/` ainda nao possui cobertura compativel com a criticidade funcional;
-- o gate atual de cobertura nao representa a meta real da `v1.0.0`;
-- faltam testes explicitos para a politica de validadores e para os contratos estruturais.
+- validadores `PROVISIONAL` exigem revisao normativa continua para eventual promocao a `OFFICIAL`;
+- testes de `PKCS11/A3` continuam necessariamente limitados sem hardware/token real;
+- erros negativos de XML continuam aparecendo no stderr dos testes por desenho do parser seguro, embora o build esteja verde.
 
 ### 4.2 Acoes obrigatorias
-- criar infraestrutura de teste de certificado para A1 e cenarios controlados de A3;
-- adicionar testes especificos para `XmlDsigSigner`;
-- cobrir `Vigencia` e branches faltantes dos value objects atuais;
-- validar round-trip e contrato explicito do JSON governamental;
-- remover a dependencia de exclusoes amplas como mecanismo de "sucesso" do gate.
+- preservar o gate JaCoCo como criterio de regressao para novas mudancas;
+- manter a matriz de validadores alinhada com a API e os testes;
+- ampliar apenas quando houver novo escopo real de dominio ou nova fonte normativa catalogada.
 
 ---
 

@@ -1,11 +1,11 @@
 # Relatorio Tecnico para Diretoria
 ## Reestruturacao da declaracoes-gov-core para a linha v1.0.0
 
-**Data:** 10/04/2026  
+**Data:** 11/04/2026  
 **Projeto:** declaracoes-gov-core  
-**Linha atual de trabalho:** 1.0.0-SNAPSHOT  
+**Linha atual de trabalho:** 1.0.0  
 **Baseline fechado:** v0.1.0  
-**Status:** DOCUMENTACAO E PASSO 0 TECNICO CONCLUIDOS
+**Status:** IMPLEMENTACAO E DOCUMENTACAO DA v1.0.0 CONCLUIDAS
 
 ---
 
@@ -15,59 +15,54 @@ A `declaracoes-gov-core` deixou de ser tratada apenas como suporte pontual para 
 
 Nesta etapa foram concluidos:
 
-- consolidacao do planejamento tecnico na raiz do repositorio;
-- confronto dos planos de Codex, Qwen, Kimi, Gemini, Claude e OpenCode;
-- criacao do workflow cascata em `docs/`;
-- alinhamento da linha de trabalho `develop` para `1.0.0-SNAPSHOT`.
+- consolidacao do planejamento tecnico e confronto entre os planos dos agentes;
+- reestruturacao do projeto para arquitetura multi-modulo Maven;
+- endurecimento do dominio e politica publica de validadores;
+- fechamento dos modulos `format`, `xml` e `crypto`;
+- publicacao de README e guia de migracao;
+- validacao final com `mvn -q verify`.
 
-Resultado: o projeto agora possui uma trilha documental coerente para iniciar a implementacao da `v1.0.0` com escopo e governanca claros.
+Resultado: o projeto agora possui implementacao e documentacao coerentes para fechamento da release `1.0.0`.
 
 ---
 
 ## 2. Estado Atual do Projeto
 
-### 2.1 Baseline tecnico observado
+### 2.1 Estado tecnico entregue
 
 | Item | Valor |
 |------|-------|
-| Classes principais mapeadas | 31 |
-| Suites de teste atuais | 17 |
-| Testes executados no baseline local | 47 |
-| Resultado do baseline local | Build de testes bem-sucedido |
-| Cobertura agregada atual | 71.63% instrucoes / 53.23% branches |
+| Estrutura | multi-modulo Maven (`parent`, `bom`, `domain`, `format`, `xml`, `crypto`) |
+| Compatibilidade | Java 8 |
+| Politica de validadores | `OFFICIAL`, `PROVISIONAL`, `STRUCTURAL` |
+| Verificacao | `mvn -q verify` verde |
+| Gate de cobertura | ativo no reactor |
 | Branch de trabalho atual | `develop` |
 | Tag de baseline | `v0.1.0` |
 
-### 2.2 Principais capacidades ja existentes
+### 2.2 Principais capacidades entregues
 
-- documentos e value objects: `Cnpj`, `Cpf`, `Nis`, `PeriodoApuracao`, `Recibo`, `CodigoMunicipio`, `Vigencia`;
-- validadores de CPF, CNPJ numerico e alfanumerico, NIS;
-- enums e tabelas pequenas: `Uf`, `TipoInscricao`, `TipoAmbiente`;
-- utilitarios: `GovJsonFactory`, `XmlDocuments`, `XmlDates`;
-- crypto e assinatura: `CertificateProvider`, A1/A3, `SslContextBuilder`, `XmlDsigSigner`.
+- documentos e value objects: `Cnpj`, `Cpf`, `Nis`, `Caepf`, `Cno`, `Cei`, `PeriodoApuracao`, `Recibo`, `CodigoMunicipio`, `Vigencia`;
+- validadores com catalogo publico de confianca e `Modulo11` compartilhado;
+- formatacao e normalizacao: `GovJsonFactory`, `GovTextNormalizer`, `GovNumberFormats`, `GovCompetenceFormats`, `XmlDates`;
+- XML: `XmlDocuments`, `XmlDsigSigner`, `XmlSignatureOptions`;
+- crypto: `CertificateProvider`, A1/A3, `Pkcs11Provider`, `SslContextBuilder`.
 
 ---
 
 ## 3. Riscos Reais Identificados
 
-### 3.1 Bugs funcionais
-- `Uf` contem nomes incorretos em alguns estados.
-
-### 3.2 Debitos de confianca
-- `crypto/` e `signature/` ainda nao possuem cobertura compativel com o papel fundacional da biblioteca;
-- `GovValidators` mistura regras fortes com heuristicas estruturais;
-- o contrato do `GovJsonFactory` precisa ser explicitado para nao parecer um mapper generico;
-- a deteccao implicita de `Id` em assinatura XML precisa ser redesenhada.
-
-### 3.3 Risco de produto
-- sem uma politica formal para validadores, o consumidor pode assumir como "oficial" uma regra que ainda nao foi confirmada normativamente.
+### 3.1 Riscos residuais
+- `CPF` e `NIS` permanecem `PROVISIONAL` ate catalogacao de fonte primaria suficiente;
+- `PKCS11/A3` continua dependente de provider, driver e token reais no ambiente do consumidor;
+- a tag Git final da release depende do fluxo de versionamento do repositorio.
 
 ---
 
 ## 4. Decisoes Estrategicas Aprovadas
 
 ### 4.1 Arquitetura
-A `v1.0.0` sera multi-modulo:
+A `v1.0.0` foi consolidada como multi-modulo:
 
 - `declaracoes-gov-core-parent`
 - `declaracoes-gov-core-bom`
@@ -93,7 +88,7 @@ Ficam fora:
 - catalogos altamente volateis sem estrategia propria.
 
 ### 4.3 Politica de validadores
-Cada validacao sera tratada como:
+Cada validacao e tratada como:
 
 - `oficial`
 - `provisoria`
@@ -109,12 +104,15 @@ Nenhum algoritmo nao confirmado sera promovido como validacao normativa definiti
 - `CODEX-PLAN-V1.md`
 - `PLANO-UNIFICADO-V1.md`
 - `PRE-DOCUMENTO-DE-REQUISITOS-V1.md`
+- `README.md`
 
 ### 5.2 Workflow cascata em `docs/`
 - `01-REQUISITOS.md`
 - `02-DESIGN.md`
 - `03-PLANO-TESTES.md`
 - `04-IMPLANTACAO.md`
+- `05-MATRIZ-VALIDADORES.md`
+- `06-GUIA-MIGRACAO-0.1.x-1.0.0.md`
 - `ARCHITECTURE.md`
 - `RELATORIO-RELEASE-V1.md`
 
@@ -122,13 +120,12 @@ Nenhum algoritmo nao confirmado sera promovido como validacao normativa definiti
 
 ## 6. Proximo Passo Recomendado
 
-Iniciar a implementacao tecnica da `v1.0.0` em `develop` na seguinte ordem:
+Executar o fechamento Git da release:
 
-1. corrigir bugs factuais e debitos do baseline;
-2. endurecer cobertura de testes, principalmente em `crypto` e `signature`;
-3. extrair `Modulo11` compartilhado;
-4. preparar a modularizacao Maven;
-5. mover o codigo atual para os modulos alvo sem ampliar escopo indevidamente.
+1. revisar o diff final;
+2. criar o commit de release;
+3. criar a tag `v1.0.0`;
+4. abrir a proxima linha de trabalho conforme a estrategia do repositorio.
 
 ---
 
@@ -139,7 +136,8 @@ A `declaracoes-gov-core` agora possui:
 - visao de produto consolidada;
 - escopo controlado;
 - politica formal para validadores;
+- arquitetura multi-modulo entregue;
 - workflow documental completo;
-- linha `develop` preparada para receber a implementacao da `v1.0.0`.
+- verificacao final verde.
 
-O projeto esta pronto para sair da fase de definicao e entrar na fase de execucao tecnica.
+O projeto esta pronto para fechamento formal da release `v1.0.0`.

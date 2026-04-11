@@ -31,12 +31,21 @@ import java.util.Collections;
 public final class XmlDsigSigner implements XmlSigner {
 
     private final CertificateProvider certificateProvider;
+    private final XmlSignatureOptions options;
 
     public XmlDsigSigner(CertificateProvider certificateProvider) {
+        this(certificateProvider, XmlSignatureOptions.defaults());
+    }
+
+    public XmlDsigSigner(CertificateProvider certificateProvider, XmlSignatureOptions options) {
         if (certificateProvider == null) {
             throw new IllegalArgumentException("O CertificateProvider é obrigatório para assinar XML.");
         }
+        if (options == null) {
+            throw new IllegalArgumentException("As opções de assinatura XML são obrigatórias.");
+        }
         this.certificateProvider = certificateProvider;
+        this.options = options;
     }
 
     @Override
@@ -57,9 +66,8 @@ public final class XmlDsigSigner implements XmlSigner {
             }
 
             XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance("DOM");
-            
-            // Busca o Id do evento no eSocial/Reinf
-            Element target = XmlDocuments.findFirstElementWithAttribute(root, "Id");
+
+            Element target = resolveTarget(root);
             Reference reference = createReference(signatureFactory, target);
 
             SignedInfo signedInfo = signatureFactory.newSignedInfo(
@@ -88,20 +96,55 @@ public final class XmlDsigSigner implements XmlSigner {
         }
     }
 
+    private Element resolveTarget(Element root) {
+        if (options.getTargetElementLocalName() != null) {
+            Element explicitTarget = XmlDocuments.findFirstElementByLocalName(root, options.getTargetElementLocalName());
+            if (explicitTarget == null) {
+                if (options.isFallbackToRootWhenTargetMissing()) {
+                    return root;
+                }
+                throw new GovSignatureException(
+                    "Elemento alvo para assinatura não encontrado: " + options.getTargetElementLocalName()
+                );
+            }
+
+            if (explicitTarget.hasAttribute(options.getIdAttributeName())) {
+                return explicitTarget;
+            }
+            if (!options.isFallbackToRootWhenTargetMissing()) {
+                throw new GovSignatureException(
+                    "Elemento alvo encontrado, mas sem o atributo de ID configurado: " + options.getIdAttributeName()
+                );
+            }
+            return root;
+        }
+
+        Element target = XmlDocuments.findFirstElementWithAttribute(root, options.getIdAttributeName());
+        if (target != null) {
+            return target;
+        }
+        if (options.isFallbackToRootWhenTargetMissing()) {
+            return root;
+        }
+        throw new GovSignatureException(
+            "Nenhum elemento contendo o atributo de ID configurado foi encontrado: " + options.getIdAttributeName()
+        );
+    }
+
     private Reference createReference(XMLSignatureFactory signatureFactory, Element target) throws Exception {
         Transform transform = signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null);
-        
-        if (target != null) {
-            target.setIdAttribute("Id", true);
+
+        if (target != null && target.hasAttribute(options.getIdAttributeName())) {
+            target.setIdAttribute(options.getIdAttributeName(), true);
             return signatureFactory.newReference(
-                    "#" + target.getAttribute("Id"),
+                    "#" + target.getAttribute(options.getIdAttributeName()),
                     signatureFactory.newDigestMethod(DigestMethod.SHA256, null),
                     Collections.singletonList(transform),
                     null,
                     null
             );
         }
-        
+
         return signatureFactory.newReference(
                 "",
                 signatureFactory.newDigestMethod(DigestMethod.SHA256, null),

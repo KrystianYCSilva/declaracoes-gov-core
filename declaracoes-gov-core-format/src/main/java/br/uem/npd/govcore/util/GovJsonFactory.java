@@ -52,7 +52,7 @@ public final class GovJsonFactory {
         govModule.addSerializer(BigDecimal.class, new StdSerializer<BigDecimal>(BigDecimal.class) {
             @Override
             public void serialize(BigDecimal value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-                gen.writeString(value.toPlainString());
+                gen.writeString(GovNumberFormats.toPlainString(value));
             }
         });
         mapper.registerModule(govModule);

@@ -4,6 +4,7 @@ import br.uem.npd.govcore.exception.GovSecurityException;
 import org.junit.Test;
 
 import javax.net.ssl.SSLContext;
+import java.security.KeyStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,6 +20,19 @@ public class SslContextBuilderTest {
     public void testBuildSslContext() {
         TestCertificateSupport.GeneratedCertificate generated = TestCertificateSupport.generateCertificate();
         SSLContext context = SslContextBuilder.build(generated);
+
+        assertNotNull(context);
+        assertEquals("TLSv1.2", context.getProtocol());
+    }
+
+    @Test
+    public void testBuildSslContextWithExplicitTrustStore() throws Exception {
+        TestCertificateSupport.GeneratedCertificate generated = TestCertificateSupport.generateCertificate();
+        KeyStore trustStore = KeyStore.getInstance("JKS");
+        trustStore.load(null, null);
+        trustStore.setCertificateEntry("govcore", generated.getCertificate());
+
+        SSLContext context = SslContextBuilder.build(generated, trustStore);
 
         assertNotNull(context);
         assertEquals("TLSv1.2", context.getProtocol());

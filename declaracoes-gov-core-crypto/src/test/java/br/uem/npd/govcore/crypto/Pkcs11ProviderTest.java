@@ -13,6 +13,8 @@ import java.security.Provider;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class Pkcs11ProviderTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -23,6 +25,11 @@ public class Pkcs11ProviderTest {
     @Test(expected = IllegalArgumentException.class)
     public void testBlankConfigString() {
         new Pkcs11Provider("   ", "1234".toCharArray());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testConfigStringWithoutLibraryDirective() {
+        new Pkcs11Provider("name = Token", "1234".toCharArray());
     }
 
     @Test(expected = GovSecurityException.class)
@@ -58,6 +65,17 @@ public class Pkcs11ProviderTest {
     }
 
     @Test(expected = GovSecurityException.class)
+    public void testConfigurationFileWithoutLibraryDirectiveIsWrapped() throws Exception {
+        Path tempFile = Files.createTempFile("govcore-pkcs11-missing-library-", ".cfg");
+        Files.write(tempFile, "name = Token".getBytes(StandardCharsets.UTF_8));
+        try {
+            new Pkcs11Provider(tempFile, "1234".toCharArray());
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test(expected = GovSecurityException.class)
     public void testExistingNativeLibraryConfigurationFileStillFailsWithoutValidPkcs11Driver() throws Exception {
         Path tempFile = Files.createTempFile("govcore-pkcs11-existing-", ".cfg");
         Path nativeLibrary = resolveExistingNativeLibrary();
@@ -67,6 +85,20 @@ public class Pkcs11ProviderTest {
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
+
+    @Test
+    public void testResolveNativeLibraryAcceptsQuotedPath() throws Exception {
+        Method method = Pkcs11Provider.class.getDeclaredMethod("resolveNativeLibrary", String.class);
+        method.setAccessible(true);
+
+        Path nativeLibrary = resolveExistingNativeLibrary().toAbsolutePath().normalize();
+        Path resolved = (Path) method.invoke(
+            null,
+            "name = Token\nlibrary = \"" + nativeLibrary.toString().replace('\\', '/') + "\""
+        );
+
+        assertEquals(nativeLibrary, resolved.toAbsolutePath().normalize());
     }
 
     @Test

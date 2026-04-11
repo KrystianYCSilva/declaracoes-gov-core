@@ -94,8 +94,8 @@ Isso nao e apenas uma regra de documentacao. E uma regra arquitetural:
 
 ## 5. Estado atual da transicao
 
-- a tag `v0.1.0` ja existe;
-- a branch atual de trabalho e `develop`;
-- a linha `develop` ja divergiu da tag `v0.1.0`;
-- o `pom.xml` da linha de trabalho passa a refletir `1.0.0-SNAPSHOT`;
-- a cascata documental em `docs/` passa a ser a fonte principal de especificacao da `v1.0.0`.
+- a tag `v0.1.0` existe como baseline preservado;
+- a linha de trabalho foi consolidada como `1.0.0`;
+- o reactor Maven multi-modulo esta implementado;
+- a cascata documental em `docs/` descreve o estado efetivamente entregue;
+- a criacao da tag Git final `v1.0.0` depende apenas do fluxo de versionamento do repositorio.

@@ -38,14 +38,16 @@
 +--------------------------------------------------------------------+
 ```
 
-### 1.2 Baseline atual revisado
+### 1.2 Estado implementado na v1.0.0
 
 Estado atual observado no repositorio:
 
-- pacotes atuais: `model`, `validator`, `table`, `crypto`, `signature`, `util`, `exception`;
-- 17 suites de teste com 47 testes executados no baseline local;
-- cobertura agregada do report completo abaixo da meta da `v1.0.0`;
-- partes criticas de `crypto` e `signature` ainda subtestadas.
+- reactor Maven multi-modulo com `parent`, `bom`, `domain`, `format`, `xml` e `crypto`;
+- politica publica de validadores implementada e documentada;
+- `CPF` e `NIS` com construtores estruturais e validacao algoritmica provisoria por opt-in;
+- `XmlDsigSigner` com configuracao explicita de alvo via `XmlSignatureOptions`;
+- `SslContextBuilder` com suporte a `TrustStore` explicito;
+- `mvn -q verify` verde com gate de cobertura ativo nos modulos.
 
 ---
 
@@ -121,17 +123,15 @@ Estado atual observado no repositorio:
 
 ## 3. Debitos Tecnicos do Baseline
 
-### 3.1 Bugs funcionais conhecidos
-- `Uf.AL` esta descrito como "Acre"
-- `Uf.MS` esta descrito como "Minas Gerais"
-- `Uf.MT` esta descrito como "Mato Grosso do Sul"
-- `Uf.RO` esta descrito como "Rio Grande do Norte"
+### 3.1 Bugs do baseline absorvidos
+- inconsistencias de descricao em `Uf` foram corrigidas;
+- heuristicas indevidas no facade de validadores foram segregadas por nivel de confianca;
+- XML e crypto deixaram de depender de cobertura artificialmente inflada.
 
-### 3.2 Dividas de confianca e manutencao
-- `GovValidators` ainda mistura validacao forte com heuristicas de tamanho;
-- `crypto/` e `signature/` nao tem nivel de cobertura compativel com o papel fundacional da biblioteca;
-- o gate de cobertura da linha atual nao representa a exigencia final da `v1.0.0`;
-- a documentacao anterior descreve um core mais estreito do que a visao consolidada.
+### 3.2 Pontos ainda deliberadamente controlados
+- `CPF` e `NIS` seguem `PROVISIONAL` por ausencia de fonte primaria catalogada no core;
+- `PKCS11` continua dependente de driver nativo e token real no ambiente do consumidor;
+- a release Git final depende do fluxo de versionamento do repositorio local.
 
 ---
 
@@ -161,9 +161,9 @@ Estado atual observado no repositorio:
 
 ## 6. Estrategia de evolucao
 
-1. Fechar e registrar o baseline `v0.1.0`.
-2. Corrigir bugs e dividas criticas que contaminam a confianca do baseline.
-3. Reestruturar o projeto em modulos.
-4. Endurecer o nucleo de dominio e a politica de validadores.
-5. Completar `format`, `xml` e `crypto` com contratos mais claros.
-6. Preparar migracao dos projetos consumidores.
+1. Baseline `v0.1.0` fechado e preservado.
+2. Dividas criticas do baseline absorvidas na linha `1.0.0`.
+3. Projeto reestruturado em modulos.
+4. Nucleo de dominio e politica de validadores endurecidos.
+5. `format`, `xml` e `crypto` fechados com contratos publicos mais claros.
+6. Documentacao de migracao publicada para os consumidores.

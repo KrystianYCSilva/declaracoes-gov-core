@@ -37,53 +37,53 @@ Transporte HTTP/SOAP/REST, OAuth2, entrega de declaracoes, regras especificas de
 ### RF-01: Fechamento controlado do baseline v0.1.0
 - **Descricao**: O estado atual deve ser reconhecido como baseline funcional da `v0.1.0` antes da reestruturacao da `v1.0.0`.
 - **Criterio**: baseline identificado, riscos conhecidos registrados, tag `v0.1.0` prevista e branch `develop` prevista para a nova linha.
-- **Status**: Em planejamento
+- **Status**: Atendido
 
 ### RF-02: Arquitetura multi-modulo
 - **Descricao**: A `v1.0.0` deve separar nucleo minimo e capacidades opcionais em modulos Maven independentes.
 - **Criterio**: arquitetura alvo com `domain`, `format`, `xml`, `crypto`, mais parent e BOM.
-- **Status**: Planejado
+- **Status**: Atendido
 
 ### RF-03: Nucleo minimo de dominio brasileiro
 - **Descricao**: O nucleo deve oferecer pelo menos `Cnpj`, `Cpf`, `Nis` ou `PisPasep`, `CodigoMunicipio`, `Uf`, `TipoInscricao`, `TipoAmbiente`, `PeriodoApuracao` e `Vigencia`.
 - **Criterio**: tipos publicos reutilizaveis, imutaveis quando aplicavel, com contratos claros.
-- **Status**: Parcialmente implementado
+- **Status**: Atendido
 
 ### RF-04: Politica explicita para validadores
 - **Descricao**: Toda validacao deve ser classificada como `oficial`, `provisoria` ou `estrutural`.
 - **Criterio**: documentacao e API deixam claro o nivel de confianca normativa de cada tipo suportado.
 - **Referencia atual**: `docs/05-MATRIZ-VALIDADORES.md`
-- **Status**: Parcialmente atendido
+- **Status**: Atendido
 
 ### RF-05: Suporte estrutural para documentos sem algoritmo oficial
 - **Descricao**: Quando nao houver regra oficial mapeada, a biblioteca deve oferecer apenas parse, mascara, formato, tamanho e normalizacao basica.
 - **Criterio**: o consumidor nao e induzido a acreditar em uma validacao normativa inexistente.
-- **Status**: Planejado
+- **Status**: Atendido
 
 ### RF-06: Modulo de formatacao e normalizacao
 - **Descricao**: A biblioteca deve oferecer mascaras, remocao de mascara, uppercase/sanitizacao normativa e formatos reutilizaveis de string, data e numero.
 - **Criterio**: contratos leves e agnosticos, sem dependencia de framework.
-- **Status**: Parcialmente implementado
+- **Status**: Atendido
 
 ### RF-07: Modulo XML opcional
 - **Descricao**: A biblioteca deve prover parsing XML seguro, utilitarios DOM e assinatura XML configuravel sem acoplamento a uma declaracao especifica.
 - **Criterio**: APIs reutilizaveis e configuraveis, com comportamento explicito para alvo de assinatura e atributo ID.
-- **Status**: Parcialmente implementado
+- **Status**: Atendido
 
 ### RF-08: Modulo crypto opcional
 - **Descricao**: A biblioteca deve prover certificados A1/A3, `SSLContext` e suporte a PKCS11 em modulo opcional.
 - **Criterio**: suporte a `CertificateProvider`, A1/A3 e tratamento claro de erros operacionais.
-- **Status**: Parcialmente implementado
+- **Status**: Atendido
 
 ### RF-09: Reuso de algoritmo compartilhado de Modulo 11
 - **Descricao**: Validadores baseados em Modulo 11 devem convergir para um utilitario compartilhado e testado com vetores oficiais.
 - **Criterio**: ausencia de duplicacao desnecessaria em CPF, CNPJ, NIS e futuros validadores oficiais baseados no mesmo mecanismo.
-- **Status**: Planejado
+- **Status**: Atendido
 
 ### RF-10: Documentacao de adocao e rastreabilidade
 - **Descricao**: A biblioteca deve publicar requisitos, design, plano de testes e implantacao com rastreabilidade para o escopo da `v1.0.0`.
 - **Criterio**: documentos em `docs/` alinhados com o workflow cascata e com a politica de validadores.
-- **Status**: Em elaboracao
+- **Status**: Atendido
 
 ---
 
@@ -107,12 +107,12 @@ Transporte HTTP/SOAP/REST, OAuth2, entrega de declaracoes, regras especificas de
 ### RNF-04: Cobertura de testes
 - **Descricao**: A `v1.0.0` deve atingir cobertura minima de 90% em linhas e branches no codigo mantido pelo projeto, sem esconder modulos criticos por exclusoes amplas.
 - **Criterio**: JaCoCo >= 90% no escopo proprio do produto.
-- **Status**: Nao atendido no baseline atual
+- **Status**: Atendido na release `1.0.0`
 
 ### RNF-05: Transparencia sobre confianca normativa
 - **Descricao**: Toda validacao deve ter fonte, nivel de confianca e limitacoes explicitadas.
 - **Criterio**: matriz publica de validadores e Javadoc consistente.
-- **Status**: Planejado
+- **Status**: Atendido
 
 ### RNF-06: Reuso de bibliotecas maduras
 - **Descricao**: A implementacao deve reutilizar bibliotecas maduras quando isso reduzir custo e risco.
@@ -129,17 +129,15 @@ Transporte HTTP/SOAP/REST, OAuth2, entrega de declaracoes, regras especificas de
 ## 4. Baseline Atual e Gaps
 
 ### 4.1 Baseline identificado
-- 31 classes principais no codigo fonte atual
-- 17 suites de teste
-- 47 testes executados com sucesso no baseline local
-- cobertura agregada atual aproximada: 71.63% de instrucoes e 53.23% de branches no report completo
+- baseline `v0.1.0` identificado e preservado por tag
+- linha `v1.0.0` reestruturada em multi-modulo Maven
+- reactor validado com `mvn -q verify`
+- gate de cobertura real ativo em todos os modulos do produto
 
 ### 4.2 Gaps conhecidos
-- `Uf` contem nomes incorretos para alguns estados
-- `GovValidators` possui heuristicas provisiorias para alguns tipos sem base oficial forte
-- a regra de JaCoCo atual nao reflete a exigencia final da `v1.0.0`
-- `GovJsonFactory` hoje escreve `BigDecimal` como string para integracoes gov, o que exige contrato explicito
-- `XmlDsigSigner` depende de comportamento implicito para localizacao do atributo `Id`
+- `CPF` e `NIS` permanecem `PROVISIONAL` ate catalogacao de fonte primaria suficiente
+- `Pkcs11Provider` continua limitado pelo provider e driver nativos disponiveis no ambiente do consumidor
+- a tag Git final da release depende do fluxo de versionamento do repositorio
 
 ---
 

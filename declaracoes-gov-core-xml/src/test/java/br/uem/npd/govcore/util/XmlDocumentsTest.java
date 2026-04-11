@@ -91,4 +91,26 @@ public class XmlDocumentsTest {
         Document docWithoutAttribute = XmlDocuments.parse("<evento><filho/></evento>");
         assertNull(XmlDocuments.findFirstElementWithAttribute(docWithoutAttribute.getDocumentElement(), "Id"));
     }
+
+    @Test
+    public void testFindFirstElementByLocalName() {
+        Document document = XmlDocuments.parse("<root xmlns=\"urn:test\"><evento><info><detalhe/></info></evento></root>");
+        assertEquals("evento", XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), "evento").getLocalName());
+        assertEquals("detalhe", XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), "detalhe").getLocalName());
+        assertNull(XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), "naoExiste"));
+        assertNull(XmlDocuments.findFirstElementByLocalName(null, "evento"));
+        assertNull(XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), " "));
+    }
+
+    @Test
+    public void testFindFirstElementByLocalNameWithoutNamespace() {
+        Document document = XmlDocuments.parse("<root><evento><info/></evento></root>");
+        assertEquals("evento", XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), "evento").getNodeName());
+    }
+
+    @Test
+    public void testFindFirstElementByLocalNameWithNullSearchTerm() {
+        Document document = XmlDocuments.parse("<root><evento><info/></evento></root>");
+        assertNull(XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), null));
+    }
 }
