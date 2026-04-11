@@ -52,7 +52,8 @@ Transporte HTTP/SOAP/REST, OAuth2, entrega de declaracoes, regras especificas de
 ### RF-04: Politica explicita para validadores
 - **Descricao**: Toda validacao deve ser classificada como `oficial`, `provisoria` ou `estrutural`.
 - **Criterio**: documentacao e API deixam claro o nivel de confianca normativa de cada tipo suportado.
-- **Status**: Planejado
+- **Referencia atual**: `docs/05-MATRIZ-VALIDADORES.md`
+- **Status**: Parcialmente atendido
 
 ### RF-05: Suporte estrutural para documentos sem algoritmo oficial
 - **Descricao**: Quando nao houver regra oficial mapeada, a biblioteca deve oferecer apenas parse, mascara, formato, tamanho e normalizacao basica.

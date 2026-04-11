@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CnpjTest {
 
@@ -16,6 +17,7 @@ public class CnpjTest {
         assertEquals("11.222.333/0001-81", cnpj.getFormatted());
         assertEquals(TipoInscricao.CNPJ, cnpj.getTipoInscricao());
         assertEquals("11.222.333/0001-81", cnpj.toString());
+        assertTrue(cnpj instanceof InscricaoGovernamental);
     }
 
     @Test

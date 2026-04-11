@@ -47,10 +47,16 @@ public class GovValidatorsTest {
         assertTrue(GovValidators.isInscricaoStructureValid(TipoInscricao.CAEPF, "12345678901234"));
         assertTrue(GovValidators.isInscricaoStructureValid(TipoInscricao.CNO, "123456789012"));
         assertTrue(GovValidators.isInscricaoStructureValid(TipoInscricao.CEI, "123456789012"));
+        assertTrue(GovValidators.isCaepfStructureValid("12.345.678/901234"));
+        assertTrue(GovValidators.isCnoStructureValid("12.345.6789012"));
+        assertTrue(GovValidators.isCeiStructureValid("12.345.6789012"));
 
         assertFalse(GovValidators.isInscricaoStructureValid(TipoInscricao.CAEPF, "123"));
         assertFalse(GovValidators.isInscricaoStructureValid(TipoInscricao.CNO, "123"));
         assertFalse(GovValidators.isInscricaoStructureValid(TipoInscricao.CEI, "123"));
+        assertFalse(GovValidators.isCaepfStructureValid(null));
+        assertFalse(GovValidators.isCnoStructureValid("123"));
+        assertFalse(GovValidators.isCeiStructureValid("123"));
         assertTrue(GovValidators.isInscricaoStructureValid(TipoInscricao.CNPJ, "11.222.333/0001-81"));
         assertFalse(GovValidators.isInscricaoStructureValid(null, "123"));
         assertFalse(GovValidators.isInscricaoStructureValid(TipoInscricao.CAEPF, null));

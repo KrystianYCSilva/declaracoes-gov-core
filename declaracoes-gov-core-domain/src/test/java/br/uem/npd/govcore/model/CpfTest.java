@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CpfTest {
 
@@ -16,6 +17,7 @@ public class CpfTest {
         assertEquals("123.456.789-09", cpf.getFormatted());
         assertEquals(TipoInscricao.CPF, cpf.getTipoInscricao());
         assertEquals("123.456.789-09", cpf.toString());
+        assertTrue(cpf instanceof InscricaoGovernamental);
     }
 
     @Test

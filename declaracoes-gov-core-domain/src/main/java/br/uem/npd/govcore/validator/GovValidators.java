@@ -46,6 +46,18 @@ public final class GovValidators {
         return NIS_VALIDATOR.isValid(nis);
     }
 
+    public static boolean isCaepfStructureValid(String numero) {
+        return hasDigitsCount(numero, 14);
+    }
+
+    public static boolean isCnoStructureValid(String numero) {
+        return hasDigitsCount(numero, 12);
+    }
+
+    public static boolean isCeiStructureValid(String numero) {
+        return hasDigitsCount(numero, 12);
+    }
+
     /**
      * Validacao forte apenas para tipos suportados por algoritmo oficial no core.
      */
@@ -76,15 +88,22 @@ public final class GovValidators {
             return false;
         }
 
-        String digits = numero.replaceAll("[^0-9]", "");
         switch (tipo) {
             case CAEPF:
-                return digits.length() == 14;
+                return isCaepfStructureValid(numero);
             case CNO:
+                return isCnoStructureValid(numero);
             case CEI:
-                return digits.length() == 12;
+                return isCeiStructureValid(numero);
             default:
                 return isInscricaoValid(tipo, numero);
         }
+    }
+
+    private static boolean hasDigitsCount(String numero, int expectedLength) {
+        if (numero == null) {
+            return false;
+        }
+        return numero.replaceAll("[^0-9]", "").length() == expectedLength;
     }
 }

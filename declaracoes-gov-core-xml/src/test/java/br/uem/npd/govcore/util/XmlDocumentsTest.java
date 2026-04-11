@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import static org.junit.Assert.*;
 
 public class XmlDocumentsTest {
@@ -57,6 +59,18 @@ public class XmlDocumentsTest {
         String xmlSigned = "<root><Signature xmlns=\"urn:custom\"></Signature></root>";
         Document document = XmlDocuments.parse(xmlSigned);
         assertTrue(XmlDocuments.hasSignature(document.getDocumentElement()));
+    }
+
+    @Test
+    public void testHasSignatureFallbackWithoutLocalNameOrPrefixMatch() throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Document document = factory.newDocumentBuilder().newDocument();
+        Element root = document.createElement("root");
+        Element signature = document.createElement("Signature");
+        root.appendChild(signature);
+        document.appendChild(root);
+
+        assertFalse(XmlDocuments.hasSignature(root));
     }
 
     @Test
