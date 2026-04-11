@@ -26,7 +26,7 @@ public final class GovValidationCatalog {
         "CPF",
         ValidationLevel.PROVISIONAL,
         "Fonte primaria de digito verificador ainda nao catalogada no core.",
-        "A implementacao existe por compatibilidade historica, mas a classificacao oficial ainda depende de fonte primaria explicitamente mapeada."
+        "O core publica checagem estrutural por padrao e mantem a validacao algoritmica apenas por opt-in provisório."
     );
 
     private static final ValidationMetadata NIS = new ValidationMetadata(
@@ -34,7 +34,7 @@ public final class GovValidationCatalog {
         "NIS/PIS/PASEP/NIT",
         ValidationLevel.PROVISIONAL,
         "Fonte primaria de digito verificador ainda nao catalogada no core.",
-        "A implementacao existe por compatibilidade historica, mas a classificacao oficial ainda depende de fonte primaria explicitamente mapeada."
+        "O core publica checagem estrutural por padrao e mantem a validacao algoritmica apenas por opt-in provisório."
     );
 
     private static final ValidationMetadata CAEPF = new ValidationMetadata(

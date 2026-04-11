@@ -38,12 +38,40 @@ public final class GovValidators {
             .orElse(null);
     }
 
-    public static boolean isCpfValid(String cpf) {
+    public static boolean isCpfStructureValid(String cpf) {
+        return hasDigitsCount(cpf, 11);
+    }
+
+    public static boolean isNisStructureValid(String nis) {
+        return hasDigitsCount(nis, 11);
+    }
+
+    public static boolean isCpfProvisionallyValid(String cpf) {
         return CPF_VALIDATOR.isValid(cpf);
     }
 
-    public static boolean isNisValid(String nis) {
+    public static boolean isNisProvisionallyValid(String nis) {
         return NIS_VALIDATOR.isValid(nis);
+    }
+
+    /**
+     * @deprecated Use {@link #isCpfStructureValid(String)} para o contrato padrão
+     *             do core ou {@link #isCpfProvisionallyValid(String)} para o algoritmo
+     *             legado explicitamente provisório.
+     */
+    @Deprecated
+    public static boolean isCpfValid(String cpf) {
+        return isCpfProvisionallyValid(cpf);
+    }
+
+    /**
+     * @deprecated Use {@link #isNisStructureValid(String)} para o contrato padrão
+     *             do core ou {@link #isNisProvisionallyValid(String)} para o algoritmo
+     *             legado explicitamente provisório.
+     */
+    @Deprecated
+    public static boolean isNisValid(String nis) {
+        return isNisProvisionallyValid(nis);
     }
 
     public static boolean isCaepfStructureValid(String numero) {
@@ -70,11 +98,10 @@ public final class GovValidators {
             case CNPJ:
             case CGC:
                 return isCnpjValid(numero);
-            case CPF:
-                return isCpfValid(numero);
             case CAEPF:
             case CNO:
             case CEI:
+            case CPF:
             default:
                 return false;
         }
@@ -89,6 +116,8 @@ public final class GovValidators {
         }
 
         switch (tipo) {
+            case CPF:
+                return isCpfStructureValid(numero);
             case CAEPF:
                 return isCaepfStructureValid(numero);
             case CNO:

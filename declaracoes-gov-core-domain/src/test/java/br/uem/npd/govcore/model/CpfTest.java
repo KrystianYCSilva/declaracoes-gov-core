@@ -34,9 +34,21 @@ public class CpfTest {
         assertNotEquals(left, "12345678909");
     }
 
+    @Test
+    public void testCreationUsesStructuralValidationOnly() {
+        Cpf cpf = Cpf.of("111.111.111-11");
+        assertEquals("11111111111", cpf.getUnformatted());
+    }
+
+    @Test
+    public void testProvisionallyValidatedCreationValidCpf() {
+        Cpf cpf = Cpf.ofProvisionallyValidated("123.456.789-09");
+        assertEquals("12345678909", cpf.getUnformatted());
+    }
+
     @Test(expected = InvalidDocumentException.class)
-    public void testCreationInvalidCpfThrowsException() {
-        Cpf.of("111.111.111-11");
+    public void testProvisionallyValidatedCreationInvalidCpfThrowsException() {
+        Cpf.ofProvisionallyValidated("111.111.111-11");
     }
 
     @Test(expected = InvalidDocumentException.class)
@@ -47,5 +59,20 @@ public class CpfTest {
     @Test(expected = InvalidDocumentException.class)
     public void testCreationBlankCpfThrowsException() {
         Cpf.of("   ");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testCreationInvalidLengthCpfThrowsException() {
+        Cpf.of("123");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testProvisionallyValidatedCreationNullCpfThrowsException() {
+        Cpf.ofProvisionallyValidated(null);
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testProvisionallyValidatedCreationBlankCpfThrowsException() {
+        Cpf.ofProvisionallyValidated("   ");
     }
 }

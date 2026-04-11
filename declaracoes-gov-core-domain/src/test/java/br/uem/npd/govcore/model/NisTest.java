@@ -16,9 +16,21 @@ public class NisTest {
         assertEquals("170.33259.50-4", nis.toString());
     }
 
+    @Test
+    public void testCreationUsesStructuralValidationOnly() {
+        Nis nis = Nis.of("111.11111.11-1");
+        assertEquals("11111111111", nis.getUnformatted());
+    }
+
+    @Test
+    public void testProvisionallyValidatedCreationValidNis() {
+        Nis nis = Nis.ofProvisionallyValidated("170.33259.50-4");
+        assertEquals("17033259504", nis.getUnformatted());
+    }
+
     @Test(expected = InvalidDocumentException.class)
-    public void testCreationInvalidNisThrowsException() {
-        Nis.of("111.11111.11-1");
+    public void testProvisionallyValidatedCreationInvalidNisThrowsException() {
+        Nis.ofProvisionallyValidated("111.11111.11-1");
     }
 
     @Test(expected = InvalidDocumentException.class)
@@ -40,5 +52,20 @@ public class NisTest {
         assertEquals(nis1, nis1);
         assertNotEquals(nis1, null);
         assertNotEquals(nis1, "17033259504");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testCreationInvalidLengthNisThrowsException() {
+        Nis.of("123");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testProvisionallyValidatedCreationNullNisThrowsException() {
+        Nis.ofProvisionallyValidated(null);
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testProvisionallyValidatedCreationBlankNisThrowsException() {
+        Nis.ofProvisionallyValidated("   ");
     }
 }

@@ -1,6 +1,7 @@
 package br.uem.npd.govcore.model;
 
 import br.uem.npd.govcore.exception.InvalidDocumentException;
+import br.uem.npd.govcore.validator.GovValidators;
 import br.uem.npd.govcore.validator.NisValidator;
 
 import java.io.Serializable;
@@ -8,6 +9,8 @@ import java.util.Objects;
 
 /**
  * Value Object Imutável para NIS (PIS/PASEP/NIT).
+ * Por padrão, aplica apenas normalização numérica e checagem estrutural.
+ * A validação algorítmica fica disponível por opt-in explícito.
  */
 public final class Nis implements Serializable {
 
@@ -24,12 +27,24 @@ public final class Nis implements Serializable {
         if (nis == null || nis.trim().isEmpty()) {
             throw new InvalidDocumentException("NIS/PIS não pode ser nulo ou vazio");
         }
-        
-        if (!VALIDATOR.isValid(nis)) {
-            throw new InvalidDocumentException("NIS/PIS inválido (Falha de formato ou Dígito Verificador): " + nis);
+
+        if (!GovValidators.isNisStructureValid(nis)) {
+            throw new InvalidDocumentException("NIS/PIS inválido (Falha estrutural): " + nis);
         }
-        
-        return new Nis(VALIDATOR.strip(nis));
+
+        return new Nis(stripDigits(nis));
+    }
+
+    public static Nis ofProvisionallyValidated(String nis) {
+        if (nis == null || nis.trim().isEmpty()) {
+            throw new InvalidDocumentException("NIS/PIS não pode ser nulo ou vazio");
+        }
+
+        if (!GovValidators.isNisProvisionallyValid(nis)) {
+            throw new InvalidDocumentException("NIS/PIS inválido na validação provisória do core: " + nis);
+        }
+
+        return new Nis(stripDigits(nis));
     }
 
     public String getUnformatted() {
@@ -60,5 +75,9 @@ public final class Nis implements Serializable {
     @Override
     public String toString() {
         return getFormatted();
+    }
+
+    private static String stripDigits(String value) {
+        return VALIDATOR.strip(value);
     }
 }

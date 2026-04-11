@@ -8,8 +8,8 @@ import java.util.Objects;
 
 /**
  * Value Object Imutável para Cadastro de Pessoas Físicas.
- * Garante que apenas CPFs matematicamente válidos 
- * sejam instanciados na memória da aplicação.
+ * Por padrão, aplica apenas normalização numérica e checagem estrutural.
+ * A validação algorítmica fica disponível por opt-in explícito.
  */
 public final class Cpf implements IdentificadorEmpregador {
 
@@ -23,20 +23,41 @@ public final class Cpf implements IdentificadorEmpregador {
 
     /**
      * Instancia um CPF a partir de uma String.
+     * Aplica apenas checagem estrutural de 11 dígitos.
      * @param cpf O CPF com ou sem formatação.
      * @return O objeto Cpf imutável.
-     * @throws InvalidDocumentException se o CPF for nulo ou inválido.
+     * @throws InvalidDocumentException se o CPF for nulo, vazio ou estruturalmente inválido.
      */
     public static Cpf of(String cpf) {
         if (cpf == null || cpf.trim().isEmpty()) {
             throw new InvalidDocumentException("CPF não pode ser nulo ou vazio");
         }
-        
-        if (!GovValidators.isCpfValid(cpf)) {
-            throw new InvalidDocumentException("CPF inválido (Falha de formato ou Dígito Verificador): " + cpf);
+
+        if (!GovValidators.isCpfStructureValid(cpf)) {
+            throw new InvalidDocumentException("CPF inválido (Falha estrutural): " + cpf);
         }
-        
-        return new Cpf(cpf.replaceAll("[^0-9]", ""));
+
+        return new Cpf(stripDigits(cpf));
+    }
+
+    /**
+     * Instancia um CPF aplicando também a validação algorítmica atualmente
+     * publicada como provisória pelo core.
+     *
+     * @param cpf O CPF com ou sem formatação.
+     * @return O objeto Cpf imutável.
+     * @throws InvalidDocumentException se o CPF for nulo, vazio ou falhar na validação provisória.
+     */
+    public static Cpf ofProvisionallyValidated(String cpf) {
+        if (cpf == null || cpf.trim().isEmpty()) {
+            throw new InvalidDocumentException("CPF não pode ser nulo ou vazio");
+        }
+
+        if (!GovValidators.isCpfProvisionallyValid(cpf)) {
+            throw new InvalidDocumentException("CPF inválido na validação provisória do core: " + cpf);
+        }
+
+        return new Cpf(stripDigits(cpf));
     }
 
     @Override
@@ -74,5 +95,9 @@ public final class Cpf implements IdentificadorEmpregador {
     @Override
     public String toString() {
         return getFormatted();
+    }
+
+    private static String stripDigits(String value) {
+        return value.replaceAll("[^0-9]", "");
     }
 }
