@@ -44,3 +44,5 @@ public class GovValidationCatalogTest {
         assertTrue(GovValidationCatalog.all().stream().allMatch(metadata -> metadata.getSourceReference() != null));
     }
 }
+
+

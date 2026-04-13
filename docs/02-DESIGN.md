@@ -1,169 +1,75 @@
-# Documento de Design - v1.0.0
+# Design do declaracoes-gov-core
 
-## 1. Visao Arquitetural
+## 1. Estrutura do reator
 
-### 1.1 Diagrama de componentes alvo
+`declaracoes-gov-core` é um parent `pom` com quatro módulos de runtime e um BOM interno.
 
-```
-+--------------------------------------------------------------------+
-|                     declaracoes-gov-core v1.0.0                    |
-+--------------------------------------------------------------------+
-|                                                                    |
-|  +-- parent / bom ------------------------------------------------+|
-|  | versionamento, alinhamento de dependencias, modulos            ||
-|  +----------------------------------------------------------------+|
-|                                                                    |
-|  +-- domain ------------------------------------------------------+ |
-|  | documentos, identificadores, periodos, vigencias, territorio  | |
-|  | contratos de validacao, normalizacao e formatacao             | |
-|  +----------------------------------------------------------------+ |
-|                                                                    |
-|  +-- format ------------------------------------------------------+ |
-|  | mascaras, desmascaramento, texto fiscal, formatos numericos   | |
-|  | e representacoes de data/periodo                              | |
-|  +----------------------------------------------------------------+ |
-|                                                                    |
-|  +-- xml ---------------------------------------------------------+ |
-|  | parsing seguro, DOM utils, serializacao, assinatura XML       | |
-|  | configuravel e agnostica ao leiaute                           | |
-|  +----------------------------------------------------------------+ |
-|                                                                    |
-|  +-- crypto ------------------------------------------------------+ |
-|  | A1, A3, PKCS11, SSLContext, diagnosticos operacionais         | |
-|  +----------------------------------------------------------------+ |
-|                                                                    |
-|  Fora do core: transporte, OAuth2, SOAP/REST clients, regras de   |
-|  declaracao, lotes, protocolos especificos e tabelas altamente    |
-|  volateis.                                                        |
-+--------------------------------------------------------------------+
-```
+| Módulo | O que entrega | Observações |
+| --- | --- | --- |
+| `declaracoes-gov-core-domain` | domínio manual, exceções, enums, catálogo de validação e metadados de leiaute | base do restante do core |
+| `declaracoes-gov-core-format` | `GovTextNormalizer`, `GovNumberFormats`, `GovCompetenceFormats`, `XmlDates`, `GovJsonFactory`, parsers e serializers manuais | depende de `domain` e usa Jackson como dependência opcional |
+| `declaracoes-gov-core-crypto` | `CertificateProvider`, `AbstractKeyStoreProvider`, `Pkcs12Provider`, `Pkcs11Provider`, `SslContextBuilder` | depende de `domain` |
+| `declaracoes-gov-core-xml` | `XmlDocuments`, `XmlSigner`, `XmlDsigSigner`, `XmlSignatureOptions` | depende de `domain` e `crypto` |
+| `declaracoes-gov-core-bom` | versão alinhada de `domain`, `format`, `crypto` e `xml` | sem `src` e sem API de runtime |
 
-### 1.2 Estado implementado na v1.0.0
+## 2. Mapa de pacotes manuais
 
-Estado atual observado no repositorio:
+| Pacote | Conteúdo atual | Papel |
+| --- | --- | --- |
+| `br.uem.npd.govcore.model` | `Cnpj`, `Cpf`, `Nis`, `Caepf`, `Cno`, `Cei`, `CodigoMunicipio`, `PeriodoApuracao`, `Recibo`, `Vigencia`, interfaces de inscrição | domínio brasileiro reutilizável |
+| `br.uem.npd.govcore.model.layout` | `LayoutVersion`, `NormativeSource`, `RecordDefinition`, `FieldDefinition`, `Constraint`, `ValidityWindow` | metadados manuais para catálogos de leiaute |
+| `br.uem.npd.govcore.table` | `TipoInscricao`, `TipoAmbiente`, `Uf` | tabelas manuais estáveis |
+| `br.uem.npd.govcore.validator` | `GovValidators`, `GovValidationCatalog`, `ValidationMetadata`, `ValidationLevel`, `Modulo11` e validadores concretos | contrato público de validação |
+| `br.uem.npd.govcore.exception` | `GovCoreException` e derivadas | hierarquia coesa de erro |
+| `br.uem.npd.govcore.format.parser` | `DelimitedParser`, `DelimitedSerializer`, `FixedLengthParser`, `FixedLengthSerializer` | parsers manuais de arquivo |
+| `br.uem.npd.govcore.util` | normalizadores, formatos, JSON e datas XML | utilitários leves de integração |
+| `br.uem.npd.govcore.crypto` | providers e `SSLContext` | segurança e certificado |
+| `br.uem.npd.govcore.signature` | `XmlSigner`, `XmlDsigSigner`, `XmlSignatureOptions` | assinatura XML configurável |
 
-- reactor Maven multi-modulo com `parent`, `bom`, `domain`, `format`, `xml` e `crypto`;
-- politica publica de validadores implementada e documentada;
-- `CPF` e `NIS` com construtores estruturais e validacao algoritmica provisoria por opt-in;
-- `XmlDsigSigner` com configuracao explicita de alvo via `XmlSignatureOptions`;
-- `SslContextBuilder` com suporte a `TrustStore` explicito;
-- `mvn -q verify` verde com gate de cobertura ativo nos modulos.
+## 3. Dependências internas
 
----
+- `format` depende de `domain` porque formata tipos e contratos do core.
+- `crypto` depende de `domain` para reutilizar exceções e convenções transversais.
+- `xml` depende de `domain` e `crypto` porque a assinatura XML reutiliza a infraestrutura de certificado.
+- `declaracoes-gov-core-bom` não entra em runtime; apenas exporta coordenadas.
 
-## 2. Decisoes de Design
+## 4. Decisões duráveis
 
-### DD-01: Multi-modulo desde o inicio
-- **Problema**: o estado atual mistura nucleo de dominio, XML e crypto no mesmo artefato.
-- **Opcao A**: manter um unico modulo e separar apenas por pacotes.
-- **Opcao B**: separar desde ja em `domain`, `format`, `xml` e `crypto`.
-- **Decisao**: Opcao B.
-- **Consequencia**: adocao incremental pelos consumidores e menor acoplamento entre partes leves e pesadas.
+### DD-01 — Value objects permanecem no `domain`
+Os tipos brasileiros manualmente mantidos vivem em `domain` porque precisam ser reutilizados por leiautes, transmissores e clientes externos sem trazer XML, criptografia ou Jackson junto.
 
-### DD-02: Core nao e transmissor
-- **Problema**: parte dos planos propunha empurrar HTTP, OAuth2, proxies e eventos especificos para dentro do core.
-- **Opcao A**: absorver transporte e conveniencias de canal.
-- **Opcao B**: manter o core restrito a blocos transversais de dominio e infraestrutura.
-- **Decisao**: Opcao B.
-- **Consequencia**: `serpro-transmissor`, `esocial-transmissor` e afins continuam responsaveis por canal, autenticacao e entrega.
+### DD-02 — Confiança normativa é parte da API
+`GovValidationCatalog` e `GovValidators` tornam público o nível de confiança de cada documento. Isso evita que heurísticas do mercado sejam vendidas como validação oficial.
 
-### DD-03: Matriz de confiabilidade para validadores
-- **Problema**: nem todo documento brasileiro tem algoritmo oficial claro, estavel e publicamente mapeado.
-- **Opcao A**: tratar qualquer heuristica de mercado como validacao padrao.
-- **Opcao B**: classificar validadores em `oficial`, `provisorio` e `estrutural`.
-- **Decisao**: Opcao B.
-- **Consequencia**:
-  - somente validacao oficial pode sustentar fail-fast normativo;
-  - validacao provisoria deve ser opt-in e claramente sinalizada;
-  - suporte estrutural valida apenas formato, mascara, parse e tamanho.
+### DD-03 — Dependência pesada fica isolada
+Jackson fica restrito a `format`; XML Security fica restrito a `xml`; integração com keystore e PKCS#11 fica restrita a `crypto`.
 
-### DD-04: Construtores/factories nao devem embutir regra provisoria
-- **Problema**: value objects fail-fast combinam bem com regras oficiais, mas sao arriscados quando a validacao e incerta.
-- **Opcao A**: fazer `of(...)` aplicar qualquer algoritmo disponivel.
-- **Opcao B**: fazer `of(...)` aplicar apenas regras oficiais ou estruturais documentadas.
-- **Decisao**: Opcao B.
-- **Consequencia**: algoritmos provisiorios ficam fora do caminho obrigatorio do construtor, evitando falsas garantias para o consumidor.
+### DD-04 — Assinatura XML usa opções explícitas
+`XmlSignatureOptions` existe para o caller informar alvo e atributo de ID sem heurística acoplada a uma declaração específica.
 
-### DD-05: Modulo11 compartilhado
-- **Problema**: CPF, CNPJ numerico, CNPJ alfanumerico e NIS repetem variacoes do mesmo checksum.
-- **Opcao A**: manter logica duplicada em cada validador.
-- **Opcao B**: extrair utilitario compartilhado com vetores oficiais.
-- **Decisao**: Opcao B.
-- **Consequencia**: menor duplicacao, melhor auditabilidade e melhor suporte a futuros validadores oficiais baseados no mesmo padrao.
+### DD-05 — O core continua independente do protocolo
+Nenhum módulo do reator conhece endpoint, token, fila ou fluxo de entrega. Essa separação é intencional e não deve ser relaxada.
 
-### DD-06: Reuso deliberado de bibliotecas maduras
-- **Problema**: parte do escopo sugerido pelos agentes invade utilitarios ja resolvidos por bibliotecas consolidadas.
-- **Opcao A**: criar utilitarios internos para tudo.
-- **Opcao B**: reutilizar `commons-lang3`, Jackson, Santuario e JCA/JCE quando apropriado.
-- **Decisao**: Opcao B.
-- **Consequencia**: menor codigo de manutencao e foco nas lacunas brasileiras reais.
+## 5. Modelo de thread-safety
 
-### DD-07: JSON governamental com contrato explicito
-- **Problema**: o comportamento atual do `GovJsonFactory` e util para integracoes gov, mas nao e um `ObjectMapper` "generico".
-- **Opcao A**: vender o mapper atual como padrao universal.
-- **Opcao B**: tratá-lo como configuracao especializada de integracao.
-- **Decisao**: Opcao B.
-- **Consequencia**: o modulo `format` ou utilitario equivalente deve documentar com clareza a serializacao de `BigDecimal` e suas implicacoes.
+| Área | Estratégia atual |
+| --- | --- |
+| value objects e enums | imutáveis |
+| validadores | stateless |
+| utilitários de formato e XML | uso estático ou configuração explícita |
+| providers PKCS#11/A3 | dependem do ambiente do consumidor e exigem cuidado operacional |
+| BOM interno | sem estado e sem runtime |
 
-### DD-08: Assinatura XML configuravel e nao implicita
-- **Problema**: a assinatura atual depende de heuristicas para localizar o atributo `Id`.
-- **Opcao A**: manter descoberta implicita.
-- **Opcao B**: explicitar alvo, atributo ID e politica de assinatura.
-- **Decisao**: Opcao B.
-- **Consequencia**: API mais previsivel, menor acoplamento a eSocial/Reinf e menor risco de assinatura incorreta.
+## 6. Pontos de extensão permitidos
 
-### DD-09: Inscricao Estadual nao e requisito obrigatorio da primeira entrega
-- **Problema**: a IE tem grande relevancia de negocio, mas alta variabilidade e custo de manutencao.
-- **Opcao A**: tornar suporte amplo de IE obrigatorio na `v1.0.0`.
-- **Opcao B**: tratar IE como expansao condicional, entrando apenas com framework ou estados realmente sustentados por fontes confiaveis e custo justificavel.
-- **Decisao**: Opcao B.
-- **Consequencia**: evita scope creep na primeira reestruturacao sem bloquear evolucao futura.
+- novo documento, enum ou metadado manual -> `domain`;
+- novo parser/serializer ou normalizador -> `format`;
+- novo provider ou helper de trust material -> `crypto`;
+- novo helper DOM ou política de assinatura -> `xml`.
 
----
+## 7. Não objetivos
 
-## 3. Debitos Tecnicos do Baseline
-
-### 3.1 Bugs do baseline absorvidos
-- inconsistencias de descricao em `Uf` foram corrigidas;
-- heuristicas indevidas no facade de validadores foram segregadas por nivel de confianca;
-- XML e crypto deixaram de depender de cobertura artificialmente inflada.
-
-### 3.2 Pontos ainda deliberadamente controlados
-- `CPF` e `NIS` seguem `PROVISIONAL` por ausencia de fonte primaria catalogada no core;
-- `PKCS11` continua dependente de driver nativo e token real no ambiente do consumidor;
-- a release Git final depende do fluxo de versionamento do repositorio local.
-
----
-
-## 4. Padroes de Projeto Aplicados
-
-| Padrao | Onde | Motivacao |
-|--------|------|-----------|
-| Value Object | `Cnpj`, `Cpf`, `Nis`, `PeriodoApuracao` | Garantir contratos de dominio claros |
-| Strategy | validadores por tipo | Permitir variacao controlada de algoritmo |
-| Factory | criacao de mappers, SSLContext, parsers | Isolar configuracoes tecnicas |
-| Facade | `GovValidators` e futuros equivalentes | Expor acesso simplificado sem acoplar o consumidor |
-| Module Boundary | `domain`, `format`, `xml`, `crypto` | Evitar monolito de integracao |
-
----
-
-## 5. Thread-Safety Model
-
-| Componente | Thread-safe? | Estrategia |
-|------------|-------------|------------|
-| Value objects | Sim | imutabilidade |
-| Validadores oficiais | Sim | stateless |
-| Factories de JSON/XML | Sim, quando configuradas uma vez | configuracao imutavel e reuso controlado |
-| Builders especificos | Nao por definicao | instancia por uso |
-| PKCS11/A3 | Cuidado especial | documentar limitacoes de provider e driver |
-
----
-
-## 6. Estrategia de evolucao
-
-1. Baseline `v0.1.0` fechado e preservado.
-2. Dividas criticas do baseline absorvidas na linha `1.0.0`.
-3. Projeto reestruturado em modulos.
-4. Nucleo de dominio e politica de validadores endurecidos.
-5. `format`, `xml` e `crypto` fechados com contratos publicos mais claros.
-6. Documentacao de migracao publicada para os consumidores.
+- clientes HTTP/SOAP/REST;
+- regra negocial de obrigação acessória;
+- geração de código a partir de artefatos oficiais;
+- catálogo de endpoints, tokens ou retries.

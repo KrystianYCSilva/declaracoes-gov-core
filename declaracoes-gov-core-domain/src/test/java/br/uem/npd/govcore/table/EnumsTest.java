@@ -26,3 +26,5 @@ public class EnumsTest {
         assertFalse(TipoInscricao.fromCode(99).isPresent());
     }
 }
+
+

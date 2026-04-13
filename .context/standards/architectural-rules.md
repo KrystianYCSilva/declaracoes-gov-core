@@ -1,7 +1,7 @@
 ---
 name: architectural-rules
 description: |
-  Tier T0 rules that define the non-negotiable architecture and security boundaries of declaracoes-gov-core.
+  Tier T0 rules for declaracoes-gov-core.
   Use when: proposing, reviewing, or implementing any change in this repository.
 ---
 
@@ -9,138 +9,81 @@ description: |
 
 > Tier: T0 - ABSOLUTE. Every change must comply with these rules.
 
-## `AR-001` Keep Library Agnostic
+## `AR-001` Keep the Core Declaration-Agnostic
 
 Rule:
-- This is a library, not an application.
-- Do not introduce framework-specific dependencies (Spring, Jakarta EE, Quarkus, Micronaut, etc.) in core modules.
-- Keep the public API framework-agnostic.
-- Integration with frameworks should happen in separate adapter modules or be left to consumers.
 
-Rationale:
-- This library is used by multiple applications with different technology stacks.
-- Framework dependencies create version conflicts and classpath hell.
+- Keep `declaracoes-gov-core` focused on transversal domain, formatting, XML, crypto, and BOM concerns.
+- Do not add declaration-specific payload DTOs, schema bundles, or workflow-specific business logic here.
+- Do not introduce transport concerns such as SOAP clients, REST clients, OAuth2 negotiation, or endpoint orchestration.
 
-## `AR-002` Thread Safety
+## `AR-002` Keep the Core Framework-Agnostic
 
 Rule:
-- All public classes must be thread-safe.
-- Prefer immutable objects.
-- Document thread-safety guarantees in class-level Javadoc with `@apiNote`.
-- Use `ReadWriteLock` for shared mutable state that requires high concurrency.
-- Use `Atomic*` classes for simple counters/flags.
-- ObjectMapper (Jackson) and XMLSignatureFactory are thread-safe after configuration - cache and reuse.
 
-Example:
-```java
-/**
- * Thread-safe certificate manager for ICP-Brasil certificates.
- * 
- * @apiNote This class is thread-safe. All methods can be called concurrently
- *          from multiple threads without external synchronization.
- */
-public final class P12CertificadoManager implements CertificadoManager {
-    private final X509Certificate certificate; // immutable
-    private final PrivateKey privateKey;       // immutable
-    // ...
-}
-```
+- Do not add Spring, Jakarta EE, or other framework dependencies to the current core modules.
+- Public APIs must remain reusable from plain Java consumers.
 
-## `AR-003` Java 8 Compatibility
+## `AR-003` Preserve the Current Module Boundaries
 
 Rule:
-- Source and target compatibility must remain at Java 8.
-- Do not use Java 9+ features:
-  - `var` keyword
-  - New `Optional` methods (`ifPresentOrElse`, `or`, `stream`)
-  - New `Stream` collectors
-  - Private interface methods
-  - New `Map`/`List`/`Set` factory methods
-- Use explicit types instead of `var`.
-- Use Guava or Apache Commons for pre-Java 9 utilities if needed.
 
-## `AR-004` Dependency Minimalism
+- `domain` owns fiscal value objects, validator policy, layout metadata, tables, and shared exceptions.
+- `format` owns text, number, date, JSON, and record parsing/serialization helpers.
+- `xml` owns secure DOM utilities and XMLDSIG signing support.
+- `crypto` owns certificate-provider abstractions and `SSLContext` creation.
+- `core-bom` stays POM-only and manages versions for the core modules.
+
+## `AR-004` Keep the Java 8 Baseline
 
 Rule:
-- Keep external dependencies to a minimum.
-- Required dependencies: Apache XML Security, SLF4J API.
-- Optional dependencies: Jackson, Apache HttpClient, Caffeine - mark with `<optional>true</optional>`.
-- Provide SPI (Service Provider Interface) for extensibility rather than direct integration.
-- Avoid transitive dependency conflicts - use `<exclusions>` when necessary.
 
-Dependency categories:
-- **Required**: `xmlsec`, `slf4j-api`
-- **Optional**: `jackson-*`, `httpclient5`, `caffeine`
-- **Test only**: `junit-jupiter`, `mockito`, `assertj`
+- Source and target compatibility remain at Java 8.
+- Do not introduce Java 9+ language or library features into maintained code.
 
-## `AR-005` No Secrets in Git
+## `AR-005` Preserve the Published Validator Confidence Model
 
 Rule:
-- Never commit certificates, keys, or credentials.
-- Never embed test credentials in source code.
-- Use test keystores only for unit tests with dummy credentials.
-- Real certificates for integration tests must be loaded from environment variables or files outside the repository.
-- `.gitignore` must include: `*.p12`, `*.pfx`, `*.pem`, `secret/`, `keystore/`, `certs/`.
 
-## `AR-006` Preserve Public API Stability
+- `OFFICIAL` validators may back fail-fast defaults.
+- `PROVISIONAL` validators must stay explicitly marked and opt-in.
+- `STRUCTURAL` support must remain limited to normalization, length, and basic form.
+- Keep the current document behavior aligned with `docs/05-MATRIZ-VALIDADORES.md`:
+  - `Cnpj` supports numeric and alphanumeric validation.
+  - `Cpf` and `Nis` default to structural checks, with provisional algorithms exposed explicitly.
+  - `Caepf`, `Cno`, and `Cei` stay structural in the current baseline.
 
-Rule:
-- Do not break backward compatibility in public APIs without major version bump.
-- Use `@Deprecated` with clear migration path and Javadoc `@deprecated` tag before removal.
-- Semantic versioning: MAJOR.MINOR.PATCH
-  - MAJOR: breaking changes
-  - MINOR: new features, backward compatible
-  - PATCH: bug fixes, backward compatible
-- Keep deprecated methods for at least one minor version.
-
-## `AR-007` Document Public APIs
+## `AR-006` Keep XML Signing Behavior Explicit
 
 Rule:
-- All public classes and methods must have Javadoc.
-- Include thread-safety notes in class-level Javadoc with `@apiNote`.
-- Document preconditions, postconditions, and exceptions thrown.
-- Document parameter and return value contracts (nullability, ranges, formats).
 
-## `AR-008` Certificate Security
+- XML signing must keep the current XMLDSIG envelope shape: RSA-SHA256 signature, SHA-256 digest, inclusive canonicalization, and enveloped transform.
+- Do not silently change target selection behavior; use `XmlSignatureOptions` when the signed element or ID attribute needs to be specified.
+- Preserve secure DOM parsing and XXE protections in `XmlDocuments`.
 
-Rule:
-- Support both A1 (file-based .p12/.pfx) and A3 (hardware token PKCS#11) certificates.
-- Validate ICP-Brasil certificate chain.
-- Check certificate revocation (CRL/OCSP) where applicable.
-- Never log certificate private keys or passwords.
-- Clear password arrays immediately after use (`Arrays.fill(password, '0')`).
-
-## `AR-009` XML Signature Compliance
+## `AR-007` Keep Certificate Handling Isolated and Safe
 
 Rule:
-- XML signature must comply with eSocial/EFD-Reinf specifications.
-- Required algorithms:
-  - Signature: RSA-SHA256 (`http://www.w3.org/2001/04/xmldsig-more#rsa-sha256`)
-  - Digest: SHA-256 (`http://www.w3.org/2001/04/xmlenc#sha256`)
-  - Canonicalization: C14N (`http://www.w3.org/TR/2001/REC-xml-c14n-20010315`)
-  - Transform: Enveloped (`http://www.w3.org/2000/09/xmldsig#enveloped-signature`)
-- Include only EndCertOnly (user certificate only, not full chain).
-- Remove `xmlns:xsi` and `xmlns:xsd` before signing (eSocial requirement).
 
-## `AR-010` Document Validator Accuracy
+- Certificate access must stay behind `CertificateProvider` implementations.
+- Preserve the current A1 (`Pkcs12Provider`) and A3 (`Pkcs11Provider`) support paths.
+- Never commit real certificates, private keys, PINs, or token configuration secrets.
+- Keep `SslContextBuilder` on TLSv1.2 and current JCA/JCE-based flows unless the live implementation changes first.
+
+## `AR-008` Keep Build and Coverage Gates Accurate
 
 Rule:
-- CNPJ validator must implement both numeric (current) and alphanumeric (2026+) formats.
-- CPF validator must reject all-identical digits (111.111.111-11 is invalid).
-- IE validators must implement state-specific rules per Receita Federal specification.
-- Document validators must fail fast with clear error messages.
 
-## `AR-011` JSON Thread Safety
+- `mvn -q verify` at the reactor root is the validation gate.
+- Parent JaCoCo defaults remain `90%` line / `90%` branch.
+- `declaracoes-gov-core-crypto` may keep its documented `85%` line override.
+- Do not add fake exclusions or stale coverage numbers to AI docs.
 
-Rule:
-- Jackson ObjectMapper is thread-safe after configuration - configure once, reuse.
-- Provide default configuration in factory/builder pattern.
-- Allow consumers to customize without breaking thread safety.
-- Use `CopyOnWriteArrayList` for dynamic configuration if needed.
-
-## `AR-012` Keep Context In Sync
+## `AR-009` Keep Context in Sync
 
 Rule:
-- If code, runtime behavior, tests, or public APIs change, update the affected Portuguese human docs in `docs/` and the affected English AI docs in `.context/`.
-- Do not leave `.context/` describing behavior that is no longer true in `src/`.
-- Synchronization order: `src/` → `docs/` → `.context/`.
+
+- The live source of truth is the root `pom.xml`, the child-module `pom.xml` files, and `declaracoes-gov-core-*/src`.
+- Human docs remain in Portuguese.
+- AI docs remain in English.
+- Synchronization order: implementation -> Portuguese human docs -> AI docs.

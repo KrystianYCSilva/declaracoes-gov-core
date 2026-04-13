@@ -28,3 +28,5 @@ public class GovTextNormalizerTest {
         assertNull(GovTextNormalizer.toGovUpper(null));
     }
 }
+
+

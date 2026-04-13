@@ -1,143 +1,48 @@
-# Plano de Testes - v1.0.0
+# Plano de testes do declaracoes-gov-core
 
-## 1. Estrategia de Testes
+## 1. Objetivo
 
-### 1.1 Niveis de teste
-- **Unitarios**: classes isoladas, algoritmos, enums, parsers e formatadores
-- **Integracao leve**: interacao entre value objects, validadores, XML e crypto
-- **Contratuais**: garantem semantica publica da API e classificacao dos validadores
-- **Concorrencia**: validam thread-safety de componentes compartilhados
+Validar o contrato público do reator e garantir que os módulos manuais do core continuem coerentes entre si.
 
-### 1.2 Framework atual
-- JUnit 4.13.2
-- Mockito 4.11.0
-- BouncyCastle em escopo de teste
-- JaCoCo para cobertura
+## 2. Comando principal
 
-### 1.3 Estado atual da validacao
-- reactor multi-modulo validado com `mvn -q verify`
-- gate JaCoCo ativo em `domain`, `format`, `xml` e `crypto`
-- `xml` e `crypto` entram no mesmo fluxo de confianca do restante do produto
+Da raiz de `declaracoes-gov-core`:
 
-### 1.4 Meta da v1.0.0
-- cobertura minima de `90%` em linhas e branches no codigo mantido pelo projeto;
-- sem exclusoes amplas para `crypto/` e `signature/`;
-- excecoes apenas para codigo gerado ou casos tecnicamente justificados e documentados.
+```bash
+mvn verify
+```
 
----
+Esse é o gate atual do módulo e cobre compilação, testes e checagem JaCoCo configurada no parent.
 
-## 2. Casos de Teste por Componente
+## 3. Escopo das suítes atuais
 
-### 2.1 Dominio e validadores
+| Módulo | Suítes representativas | O que precisa continuar coberto |
+| --- | --- | --- |
+| `declaracoes-gov-core-domain` | `model/*Test`, `model/layout/LayoutModelsTest`, `validator/*Test`, `table/*Test`, `exception/ExceptionsTest` | value objects, catálogo de confiança, `Modulo11`, enums e exceções |
+| `declaracoes-gov-core-format` | `format/parser/*Test`, `util/GovJsonFactoryTest`, `GovTextNormalizerTest`, `GovNumberFormatsTest`, `GovCompetenceFormatsTest`, `XmlDatesTest` | parsers manuais, normalização, números, competência, datas XML e JSON governamental |
+| `declaracoes-gov-core-crypto` | `AbstractKeyStoreProviderTest`, `Pkcs12ProviderTest`, `Pkcs11ProviderTest`, `SslContextBuilderTest` | providers A1/A3, leitura de keystore e `SSLContext` |
+| `declaracoes-gov-core-xml` | `XmlDocumentsTest`, `XmlSignatureOptionsTest`, `XmlDsigSignerTest` | parsing seguro, opções explícitas de assinatura e assinatura XML |
+| `declaracoes-gov-core-bom` | não possui suíte própria | módulo POM-only; a validação relevante é manter o reator verde e o BOM sem código |
 
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| DV-01 | CNPJ numerico valido | Positivo | objeto/validacao aceita |
-| DV-02 | CNPJ alfanumerico com vetor oficial | Positivo | DV correto |
-| DV-03 | CNPJ com DV errado | Negativo | rejeicao |
-| DV-04 | CPF valido com e sem mascara | Positivo | aceita |
-| DV-05 | CPF homogeneo | Negativo | rejeicao |
-| DV-06 | NIS valido | Positivo | aceita |
-| DV-07 | `PeriodoApuracao` em formatos suportados | Positivo | parse correto |
-| DV-08 | `PeriodoApuracao` invalido | Negativo | excecao |
-| DV-09 | `CodigoMunicipio` com 7 digitos | Positivo | aceita |
-| DV-10 | `CodigoMunicipio` com tamanho incorreto | Negativo | excecao |
-| DV-11 | `Recibo` em formato valido | Positivo | aceita |
-| DV-12 | `Uf.fromSigla()` com sigla valida e invalida | Positivo/Negativo | optional coerente |
+## 4. Gates documentados
 
-### 2.2 Politica de validadores
+| Módulo | Gate atual |
+| --- | --- |
+| `domain`, `format`, `xml` | JaCoCo mínimo `0.90` linha / `0.90` ramo |
+| `crypto` | JaCoCo mínimo `0.85` linha / `0.90` ramo |
+| `core-bom` | JaCoCo desabilitado |
+| reator | `mvn verify` |
 
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| PV-01 | Documento com validacao oficial | Contratual | fail-fast permitido |
-| PV-02 | Documento estrutural | Contratual | apenas formato/tamanho sao exigidos |
-| PV-03 | Documento com algoritmo provisorio | Contratual | validacao opt-in e documentada |
-| PV-04 | Matriz de confiabilidade publicada | Documental | tipo classificado como oficial/provisorio/estrutural |
+## 5. Regressões que merecem atenção extra
 
-### 2.3 Modulo11 compartilhado
+- mudanças na política `OFFICIAL`/`PROVISIONAL`/`STRUCTURAL` exigem sincronismo imediato com `docs/05-MATRIZ-VALIDADORES.md`;
+- `Cpf` e `Nis` precisam preservar o caminho padrão estrutural e o opt-in provisório;
+- testes negativos de XML podem emitir mensagens do parser no stderr por desenho do teste, sem caracterizar falha do build;
+- cenários de PKCS#11 e A3 continuam limitados ao que a suíte manual consegue simular sem hardware real.
 
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| M11-01 | Vetor oficial de CNPJ alfanumerico | Positivo | DV esperado |
-| M11-02 | CPF com pesos oficiais | Positivo | DV esperado |
-| M11-03 | NIS com pesos oficiais | Positivo | DV esperado |
-| M11-04 | charToValue para faixa numerica e alfanumerica | Positivo | conversao correta |
-| M11-05 | entrada invalida | Negativo | falha clara |
+## 6. Critérios de aceite
 
-### 2.4 Formatacao e normalizacao
-
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| FM-01 | mascara de CNPJ | Positivo | formato correto |
-| FM-02 | desmascaramento | Positivo | apenas caracteres relevantes |
-| FM-03 | uppercase/sanitizacao | Positivo | normalizacao consistente |
-| FM-04 | `BigDecimal` para representacao governamental | Positivo | sem notacao cientifica |
-| FM-05 | round-trip documentado de `BigDecimal` | Integracao | comportamento previsivel |
-
-### 2.5 XML
-
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| XML-01 | parse de XML valido | Positivo | DOM criado |
-| XML-02 | XML invalido | Negativo | excecao clara |
-| XML-03 | assinatura com atributo ID explicito | Positivo | `<ds:Signature>` presente |
-| XML-04 | XML ja assinado | Borda | comportamento idempotente ou erro documentado |
-| XML-05 | assinatura sem alvo configurado corretamente | Negativo | falha clara |
-
-### 2.6 Crypto
-
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| CR-01 | carga de PKCS12 valido | Positivo | certificado e chave disponiveis |
-| CR-02 | senha incorreta | Negativo | excecao clara |
-| CR-03 | alias preferido inexistente | Negativo | excecao clara |
-| CR-04 | `SSLContext` com provider valido | Positivo | contexto criado |
-| CR-05 | cenarios de erro A3/PKCS11 | Negativo | mensagens operacionais compreensiveis |
-
-### 2.7 Concorrencia
-
-| ID | Caso | Tipo | Resultado esperado |
-|----|------|------|--------------------|
-| CC-01 | criacao concorrente de VOs | Concorrencia | sem corrupcao de estado |
-| CC-02 | uso concorrente de validadores | Concorrencia | resultados consistentes |
-| CC-03 | uso concorrente de `GovJsonFactory` e utilitarios XML | Concorrencia | sem falhas espurias |
-
----
-
-## 3. Matriz de Rastreabilidade
-
-| Requisito | Suites/casos principais |
-|-----------|-------------------------|
-| RF-03 | DV-01 a DV-12 |
-| RF-04 | PV-01 a PV-04 |
-| RF-05 | PV-02, PV-03 |
-| RF-06 | FM-01 a FM-05 |
-| RF-07 | XML-01 a XML-05 |
-| RF-08 | CR-01 a CR-05 |
-| RF-09 | M11-01 a M11-05 |
-| RNF-03 | CC-01 a CC-03 |
-| RNF-04 | JaCoCo + suites completas |
-| RNF-05 | PV-01 a PV-04 + revisao documental |
-
----
-
-## 4. Divida de Testes do Baseline
-
-### 4.1 Riscos mais relevantes
-- validadores `PROVISIONAL` exigem revisao normativa continua para eventual promocao a `OFFICIAL`;
-- testes de `PKCS11/A3` continuam necessariamente limitados sem hardware/token real;
-- erros negativos de XML continuam aparecendo no stderr dos testes por desenho do parser seguro, embora o build esteja verde.
-
-### 4.2 Acoes obrigatorias
-- preservar o gate JaCoCo como criterio de regressao para novas mudancas;
-- manter a matriz de validadores alinhada com a API e os testes;
-- ampliar apenas quando houver novo escopo real de dominio ou nova fonte normativa catalogada.
-
----
-
-## 5. Criterios de aceite
-
-- nenhum componente critico do nucleo fica sem teste representativo;
-- `crypto` e `signature` entram no mesmo padrao de exigencia dos demais modulos;
-- a classificacao `oficial/provisorio/estrutural` e testada e documentada;
-- a cobertura final atende a meta sem maquiagem artificial.
+- `mvn verify` verde;
+- nenhuma suíte crítica removida sem substituição equivalente;
+- documentação técnica atualizada quando o contrato público mudou;
+- gates JaCoCo preservados conforme os POMs atuais.

@@ -24,3 +24,5 @@ public class UfTest {
         assertFalse(Uf.fromSigla(null).isPresent());
     }
 }
+
+
