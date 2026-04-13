@@ -1,43 +1,48 @@
-# Plano de Testes: Declaracoes Gov Core
+# Plano de testes do declaracoes-gov-core
 
-## 1. Visão Geral
-Este plano descreve as estratégias e suítes de teste necessárias para garantir a integridade dos componentes críticos da biblioteca `declaracoes-gov-core`. A meta global de cobertura (*Code Coverage*) é **90%** (via JaCoCo), focada nas linhas de código e caminhos lógicos (branches).
+## 1. Objetivo
 
-## 2. Níveis de Teste
+Validar o contrato público do reator e garantir que os módulos manuais do core continuem coerentes entre si.
 
-### 2.1 Testes Unitários
-Testes isolados (JUnit 4) e focados em métodos puros. Nenhum teste unitário deve depender de acesso externo à internet.
+## 2. Comando principal
 
-#### A. Suíte de Value Objects e Validators (Extremamente Crítico)
-*   **CnpjValidatorTest:**
-    *   Testar com Cnpjs numéricos conhecidos válidos.
-    *   Testar com Cnpjs com dígitos verificadores errados (retorno `false`).
-    *   Testar com Cnpjs numéricos contendo tamanhos inválidos (ex: 13 ou 15 dígitos).
-    *   **Cenário Especial (CNPJ Alfanumérico):** Testar o comportamento do novo cálculo (ASCII - 48) conforme documentação da RFB.
-*   **CpfValidatorTest:**
-    *   Testar CPFs válidos (Módulo 11).
-    *   Testar regras de rejeição de strings homogêneas ("111.111.111-11", "000.000.000-00"), que apesar de passarem no algoritmo m11, são proibidas.
-*   **PeriodoApuracaoTest:**
-    *   Testar *parse* de múltiplos formatos ("YYYYMM", "YYYY-MM", "MM/YYYY").
-    *   Testar exceções em formatos absurdos.
+Da raiz de `declaracoes-gov-core`:
 
-#### B. Suíte de Segurança (Certificate Provider)
-*   **Pkcs12ProviderTest:**
-    *   Utilizar um arquivo certificado `.pfx` de teste (mock/self-signed criado no build ou com a biblioteca Bouncy Castle) e testar a extração correta de chave e cadeias X509.
-    *   Testar falha elegante ("Fail-Fast") com `CertificateException` caso a senha fornecida seja incorreta ou se o arquivo for inválido.
+```bash
+mvn verify
+```
 
-#### C. Suíte de Assinatura XML (XmlDsigSigner)
-*   **XmlDsigSignerTest:**
-    *   Pegar um fragmento XML simples simulando um evento eSocial/Reinf.
-    *   Carregar o certificado de teste.
-    *   Assinar e validar se as *tags* de assinatura (`<Signature>`, `<SignedInfo>`, `<X509Data>`) foram inseridas corretamente.
-    *   Validar a estrutura criptográfica com a própria API nativa Java de validação de XMLDSIG.
+Esse é o gate atual do módulo e cobre compilação, testes e checagem JaCoCo configurada no parent.
 
-### 2.2 Testes de Concorrência (Thread-Safety)
-Como o core será usado intensamente em servidores que lidam com múltiplas requisições (Tomcat, Undertow, Batch Workers), devemos garantir a segurança de execução paralela.
-*   **ConcurrencyTest:** Subir *N* threads (ex: `Executors.newFixedThreadPool(100)`). Executar operações sobre o `GovValidators.isCnpjValid()`, `Cnpj.of()` e `XmlDsigSigner.sign()`. O teste é considerado bem sucedido se nenhuma *Exception* vazada ou corrupção de estado (ex: assinatura gerada a partir da thread errada) ocorrer.
+## 3. Escopo das suítes atuais
 
-## 3. Ferramentas e Configurações
-*   **Framework:** JUnit 4 (Padrão corporativo herdado) / Mockito.
-*   **Certificados de Teste:** Emprego de um gerador estático (Bouncy Castle) nos testes ou fornecimento de um `mock-cert.p12` no diretório `src/test/resources` (com chave falsa para propósitos exclusivos de teste de assinatura).
-*   **Execução Automática:** Incorporado à fase `mvn verify` integrado com relatório de cobertura `jacoco`.
+| Módulo | Suítes representativas | O que precisa continuar coberto |
+| --- | --- | --- |
+| `declaracoes-gov-core-domain` | `model/*Test`, `model/layout/LayoutModelsTest`, `validator/*Test`, `table/*Test`, `exception/ExceptionsTest` | value objects, catálogo de confiança, `Modulo11`, enums e exceções |
+| `declaracoes-gov-core-format` | `format/parser/*Test`, `util/GovJsonFactoryTest`, `GovTextNormalizerTest`, `GovNumberFormatsTest`, `GovCompetenceFormatsTest`, `XmlDatesTest` | parsers manuais, normalização, números, competência, datas XML e JSON governamental |
+| `declaracoes-gov-core-crypto` | `AbstractKeyStoreProviderTest`, `Pkcs12ProviderTest`, `Pkcs11ProviderTest`, `SslContextBuilderTest` | providers A1/A3, leitura de keystore e `SSLContext` |
+| `declaracoes-gov-core-xml` | `XmlDocumentsTest`, `XmlSignatureOptionsTest`, `XmlDsigSignerTest` | parsing seguro, opções explícitas de assinatura e assinatura XML |
+| `declaracoes-gov-core-bom` | não possui suíte própria | módulo POM-only; a validação relevante é manter o reator verde e o BOM sem código |
+
+## 4. Gates documentados
+
+| Módulo | Gate atual |
+| --- | --- |
+| `domain`, `format`, `xml` | JaCoCo mínimo `0.90` linha / `0.90` ramo |
+| `crypto` | JaCoCo mínimo `0.85` linha / `0.90` ramo |
+| `core-bom` | JaCoCo desabilitado |
+| reator | `mvn verify` |
+
+## 5. Regressões que merecem atenção extra
+
+- mudanças na política `OFFICIAL`/`PROVISIONAL`/`STRUCTURAL` exigem sincronismo imediato com `docs/05-MATRIZ-VALIDADORES.md`;
+- `Cpf` e `Nis` precisam preservar o caminho padrão estrutural e o opt-in provisório;
+- testes negativos de XML podem emitir mensagens do parser no stderr por desenho do teste, sem caracterizar falha do build;
+- cenários de PKCS#11 e A3 continuam limitados ao que a suíte manual consegue simular sem hardware real.
+
+## 6. Critérios de aceite
+
+- `mvn verify` verde;
+- nenhuma suíte crítica removida sem substituição equivalente;
+- documentação técnica atualizada quando o contrato público mudou;
+- gates JaCoCo preservados conforme os POMs atuais.

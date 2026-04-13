@@ -1,104 +1,57 @@
 ---
 name: tech-stack
 description: |
-  Technology stack and runtime dependencies for declaracoes-gov-core.
-  Use when: onboarding, debugging, or planning changes.
+  Technology stack and build facts for declaracoes-gov-core.
+  Use when: checking dependencies, build gates, or module responsibilities.
 ---
 
 # Technology Stack
 
 ## Core Platform
 
-| Component | Version | Purpose |
-|-----------|---------|---------|
-| Java | 8+ | Source and target compatibility |
-| Maven | 3.9+ | Build and dependency management |
+- Root packaging: Maven reactor parent (`pom`)
+- Java baseline: source and target `1.8`
+- Modules:
+  - `declaracoes-gov-core-domain`
+  - `declaracoes-gov-core-format`
+  - `declaracoes-gov-core-xml`
+  - `declaracoes-gov-core-crypto`
+  - `declaracoes-gov-core-bom`
 
-## Required Dependencies
+## Dependencies by Module
 
-| Library | Version | Purpose |
-|---------|---------|---------|
-| Apache XML Security (xmlsec) | 3.0.3 | XML digital signature implementation |
-| SLF4J API | 2.0.9 | Logging facade |
-| JSR-305 annotations | 3.0.2 | Nullability annotations (@Nonnull, @Nullable) |
+| Module | Key Dependencies | Notes |
+| --- | --- | --- |
+| `domain` | JDK only (plus shared test deps from the parent) | Models, validator policy, tables, exceptions |
+| `format` | `declaracoes-gov-core-domain`, optional `jackson-databind`, optional `jackson-datatype-jsr310` | Text, number, date, JSON, and record parsing helpers |
+| `xml` | `declaracoes-gov-core-domain`, `declaracoes-gov-core-crypto`, `org.apache.santuario:xmlsec:3.0.3` | XMLDSIG and DOM utilities |
+| `crypto` | `declaracoes-gov-core-domain` | PKCS12 / PKCS11 providers, `SSLContext` builder, publishes a test JAR |
+| `core-bom` | Packaging `pom` only | Internal version alignment; JaCoCo skipped |
 
-## Optional Dependencies
+## Shared Test Dependencies
 
-| Library | Version | Purpose | Scope |
-|---------|---------|---------|-------|
-| Jackson Databind | 2.16.0 | JSON serialization | provided |
-| Jackson JSR310 | 2.16.0 | Java 8 date/time support | provided |
-| Apache HttpClient 5 | 5.3 | HTTP client with mTLS | provided |
-| Apache HttpCore 5 | 5.2.4 | HTTP core components | provided |
-| Caffeine | 3.1.8 | High-performance caching | provided |
+- `junit:junit:4.13.2`
+- `org.mockito:mockito-core:4.11.0`
+- `org.bouncycastle:bcpkix-jdk15on:1.70`
 
-## Test Dependencies
+## Build Plugins
 
-| Library | Version | Purpose |
-|---------|---------|---------|
-| JUnit Jupiter | 5.10.1 | Unit testing framework |
-| Mockito | 5.8.0 | Mocking framework |
-| AssertJ | 3.24.2 | Fluent assertions |
+- `maven-compiler-plugin:3.12.1`
+- `jacoco-maven-plugin:0.8.11` at the reactor root
+- `maven-jar-plugin:3.4.2` in `declaracoes-gov-core-crypto` to publish a `test-jar`
 
-## Build Tools
+## Coverage and Validation
 
-| Plugin | Purpose |
-|--------|---------|
-| Maven Compiler | Java compilation (source/target 8) |
-| Maven Surefire | Test execution |
-| JaCoCo | Code coverage reporting |
-| Checkstyle | Code style validation |
-| PMD | Static code analysis |
-| Maven Source | Source JAR generation |
-| Maven Javadoc | Javadoc JAR generation |
+- Root validation gate: `mvn -q verify`
+- Default JaCoCo thresholds from the parent POM:
+  - line coverage: `0.90`
+  - branch coverage: `0.90`
+- `declaracoes-gov-core-crypto` lowers only the line threshold to `0.85`
+- `declaracoes-gov-core-bom` sets `jacoco.skip=true` because it is POM-only
 
-## Cryptographic Standards
+## Runtime Constraints
 
-### XML Signature
-- Algorithm: RSA-SHA256
-- Digest: SHA-256
-- Canonicalization: C14N (inclusive)
-- Transform: Enveloped Signature
-- Provider: Apache XML Security
-
-### Certificate Standards
-- Authority: ICP-Brasil
-- Types: A1 (file), A3 (hardware)
-- Formats: PKCS#12 (.p12/.pfx), PKCS#11 (HSM/token)
-- Key size: 2048+ bits RSA
-
-### Validation Algorithms
-- CNPJ: Modulo 11 (numeric + alphanumeric ASCII-48)
-- CPF: Modulo 11
-- IE: State-specific algorithms
-
-## Thread Safety Guarantees
-
-| Component | Thread Safety | Mechanism |
-|-----------|---------------|-----------|
-| CertificadoManager | Yes | Immutable state |
-| XmlSigner | Yes | Stateless, thread-safe factories |
-| CNPJ/CPF validators | Yes | Stateless |
-| JsonMapper | Yes | ObjectMapper is thread-safe after config |
-| MtlsConnectionFactory | Yes | Stateless |
-
-## Performance Targets
-
-| Operation | Target |
-|-----------|--------|
-| Certificate loading (A1) | < 100ms |
-| Certificate loading (A3) | < 500ms |
-| XML signature | < 10ms |
-| CNPJ validation | < 1ms |
-| JSON serialization (small) | < 5ms |
-
-## Compatibility Matrix
-
-| Consumer | Min Version | Compatibility |
-|----------|-------------|---------------|
-| declaracoes-esocial-* | 1.0.0 | Full |
-| declaracoes-efd-reinf-* | 1.0.0 | Full |
-| declaracoes-serpro-* | 1.0.0 | Full |
-| Java 8 runtime | - | Full |
-| Java 11+ runtime | - | Full |
-| Java 17+ runtime | - | Full |
+- No framework dependencies are declared in the current POMs.
+- No generated source tree is present in this repository today.
+- XML support uses secure DOM parsing and XMLDSIG signing APIs.
+- JSON support is optional and concentrated in `declaracoes-gov-core-format`.

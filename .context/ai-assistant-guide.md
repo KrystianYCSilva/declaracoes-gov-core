@@ -2,88 +2,60 @@
 name: ai-assistant-guide
 description: |
   Bootstrap and operating guide for AI assistants working in declaracoes-gov-core.
-  Use when: deciding what to load, how to classify a request, and what done means in this repository.
+  Use when: deciding what to load, how to classify a request, and what done means here.
 ---
 
 # AI Assistant Guide
 
 ## Bootstrap Sequence
 
-1. Load `standards/architectural-rules.md`.
-2. Load `_meta/project-overview.md` and `_meta/codebase-map.md`.
-3. Load only the task-specific standard, pattern, workflow, or example files required for the current change.
+1. Load `README.md` in `.context/`.
+2. Load `_meta/project-overview.md` and `_meta/tech-stack.md`.
+3. Load `standards/architectural-rules.md`.
+4. Load only the task-specific files required for the current change.
 
 ## Request Classification
 
 | Request Type | Minimum Files To Load |
 | --- | --- |
-| Certificate (A1/A3) or mTLS change | `standards/architectural-rules.md`, `_meta/key-decisions.md`, `_meta/codebase-map.md`, `standards/testing-strategy.md` |
-| XML signature algorithm change | `standards/architectural-rules.md`, `_meta/key-decisions.md`, `patterns/architecture-patterns.md` |
-| CNPJ/CPF/IE validator change | `standards/architectural-rules.md`, `_meta/codebase-map.md`, `patterns/architecture-patterns.md`, `standards/testing-strategy.md` |
-| JSON mapper/serialization change | `standards/architectural-rules.md`, `_meta/tech-stack.md`, `patterns/architecture-patterns.md` |
-| Test change or regression fix | `standards/testing-strategy.md`, `patterns/testing-and-tdd.md`, `workflows/testing-and-validation-workflow.md` |
-| Review or QA request | `_meta/codebase-map.md`, `workflows/review-qa-and-release-workflow.md`, `troubleshooting/common-issues.md` |
-| Performance optimization | `standards/architectural-rules.md`, `_meta/tech-stack.md`, `patterns/architecture-patterns.md` |
+| Validator or document model change | `standards/architectural-rules.md`, `_meta/codebase-map.md`, `_meta/key-decisions.md`, `standards/testing-strategy.md` |
+| Format, parser, or `GovJsonFactory` change | `standards/architectural-rules.md`, `_meta/tech-stack.md`, `_meta/codebase-map.md`, `patterns/architecture-patterns.md` |
+| XML signing or DOM utility change | `standards/architectural-rules.md`, `_meta/codebase-map.md`, `_meta/key-decisions.md`, `standards/testing-strategy.md` |
+| PKCS11, PKCS12, or `SSLContext` change | `standards/architectural-rules.md`, `_meta/tech-stack.md`, `_meta/key-decisions.md`, `standards/testing-strategy.md` |
+| Documentation or context sync task | `README.md`, `workflows/development-workflow.md` |
 
 ## Operating Rules
 
-- This is a library project (not an application); maintain framework agnosticism.
-- Never introduce Spring, Jakarta EE, or other framework dependencies in core modules.
-- Prefer the existing package boundaries (`certificado`, `assinatura`, `documento`, `json`) and extension points over new abstractions.
-- Never invent behavior that is not documented in `docs/` or implemented in `src/`.
-- When architecture, behavior, or operational setup changes, update `docs/` first for humans and `.context/` second for AI compression.
-- All certificate-related code must support both A1 (file-based) and A3 (hardware token) certificates.
-- XML signature must comply with eSocial/EFD-Reinf specifications: RSA-SHA256, SHA-256 digest, C14N canonicalization, Enveloped transform.
-- CNPJ validator must support both numeric (current) and alphanumeric (2026+) formats.
+- This repository root is a Maven aggregator; the live implementation is in the child modules.
+- Keep the core limited to transversal domain, formatting, XML, crypto, and BOM concerns.
+- Do not add declaration-specific schemas, transport clients, OAuth2 flows, or framework wiring here.
+- Use the actual package tree `br.uem.npd.govcore.*`; do not invent alternate package names in docs or code.
+- Keep the validator confidence model aligned with `docs/05-MATRIZ-VALIDADORES.md`.
+- Update Portuguese human docs first when behavior, policy, or architecture changes; then update AI docs.
 
-## Definition Of Done
+## Definition of Done
 
 - The change respects `standards/architectural-rules.md`.
-- The affected tests are updated or added.
-- `mvn -q test` stays green for behavior changes.
-- `mvn -q verify` stays green before release-level completion.
-- JaCoCo minimums remain at `80%` line and `75%` branch.
-- No secrets are added to Git or embedded into the JAR.
-- `docs/` and `.context/` are synchronized when behavior, architecture, tests, or environment requirements change.
-- All public APIs have Javadoc with thread-safety notes.
-- Java 8 compatibility is maintained (no Java 9+ features).
+- Behavior changes update or add tests in the same child module.
+- `mvn -q test` stays green for the touched scope, and `mvn -q verify` remains the release-level gate.
+- The parent coverage defaults stay true (`90%` line / `90%` branch, with the documented `crypto` line exception at `85%`).
+- Public API or validator policy changes keep `docs/02-DESIGN.md`, `docs/03-PLANO-TESTES.md`, and `docs/05-MATRIZ-VALIDADORES.md` synchronized where applicable.
+- No secrets, certificate material, or token configuration are added to Git.
 
 ## Research Method
 
-1. Read the relevant human doc in `docs/`.
-2. Confirm the current implementation in `src/`.
-3. Resolve conflicts in favor of the real code, then update documentation.
-4. Summarize the stable truth in `.context/` without duplicating full documents.
+1. Read the relevant Portuguese human document.
+2. Confirm the current implementation in the child-module source and `pom.xml`.
+3. Resolve conflicts in favor of the real code.
+4. Compress the stable truth into `.context/` without inventing new behavior.
 
 ## Sync Triggers
 
 Update `.context/` whenever any of the following changes:
 
-- certificate loading, validation, or mTLS behavior
-- XML signature algorithms or transforms
-- document validators (CNPJ, CPF, IE) logic
-- JSON serialization/deserialization behavior
-- package responsibilities, class responsibilities, or extension points
-- test strategy, coverage thresholds, or release gates
-- accepted architectural decisions or removed legacy artifacts
-- public API changes (new methods, deprecations, removals)
-
-## Special Considerations for Core Library
-
-### Thread Safety
-- All public classes must be thread-safe.
-- Use immutable objects where possible.
-- Document thread-safety guarantees in class-level Javadoc.
-- Use `ReadWriteLock` for shared mutable state.
-
-### Dependencies
-- Keep external dependencies to minimum.
-- Mark optional dependencies with `<optional>true</optional>` in pom.xml.
-- Prefer SPI (Service Provider Interface) for extensibility.
-- Avoid dependency version conflicts - use provided scope when integrating with other libs.
-
-### Backward Compatibility
-- Maintain semantic versioning (MAJOR.MINOR.PATCH).
-- Do not break public APIs without major version bump.
-- Use `@Deprecated` with clear migration path before removal.
-- Keep deprecated methods for at least one minor version.
+- validator confidence level or document constructor behavior
+- formatting or parser behavior in `declaracoes-gov-core-format`
+- XML signing defaults or target-selection rules in `declaracoes-gov-core-xml`
+- certificate-provider or `SSLContext` behavior in `declaracoes-gov-core-crypto`
+- module boundaries, build gates, or coverage thresholds
+- public API additions, deprecations, or removals

@@ -5,15 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.uem.npd</groupId>
-    <artifactId>declaracoes-gov-core</artifactId>
-    <version>0.1.0</version>
-    <packaging>jar</packaging>
+    <artifactId>declaracoes-gov-core-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
 
-    <name>Declaracoes Gov - Core</name>
+    <name>Declaracoes Gov - Core Parent</name>
     <description>
-        Biblioteca fundacional contendo validadores, infraestrutura criptográfica e Value Objects 
-        compartilhados por todo o ecossistema de declarações governamentais da Receita Federal.
+        Parent Maven do ecossistema declaracoes-gov-core, organizado em modulos
+        de dominio, formatacao, XML e criptografia para o contexto brasileiro.
     </description>
+
+    <modules>
+        <module>declaracoes-gov-core-bom</module>
+        <module>declaracoes-gov-core-domain</module>
+        <module>declaracoes-gov-core-format</module>
+        <module>declaracoes-gov-core-crypto</module>
+        <module>declaracoes-gov-core-xml</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -22,43 +30,57 @@
 
         <jackson.version>2.16.1</jackson.version>
         <xmlsec.version>3.0.3</xmlsec.version>
-        <slf4j.version>2.0.12</slf4j.version>
         <junit.version>4.13.2</junit.version>
-        <mockito.version>4.11.0</mockito.version> <!-- Mockito 4.x supports Java 8 -->
+        <mockito.version>4.11.0</mockito.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
         <jacoco.version>0.8.11</jacoco.version>
+        <jacoco.skip>false</jacoco.skip>
+        <jacoco.line.minimum>0.90</jacoco.line.minimum>
+        <jacoco.branch.minimum>0.90</jacoco.branch.minimum>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>br.uem.npd</groupId>
+                <artifactId>declaracoes-gov-core-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.uem.npd</groupId>
+                <artifactId>declaracoes-gov-core-format</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.uem.npd</groupId>
+                <artifactId>declaracoes-gov-core-crypto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.uem.npd</groupId>
+                <artifactId>declaracoes-gov-core-xml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!-- Security (Assinatura XMLDSIG ICP-Brasil) -->
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>${xmlsec.version}</version>
-        </dependency>
-
-        <!-- JSON (Formatadores e Serialização REST Serpro) -->
-        <!-- Opcional pois o usuário do Core pode usá-lo apenas para o SPED (XML) -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Logging Facade -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <!-- =================== TESTES =================== -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -74,14 +96,13 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.70</version>
+            <version>${bouncycastle.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -93,11 +114,13 @@
                 </configuration>
             </plugin>
 
-            <!-- JaCoCo (Cobertura de Testes Mínima: 90%) -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <skip>${jacoco.skip}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -118,10 +141,6 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <excludes>
-                                <exclude>br/uem/npd/govcore/crypto/**</exclude>
-                                <exclude>br/uem/npd/govcore/signature/**</exclude>
-                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
@@ -129,12 +148,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.50</minimum>
+                                            <minimum>${jacoco.line.minimum}</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.50</minimum>
+                                            <minimum>${jacoco.branch.minimum}</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -6,71 +6,7 @@ alwaysApply: true
 
 # Project Bootstrap
 
-## Project
-
-- Name: declaracoes-gov-core
-- Type: Java Library (JAR)
-- Language: Java 8+
-- Build: Maven 3.9+
-
-## Key Constraints
-
-1. Java 8 compatibility - no `var`, no Java 9+ Optional methods
-2. Thread-safe public APIs required
-3. No Spring/Jakarta EE dependencies
-4. Framework-agnostic core
-5. Immutable value objects preferred
-6. BigDecimal for monetary values
-
-## Architecture
-
-```
-certificado/  - Certificate management (A1/A3, mTLS)
-assinatura/   - XML digital signature (RSA-SHA256, C14N)
-documento/    - Validators (CNPJ alphanumeric, CPF, IE)
-json/         - JSON utilities (Jackson wrapper)
-exception/    - Common exceptions
-```
-
-## Quality Gates
-
-- `mvn verify` must pass
-- 80% line coverage minimum
-- Checkstyle clean
-- PMD clean
-
-## Code Patterns
-
-### Value Object
-```java
-public final class CNPJ {
-    private final String value;
-    
-    private CNPJ(String value) {
-        this.value = validate(value);
-    }
-    
-    public static CNPJ of(String value) {
-        return new CNPJ(value);
-    }
-    
-    // getters, equals, hashCode, toString
-}
-```
-
-### Thread-Safe Service
-```java
-/**
- * @apiNote This class is thread-safe.
- */
-public final class XmlSigner {
-    // stateless or immutable fields
-}
-```
-
-## Security
-
-- Never commit certificates (.p12, .pfx, .pem)
-- Never log passwords or private keys
-- Clear sensitive arrays immediately after use
-- Use test keystores with dummy credentials only
+- Use `AGENTS.md` as the canonical repository index.
+- This is a Maven multi-module core library; live implementation is in `declaracoes-gov-core-*/src` and the related `pom.xml` files.
+- Keep the core framework-agnostic and declaration-agnostic.
+- `mvn -q verify` is the validation gate.
