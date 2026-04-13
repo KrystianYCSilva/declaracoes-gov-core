@@ -16,15 +16,15 @@ description: |
  /      \  - mTLS connection tests
 /--------\
    /\
-  /  \   Unit Tests (80%)
+  /  \   Unit Tests (primary)
  /----\    - Business logic
 /      \   - Validators
 /--------\ - Signatures
   /\
  /  \    Contract/Static Tests (10%)
-/----\     - Checkstyle
-/      \   - PMD
-/--------\ - JaCoCo coverage
+/----\     - JaCoCo coverage
+/      \   - Contract/resource validation
+/--------\ - Build verification
 ```
 
 ## Test Categories
@@ -33,7 +33,7 @@ description: |
 
 **Scope**: Individual classes and methods in isolation.
 
-**Tools**: JUnit 5, Mockito, AssertJ
+**Tools**: JUnit 4.13.x and focused helper utilities already present in the repository
 
 **Location**: `src/test/java` mirroring `src/main/java`
 
@@ -46,31 +46,29 @@ description: |
 - Mock external dependencies
 
 ```java
-@ExtendWith(MockitoExtension.class)
-class CNPJValidatorTest {
+@RunWith(MockitoJUnitRunner.class)
+public class CNPJValidatorTest {
     
     private final CNPJValidator validator = new CNPJValidator();
     
     @Test
-    void shouldValidateCorrectNumericCnpj() {
-        assertThat(validator.isValid("12345678000195")).isTrue();
+    public void shouldValidateCorrectNumericCnpj() {
+        assertTrue(validator.isValid("12345678000195"));
     }
     
     @Test
-    void shouldValidateCorrectAlphanumericCnpj() {
-        assertThat(validator.isValid("12ABC67801X295")).isTrue();
+    public void shouldValidateCorrectAlphanumericCnpj() {
+        assertTrue(validator.isValid("12ABC67801X295"));
     }
     
     @Test
-    void shouldRejectCnpjWithInvalidCheckDigits() {
-        assertThat(validator.isValid("12345678000100")).isFalse();
+    public void shouldRejectCnpjWithInvalidCheckDigits() {
+        assertFalse(validator.isValid("12345678000100"));
     }
     
-    @Test
-    void shouldRejectNullCnpj() {
-        assertThatThrownBy(() -> validator.validate(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("CNPJ is required");
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldRejectNullCnpj() {
+        validator.validate(null);
     }
 }
 ```
@@ -79,7 +77,7 @@ class CNPJValidatorTest {
 
 **Scope**: Multiple components working together.
 
-**Tools**: JUnit 5, real test keystores (dummy credentials)
+**Tools**: JUnit 4.13.x, real test keystores (dummy credentials)
 
 **Location**: `src/test/java/**/integration/`
 
@@ -118,7 +116,7 @@ class XmlSigningIntegrationTest {
 
 **Scope**: Concurrent access to shared state.
 
-**Tools**: JUnit 5, concurrent JUnit extension
+**Tools**: JUnit 4.13.x and standard JDK concurrency primitives
 
 **Location**: `src/test/java/**/concurrent/`
 
@@ -201,9 +199,9 @@ class CNPJTestVectors {
 
 | Metric | Minimum | Ideal |
 |--------|---------|-------|
-| Line Coverage | 80% | 90% |
-| Branch Coverage | 75% | 85% |
-| Method Coverage | 80% | 90% |
+| Line Coverage | 90% | 95% |
+| Branch Coverage | 90% | 95% |
+| Method Coverage | 90% | 95% |
 | Class Coverage | 90% | 100% |
 
 ### JaCoCo Configuration
@@ -220,12 +218,12 @@ class CNPJTestVectors {
                     <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.80</minimum>
+                        <minimum>0.90</minimum>
                     </limit>
                     <limit>
                         <counter>BRANCH</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.75</minimum>
+                        <minimum>0.90</minimum>
                     </limit>
                 </limits>
             </rule>

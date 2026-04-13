@@ -25,7 +25,7 @@ description: |
 | Methods | camelCase (verb) | `carregarCertificado()`, `assinarXml()` |
 | Variables | camelCase | `certificado`, `chavePrivada` |
 | Constants | UPPER_SNAKE_CASE | `ALGORITMO_RSA_SHA256` |
-| Packages | lowercase | `br.gov.receita.declaracoes.core` |
+| Packages | lowercase | `br.uem.npd.govcore` |
 | Enums | PascalCase (constants UPPER) | `TipoCertificado { E_CPF, E_CNPJ }` |
 | Generic types | Single uppercase | `T`, `E`, `K`, `V` |
 
@@ -38,13 +38,13 @@ description: |
 - Imports: No wildcard imports, organized groups
 
 ```java
-package br.gov.receita.declaracoes.core.certificado;
+package br.uem.npd.govcore.crypto;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
 
-import br.gov.receita.declaracoes.core.exception.CertificadoException;
+import br.uem.npd.govcore.exception.GovSecurityException;
 
 /**
  * Manages ICP-Brasil certificates for mTLS and XML signing.
@@ -220,15 +220,18 @@ void shouldSignXmlWithValidCertificate() {
 
 ### Test Coverage Requirements
 
-- **Line coverage**: ≥ 80%
-- **Branch coverage**: ≥ 75%
+- **Line coverage**: ≥ 90% by default (`crypto` has a documented 85% exception)
+- **Branch coverage**: ≥ 90%
 - All public methods must have tests
 - Edge cases must be tested
 - Thread-safety requires concurrent tests
 
 ## Static Analysis
 
-### Checkstyle Rules
+> **Note**: Checkstyle and PMD are **not configured** in the current Maven build.
+> The rules below are kept as reference guidelines for manual review and future enforcement.
+
+### Checkstyle Rules (not enforced in build — manual reference only)
 
 - Maximum line length: 120
 - Indentation: 4 spaces
@@ -236,7 +239,7 @@ void shouldSignXmlWithValidCertificate() {
 - Proper Javadoc on public APIs
 - No wildcard imports
 
-### PMD Rules
+### PMD Rules (not enforced in build — manual reference only)
 
 - Avoid unused imports
 - Avoid unused private methods/fields
@@ -261,8 +264,6 @@ Before submitting code:
 - [ ] Code compiles without warnings
 - [ ] All tests pass (`mvn test`)
 - [ ] Coverage meets thresholds (`mvn jacoco:check`)
-- [ ] Checkstyle passes (`mvn checkstyle:check`)
-- [ ] PMD passes (`mvn pmd:check`)
 - [ ] Javadoc is complete for public APIs
 - [ ] Thread-safety is documented
 - [ ] No secrets or credentials in code

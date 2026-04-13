@@ -10,7 +10,7 @@ description: |
 ## Package Structure
 
 ```
-br.gov.receita.declaracoes.core/
+br.uem.npd.govcore/
 ├── certificado/              # Certificate management (mTLS)
 │   ├── model/               # Certificate models
 │   │   ├── CertificadoInfo
@@ -167,6 +167,4 @@ jackson
 | File | Purpose | Location |
 |------|---------|----------|
 | `pom.xml` | Maven build config | Root |
-| `checkstyle.xml` | Code style rules | Root or `.config/` |
-| `pmd-ruleset.xml` | PMD rules | Root or `.config/` |
-| ` jacoco.exec` | Coverage data | `target/` |
+| `jacoco.exec` | Coverage data | `target/` |

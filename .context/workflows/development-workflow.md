@@ -124,11 +124,11 @@ public final class P12CertificadoLoader {
 Create `src/test/java` mirror structure:
 
 ```java
-@ExtendWith(MockitoExtension.class)
-class P12CertificadoLoaderTest {
+@RunWith(MockitoJUnitRunner.class)
+public class P12CertificadoLoaderTest {
     
     @Test
-    void shouldLoadValidP12() throws Exception {
+    public void shouldLoadValidP12() throws Exception {
         // Arrange
         Path testP12 = Paths.get("src/test/resources/certs/test.p12");
         char[] password = "test123".toCharArray();
@@ -142,14 +142,14 @@ class P12CertificadoLoaderTest {
     }
     
     @Test
-    void shouldThrowWhenPathIsNull() {
+    public void shouldThrowWhenPathIsNull() {
         assertThatThrownBy(() -> P12CertificadoLoader.load(null, "pass".toCharArray()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Path is required");
     }
     
     @Test
-    void shouldThrowWhenPasswordIsWrong() {
+    public void shouldThrowWhenPasswordIsWrong() {
         Path testP12 = Paths.get("src/test/resources/certs/test.p12");
         
         assertThatThrownBy(() -> P12CertificadoLoader.load(testP12, "wrong".toCharArray()))
@@ -166,8 +166,8 @@ For concurrent classes:
 ```java
 class XmlSignerConcurrencyTest {
     
-    @RepeatedTest(10)
-    void shouldHandleConcurrentSigning() throws InterruptedException {
+    @Test
+    public void shouldHandleConcurrentSigning() throws InterruptedException {
         XmlSigner signer = new EnvelopedXmlSigner();
         ExecutorService executor = Executors.newFixedThreadPool(10);
         CountDownLatch latch = new CountDownLatch(100);
@@ -203,29 +203,11 @@ mvn jacoco:report
 cat target/site/jacoco/index.html
 ```
 
-Ensure:
-- Line coverage ≥ 80%
-- Branch coverage ≥ 75%
+Ensure the module-specific JaCoCo gates configured in the POMs remain green. The default target is 90% line / 90% branch, with a documented crypto line exception.
 
 ## Phase 4: Quality Checks
 
-### 4.1 Checkstyle
-
-```bash
-mvn checkstyle:check
-```
-
-Fix any style violations.
-
-### 4.2 PMD
-
-```bash
-mvn pmd:check
-```
-
-Fix any static analysis issues.
-
-### 4.3 Compile
+### 4.1 Compile
 
 ```bash
 mvn -q -DskipTests compile
@@ -233,7 +215,7 @@ mvn -q -DskipTests compile
 
 No warnings should be present.
 
-### 4.4 Full Verification
+### 4.2 Full Verification
 
 ```bash
 mvn -q verify

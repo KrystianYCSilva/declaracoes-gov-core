@@ -26,8 +26,8 @@ description: |
 
 | Library | Version | Purpose | Scope |
 |---------|---------|---------|-------|
-| Jackson Databind | 2.16.0 | JSON serialization | provided |
-| Jackson JSR310 | 2.16.0 | Java 8 date/time support | provided |
+| Jackson Databind | 2.16.1 | JSON serialization | provided |
+| Jackson JSR310 | 2.16.1 | Java 8 date/time support | provided |
 | Apache HttpClient 5 | 5.3 | HTTP client with mTLS | provided |
 | Apache HttpCore 5 | 5.2.4 | HTTP core components | provided |
 | Caffeine | 3.1.8 | High-performance caching | provided |
@@ -36,9 +36,9 @@ description: |
 
 | Library | Version | Purpose |
 |---------|---------|---------|
-| JUnit Jupiter | 5.10.1 | Unit testing framework |
-| Mockito | 5.8.0 | Mocking framework |
-| AssertJ | 3.24.2 | Fluent assertions |
+| JUnit | 4.13.2 | Unit testing framework |
+| Mockito | 4.11.0 | Mocking framework |
+| BouncyCastle (bcpkix-jdk15on) | 1.70 | Test certificate and crypto utilities |
 
 ## Build Tools
 
@@ -46,9 +46,7 @@ description: |
 |--------|---------|
 | Maven Compiler | Java compilation (source/target 8) |
 | Maven Surefire | Test execution |
-| JaCoCo | Code coverage reporting |
-| Checkstyle | Code style validation |
-| PMD | Static code analysis |
+| JaCoCo | Code coverage reporting and enforcement (0.8.11) |
 | Maven Source | Source JAR generation |
 | Maven Javadoc | Javadoc JAR generation |
 

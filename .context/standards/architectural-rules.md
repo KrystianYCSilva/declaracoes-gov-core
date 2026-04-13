@@ -71,7 +71,7 @@ Rule:
 Dependency categories:
 - **Required**: `xmlsec`, `slf4j-api`
 - **Optional**: `jackson-*`, `httpclient5`, `caffeine`
-- **Test only**: `junit-jupiter`, `mockito`, `assertj`
+- **Test only**: `junit`, `mockito`, `bouncycastle`
 
 ## `AR-005` No Secrets in Git
 

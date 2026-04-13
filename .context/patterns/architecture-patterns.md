@@ -220,8 +220,8 @@ public class P12CertificadoLoader implements CertificadoLoader {
     }
 }
 
-// Registration: META-INF/services/br.gov.receita.declaracoes.core.certificado.loader.CertificadoLoader
-// Contents: br.gov.receita.declaracoes.core.certificado.loader.P12CertificadoLoader
+// Registration: META-INF/services/br.uem.npd.govcore.certificado.loader.CertificadoLoader
+// Contents: br.uem.npd.govcore.certificado.loader.P12CertificadoLoader
 
 // Usage
 ServiceLoader<CertificadoLoader> loaders = ServiceLoader.load(CertificadoLoader.class);
