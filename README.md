@@ -1,16 +1,42 @@
 # declaracoes-gov-core
 
-Biblioteca Java 8, agnóstica a framework, para primitivas brasileiras reutilizáveis no ecossistema fiscal e contábil: documentos, períodos, normalização, XML e criptografia.
+Reator Maven e fundação Java 8 do ecossistema `declaracoes-*`. Este diretório mantém o parent `br.uem.npd:declaracoes-gov-core-parent:1.0.0` e os módulos manuais reutilizados por leiautes, transmissores e consumidores Java.
 
-## Módulos
+## Papel no portfólio
 
-- `declaracoes-gov-core-domain`: documentos, tipos, períodos, vigências, território e política pública de validadores.
-- `declaracoes-gov-core-format`: normalização textual, formatos numéricos, competências e `ObjectMapper` governamental.
-- `declaracoes-gov-core-xml`: parsing XML seguro, utilitários DOM e assinatura XML configurável.
-- `declaracoes-gov-core-crypto`: certificados A1/A3, PKCS11 e `SSLContext`.
-- `declaracoes-gov-core-bom`: alinhamento de versões do ecossistema.
+- concentrar tipos brasileiros, validadores e exceções transversais;
+- separar formatação, XML e criptografia em módulos opcionais;
+- publicar um BOM interno (`declaracoes-gov-core-bom`) para consumidores que precisam só da fundação.
 
-## Uso com BOM
+## Módulos do reator
+
+| Artefato | Papel atual |
+| --- | --- |
+| `declaracoes-gov-core-bom` | `dependencyManagement` do próprio core; não contém código Java. |
+| `declaracoes-gov-core-domain` | value objects, catálogo de validação, metadados de leiaute, enums e exceções-base. |
+| `declaracoes-gov-core-format` | normalização textual, formatos numéricos e de competência, datas XML, `GovJsonFactory` e parsers/serializers delimitados e posicionais. |
+| `declaracoes-gov-core-crypto` | abstrações de certificado (`CertificateProvider`), PKCS#12, PKCS#11 e `SSLContext`. |
+| `declaracoes-gov-core-xml` | parsing XML seguro, utilitários DOM, `XmlSigner`, `XmlDsigSigner` e `XmlSignatureOptions`. |
+
+## Escopo
+
+Entram no core:
+
+- domínio brasileiro reutilizável (`Cnpj`, `Cpf`, `Nis`, `PeriodoApuracao`, `Vigencia`, `CodigoMunicipio`, `TipoInscricao`, `Uf`);
+- política pública de validadores (`OFFICIAL`, `PROVISIONAL`, `STRUCTURAL`);
+- utilitários de formatação e serialização voltados ao contexto governamental;
+- infraestrutura transversal de XML e certificados.
+
+Ficam fora do core:
+
+- transporte HTTP, SOAP ou REST;
+- OAuth2, filas, polling e orquestração de entrega;
+- regras negociais específicas de cada declaração;
+- código gerado por esquemas oficiais.
+
+## Consumo pelo Maven
+
+Consumidores do ecossistema normalmente importam o BOM interno do core e escolhem apenas os módulos necessários:
 
 ```xml
 <dependencyManagement>
@@ -32,76 +58,39 @@ Biblioteca Java 8, agnóstica a framework, para primitivas brasileiras reutiliz�
         <groupId>br.uem.npd</groupId>
         <artifactId>declaracoes-gov-core-domain</artifactId>
     </dependency>
+    <dependency>
+        <groupId>br.uem.npd</groupId>
+        <artifactId>declaracoes-gov-core-xml</artifactId>
+    </dependency>
 </dependencies>
 ```
 
-## Política de validadores
+## Validação local
 
-O core publica três níveis de confiança:
-
-- `OFFICIAL`: regra normativa mapeada e apta a sustentar fail-fast.
-- `PROVISIONAL`: algoritmo disponível, mas sem fonte primária catalogada o suficiente para ser tratado como oficial.
-- `STRUCTURAL`: apenas tamanho, forma e normalização.
-
-Para `CPF` e `NIS`, a criação padrão é estrutural:
-
-```java
-Cpf cpf = Cpf.of("111.111.111-11");
-Nis nis = Nis.of("111.11111.11-1");
-```
-
-Quando o consumidor quiser o algoritmo legado explicitamente provisório:
-
-```java
-Cpf cpf = Cpf.ofProvisionallyValidated("123.456.789-09");
-Nis nis = Nis.ofProvisionallyValidated("170.33259.50-4");
-```
-
-Veja [05-MATRIZ-VALIDADORES.md](./docs/05-MATRIZ-VALIDADORES.md).
-
-## Exemplos
-
-### Domínio
-
-```java
-Cnpj cnpj = Cnpj.of("12.345.678/0001-90");
-PeriodoApuracao periodo = PeriodoApuracao.parse("2026-04");
-```
-
-### Formatação
-
-```java
-String texto = GovTextNormalizer.toGovUpper(" João d'Ávila Ltda ");
-String valor = GovNumberFormats.toPlainString(new BigDecimal("1000.00"));
-String competencia = GovCompetenceFormats.toCompactFormat(YearMonth.of(2026, 4));
-```
-
-### XML
-
-```java
-XmlSigner signer = new XmlDsigSigner(
-    certificateProvider,
-    XmlSignatureOptions.forElement("info", "IdEvento")
-);
-String signedXml = signer.sign(xml);
-```
-
-### Crypto
-
-```java
-SSLContext sslContext = SslContextBuilder.build(certificateProvider);
-```
-
-## Build
+Da raiz deste módulo, rode:
 
 ```bash
-mvn clean verify
+mvn verify
 ```
 
-## Documentação
+Esse comando valida o reator inteiro (`domain`, `format`, `crypto`, `xml` e o BOM interno).
 
-- [01-REQUISITOS.md](./docs/01-REQUISITOS.md)
-- [02-DESIGN.md](./docs/02-DESIGN.md)
-- [03-PLANO-TESTES.md](./docs/03-PLANO-TESTES.md)
-- [04-IMPLANTACAO.md](./docs/04-IMPLANTACAO.md)
-- [06-GUIA-MIGRACAO-0.1.x-1.0.0.md](./docs/06-GUIA-MIGRACAO-0.1.x-1.0.0.md)
+## Mapa da documentação
+
+Documentação canônica na raiz:
+
+- `README.md`: visão rápida, escopo e consumo;
+- `ONBOARDING.md`: primeiro fluxo local e pontos de entrada;
+- `CONTRIBUTING.md`: regras de contribuição e gatilhos de atualização documental;
+- `ARCHITECTURE.md`: visão estrutural estável.
+
+Documentação detalhada em `docs/`:
+
+- `docs/01-REQUISITOS.md`
+- `docs/02-DESIGN.md`
+- `docs/03-PLANO-TESTES.md`
+- `docs/04-IMPLANTACAO.md`
+- `docs/05-MATRIZ-VALIDADORES.md`
+- `docs/06-GUIA-MIGRACAO-0.1.x-1.0.0.md`
+
+Material congelado da formação da linha `1.0.0` fica em `docs/hist/`.

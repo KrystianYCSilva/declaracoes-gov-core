@@ -2,16 +2,17 @@
 name: context-hub
 description: |
   Navigation hub for the AI-facing context of declaracoes-gov-core.
-  Use when: loading the minimum authoritative context before changing code, tests, or documentation.
+  Use when: loading the minimum authoritative context before changing code or AI docs.
 ---
 
 # .context Hub
 
 ## Quick Start
 
-1. Load `standards/architectural-rules.md` first.
-2. Load `_meta/project-overview.md` and `_meta/codebase-map.md`.
-3. Load only the task-specific files listed below.
+1. Load `standards/architectural-rules.md`.
+2. Load `_meta/project-overview.md` and `_meta/tech-stack.md`.
+3. Load `_meta/codebase-map.md`.
+4. Load only the task-specific files needed for the current request.
 
 ## Authority Model
 
@@ -19,46 +20,45 @@ description: |
 | --- | --- | --- | --- |
 | T0 | Enforcement | Absolute | `standards/architectural-rules.md` |
 | T1 | Standards and patterns | Normative | `standards/`, `patterns/` |
-| T2 | Project context | Informative | `_meta/` |
-| T3 | Examples | Illustrative | `examples/` |
+| T2 | Project context and workflows | Informative | `_meta/`, `workflows/` |
+| T3 | Examples | Illustrative | None currently maintained |
 
 Conflict resolution:
+
 - If T0 conflicts with anything else, T0 wins.
-- If T1 conflicts with T2 or T3, T1 wins.
-- If T2 conflicts with T3, T2 wins.
-- If code and docs disagree, confirm the current behavior in `src/` and then update both `docs/` and `.context/`.
+- If AI docs and Portuguese human docs drift from the code, confirm the truth in `declaracoes-gov-core-*/src` and the relevant `pom.xml`, then update human docs, then `.context/`.
+- Never describe provisional validator behavior as official.
 
-## Source Of Truth
+## Source of Truth
 
-- `src/` is authoritative for implementation details and current runtime behavior.
-- `docs/` is the human-facing record and remains in Portuguese.
-- `.context/` is the compressed English AI-facing layer and must mirror the current code and human docs.
+- The root `pom.xml` defines the reactor, shared test dependencies, and default coverage gates.
+- Child-module `pom.xml` files and `declaracoes-gov-core-*/src` define the live implementation.
+- Human docs in the module root and `docs/` remain in Portuguese.
+- `.context/` is the compressed English AI layer.
 
 ## Task Routing
 
 | Task | Load Next |
 | --- | --- |
-| Certificate loading/mTLS changes | `_meta/key-decisions.md`, `standards/architectural-rules.md`, `patterns/architecture-patterns.md` |
-| XML signature changes | `_meta/key-decisions.md`, `standards/architectural-rules.md`, `workflows/development-workflow.md` |
-| CNPJ/CPF/IE validator changes | `_meta/codebase-map.md`, `patterns/architecture-patterns.md`, `standards/testing-strategy.md` |
-| JSON utilities changes | `_meta/tech-stack.md`, `patterns/architecture-patterns.md` |
-| Test changes or regression fix | `standards/testing-strategy.md`, `patterns/testing-and-tdd.md`, `workflows/testing-and-validation-workflow.md` |
-| Review or QA | `_meta/codebase-map.md`, `workflows/review-qa-and-release-workflow.md` |
+| Validator or value-object change | `_meta/codebase-map.md`, `_meta/key-decisions.md`, `standards/testing-strategy.md` |
+| Format/parser/JSON change | `_meta/tech-stack.md`, `_meta/codebase-map.md`, `patterns/architecture-patterns.md` |
+| XML signing or DOM utility change | `standards/architectural-rules.md`, `_meta/codebase-map.md`, `_meta/key-decisions.md` |
+| PKCS11, PKCS12, or `SSLContext` change | `standards/architectural-rules.md`, `_meta/tech-stack.md`, `_meta/key-decisions.md` |
+| Documentation or sync task | `ai-assistant-guide.md`, `workflows/development-workflow.md` |
 
 ## Directory Map
 
-- `_meta/`: project summary, technology, decisions, and package map.
-- `standards/`: absolute and normative rules that every change must follow.
-- `patterns/`: the real architectural and design patterns used by this codebase.
-- `workflows/`: execution playbooks for development, testing, review, QA, and synchronization.
-- `troubleshooting/`: common failure modes and their likely causes.
-- `examples/`: compact examples that show how to apply project principles correctly.
+- `_meta/`: project scope, technology, codebase map, and stable design decisions.
+- `standards/`: normative rules for architecture, code quality, and testing.
+- `patterns/`: recurring implementation patterns that already exist in the codebase.
+- `workflows/`: repeatable maintenance flow for code or documentation changes.
+- Optional `examples/` and `troubleshooting/` folders are not used in this module today.
 
 ## Human Docs Mapping
 
 | Human Doc | AI Summary Files |
 | --- | --- |
-| `docs/PROJECT-OVERVIEW.md` | `_meta/project-overview.md`, `_meta/tech-stack.md` |
-| `docs/ARCHITECTURE.md` | `_meta/tech-stack.md`, `_meta/codebase-map.md`, `patterns/architecture-patterns.md` |
-| `docs/KEY-DECISIONS.md` | `_meta/key-decisions.md`, `standards/architectural-rules.md` |
-| `docs/TESTING.md` | `standards/testing-strategy.md`, `patterns/testing-and-tdd.md` |
+| `README.md` | `_meta/project-overview.md`, `_meta/tech-stack.md` |
+| `ARCHITECTURE.md`, `docs/02-DESIGN.md` | `_meta/codebase-map.md`, `_meta/key-decisions.md`, `patterns/architecture-patterns.md` |
+| `docs/03-PLANO-TESTES.md` | `standards/testing-strategy.md` |
+| `docs/05-MATRIZ-VALIDADORES.md` | `_meta/project-overview.md`, `_meta/key-decisions.md`, `standards/architectural-rules.md` |

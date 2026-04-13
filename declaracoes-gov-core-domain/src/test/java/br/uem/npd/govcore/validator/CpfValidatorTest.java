@@ -31,3 +31,5 @@ public class CpfValidatorTest {
         assertEquals("12345678909", validator.strip("123.456.789-09"));
     }
 }
+
+

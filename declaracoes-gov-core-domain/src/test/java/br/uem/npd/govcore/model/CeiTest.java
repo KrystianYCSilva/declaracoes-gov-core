@@ -38,3 +38,5 @@ public class CeiTest {
         Cei.of("123");
     }
 }
+
+

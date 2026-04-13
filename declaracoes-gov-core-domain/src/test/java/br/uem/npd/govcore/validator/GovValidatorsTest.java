@@ -75,3 +75,5 @@ public class GovValidatorsTest {
         assertFalse(GovValidators.isInscricaoStructureValid(TipoInscricao.CAEPF, null));
     }
 }
+
+

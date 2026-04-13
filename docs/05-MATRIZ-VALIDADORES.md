@@ -1,38 +1,31 @@
-# Matriz de Validadores
+# Matriz de validadores do declaracoes-gov-core
 
-Atualizado em 11 de abril de 2026.
+## Fonte de verdade
 
-## Objetivo
+A matriz abaixo resume o que está implementado hoje em:
 
-Esta matriz registra o nivel de confianca publicado pelo `declaracoes-gov-core`
-para os validadores e checagens estruturais atualmente expostos.
+- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/GovValidationCatalog.java`
+- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/GovValidators.java`
 
-Classificacoes usadas:
+## Classificações
 
-- `OFFICIAL`: regra oficial mapeada no core e apta a sustentar fail-fast.
-- `PROVISIONAL`: implementacao existente, mas a fonte primaria ainda nao foi
-  catalogada no core de forma suficiente para promovela como normativa.
-- `STRUCTURAL`: apenas normalizacao, tamanho e forma basica; sem promessa de
-  validacao algoritmica oficial.
+- `OFFICIAL`: algoritmo e fonte registrada no core permitem fail-fast forte.
+- `PROVISIONAL`: existe algoritmo disponível, mas a fonte primária ainda não está catalogada no core.
+- `STRUCTURAL`: o core garante apenas normalização, tamanho e forma básica.
 
-## Matriz Atual
+## Matriz atual
 
-| Tipo | API principal | Nivel | Fail-fast no core | Fonte/Referencia | Observacoes |
+| Tipo | APIs atuais | Nível | Comportamento padrão | Fonte registrada | Observações |
 | --- | --- | --- | --- | --- | --- |
-| `CNPJ` / `CGC` | `Cnpj`, `GovValidators.isCnpjValid` | `OFFICIAL` | Sim | https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cnpj | Suporte a CNPJ numerico e alfanumerico com DV no core. |
-| `CPF` | `Cpf.of`, `Cpf.ofProvisionallyValidated`, `GovValidators.isCpfStructureValid`, `GovValidators.isCpfProvisionallyValid` | `PROVISIONAL` | Nao por padrao; apenas por opt-in provisório | Fonte primaria de DV ainda nao catalogada no core | O core publica checagem estrutural por padrao e mantem o algoritmo apenas como opt-in explícito. |
-| `NIS/PIS/PASEP/NIT` | `Nis.of`, `Nis.ofProvisionallyValidated`, `GovValidators.isNisStructureValid`, `GovValidators.isNisProvisionallyValid` | `PROVISIONAL` | Nao por padrao; apenas por opt-in provisório | Fonte primaria de DV ainda nao catalogada no core | O core publica checagem estrutural por padrao e mantem o algoritmo apenas como opt-in explícito. |
-| `CAEPF` | `Caepf`, `GovValidators.isCaepfStructureValid` | `STRUCTURAL` | Nao | https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/caepf | O core normaliza digitos e valida apenas o comprimento estrutural de 14 digitos. |
-| `CNO` | `Cno`, `GovValidators.isCnoStructureValid` | `STRUCTURAL` | Nao | https://www.gov.br/receitafederal/pt-br/assuntos/construcao-civil/cno | O core normaliza digitos e valida apenas o comprimento estrutural de 12 digitos. |
-| `CEI` | `Cei`, `GovValidators.isCeiStructureValid` | `STRUCTURAL` | Nao | https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cei | O core normaliza digitos e valida apenas o comprimento estrutural de 12 digitos. |
+| `CNPJ` / `CGC` | `Cnpj.of`, `GovValidators.isCnpjValid`, `GovValidators.stripCnpjIfValid` | `OFFICIAL` | validação forte habilitada | URL gov.br cadastrada no catálogo | cobre CNPJ numérico e alfanumérico |
+| `CPF` | `Cpf.of`, `Cpf.ofProvisionallyValidated`, `GovValidators.isCpfStructureValid`, `GovValidators.isCpfProvisionallyValid` | `PROVISIONAL` | criação padrão estrutural; algoritmo apenas por opt-in | catálogo registra ausência de fonte primária suficiente | `GovValidators.isCpfValid` permanece apenas como alias deprecated do caminho provisório |
+| `NIS/PIS/PASEP/NIT` | `Nis.of`, `Nis.ofProvisionallyValidated`, `GovValidators.isNisStructureValid`, `GovValidators.isNisProvisionallyValid` | `PROVISIONAL` | criação padrão estrutural; algoritmo apenas por opt-in | catálogo registra ausência de fonte primária suficiente | `GovValidators.isNisValid` permanece deprecated |
+| `CAEPF` | `Caepf`, `GovValidators.isCaepfStructureValid` | `STRUCTURAL` | apenas normalização e 14 dígitos | URL gov.br cadastrada no catálogo | sem DV publicado pelo core |
+| `CNO` | `Cno`, `GovValidators.isCnoStructureValid` | `STRUCTURAL` | apenas normalização e 12 dígitos | URL gov.br cadastrada no catálogo | sem algoritmo oficial mapeado |
+| `CEI` | `Cei`, `GovValidators.isCeiStructureValid` | `STRUCTURAL` | apenas normalização e 12 dígitos | URL gov.br cadastrada no catálogo | documento legado mantido de forma estrutural |
 
-## Notas de Uso
+## Notas de uso
 
-- Os tipos estruturais `Caepf`, `Cno` e `Cei` retornam a representacao
-  normalizada sem pontuacao em `getFormatted()`, porque o core ainda nao publica
-  uma mascara oficial estabilizada para esses documentos.
-- Esta matriz descreve o contrato publicado pelo core. Ela nao substitui a
-  validacao normativa que um modulo consumidor decida aplicar por fora.
-- Enquanto `CPF` e `NIS` permanecerem como `PROVISIONAL`, a API padrão deve
-  continuar estrutural e qualquer algoritmo de DV deve permanecer claramente
-  marcado como opt-in e provisório.
+- `GovValidators.isInscricaoValid(...)` retorna validação forte apenas para tipos com algoritmo oficial hoje suportado no core.
+- `GovValidators.isInscricaoStructureValid(...)` é o caminho genérico quando o consumidor precisa apenas da checagem estrutural.
+- Se o nível de confiança de um documento mudar, sincronize código, testes e esta matriz no mesmo change set.

@@ -1,56 +1,47 @@
-# Guia de Migração - 0.1.x para 1.0.0
+# Guia de migração da linha 0.1.x para 1.0.0
 
-## 1. Resumo
+## 1. Quando este guia se aplica
 
-A `v1.0.0` consolida a biblioteca como projeto multi-módulo Maven e endurece os contratos públicos do domínio, do XML e da criptografia. O principal efeito prático da migração é que o consumidor passa a importar apenas os módulos necessários.
+Use este guia se o consumidor ainda depende da versão monolítica anterior ao reator `declaracoes-gov-core-parent`.
 
-## 2. Mudanças principais
+## 2. O que mudou na estrutura
 
-### 2.1 Estrutura de artefatos
+Antes, um único artefato reunia domínio, formatação, XML e criptografia.
 
-Antes:
-
-- um único artefato com domínio, XML, JSON e crypto juntos.
-
-Agora:
+Agora, a linha `1.0.0` foi separada em:
 
 - `declaracoes-gov-core-domain`
 - `declaracoes-gov-core-format`
-- `declaracoes-gov-core-xml`
 - `declaracoes-gov-core-crypto`
+- `declaracoes-gov-core-xml`
 - `declaracoes-gov-core-bom`
 
-### 2.2 Política de validadores
+## 3. Ajustes de contrato que exigem atenção
 
-- `CNPJ/CGC` continuam com validação oficial no core.
-- `CPF` e `NIS` passam a ter criação padrão estrutural.
-- A validação algorítmica de `CPF` e `NIS` continua disponível, mas apenas por opt-in explícito:
-  - `Cpf.ofProvisionallyValidated(...)`
-  - `Nis.ofProvisionallyValidated(...)`
+### 3.1 CPF e NIS
 
-### 2.3 Assinatura XML
+- `Cpf.of(...)` e `Nis.of(...)` ficaram estruturais.
+- O algoritmo legado continua disponível em `ofProvisionallyValidated(...)`.
+- Os utilitários diretos seguem a mesma separação entre estrutural e provisório.
 
-- `XmlDsigSigner` mantém o construtor compatível por provider.
-- A `v1.0.0` adiciona configuração explícita do alvo de assinatura:
-  - `XmlSignatureOptions.forElement(...)`
-  - `XmlSignatureOptions.forIdAttribute(...)`
+### 3.2 XML assinado
 
-### 2.4 SSL/TLS
+- `XmlDsigSigner` continua existindo.
+- O caminho preferido para alvo explícito passa por `XmlSignatureOptions`.
 
-- `SslContextBuilder.build(provider)` continua suportado.
-- A `v1.0.0` adiciona `SslContextBuilder.build(provider, trustStore)` para cenários com cadeia confiável explícita.
+### 3.3 SSL e certificados
 
-## 3. Passos recomendados
+- `CertificateProvider`, `Pkcs12Provider`, `Pkcs11Provider` e `SslContextBuilder` vivem em módulo dedicado (`declaracoes-gov-core-crypto`).
 
-1. Importar o BOM `1.0.0`.
-2. Trocar dependência monolítica pelo módulo mínimo necessário.
-3. Revisar qualquer uso de `CPF`/`NIS` que dependia de rejeição por DV no construtor padrão.
-4. Migrar assinatura XML implícita para `XmlSignatureOptions` quando o integrador precisar controle explícito.
-5. Rodar `mvn clean verify` no projeto consumidor.
+## 4. Passos recomendados
 
-## 4. Exemplos
+1. importar `declaracoes-gov-core-bom`;
+2. substituir a dependência monolítica pelos módulos mínimos necessários;
+3. revisar todo uso de `Cpf` e `Nis` que esperava DV forte no construtor padrão;
+4. revisar integrações XML para usar `XmlSignatureOptions` quando o alvo de assinatura não for trivial;
+5. validar o projeto consumidor com `mvn verify`.
 
-### 4.1 Dependências
+## 5. Exemplo de adoção
 
 ```xml
 <dependencyManagement>
@@ -79,24 +70,9 @@ Agora:
 </dependencies>
 ```
 
-### 4.2 CPF/NIS
+## 6. Checklist de encerramento
 
-Antes:
-
-```java
-Cpf cpf = Cpf.of("123.456.789-09");
-```
-
-Agora:
-
-```java
-Cpf estrutural = Cpf.of("123.456.789-00");
-Cpf provisoriamenteValidado = Cpf.ofProvisionallyValidated("123.456.789-09");
-```
-
-## 5. Checklist de adoção
-
-- consumidor importa apenas os módulos necessários;
-- uso de `CPF` e `NIS` está alinhado com a política `PROVISIONAL`;
+- o consumidor importa apenas os módulos necessários;
+- o uso de `CPF` e `NIS` está alinhado com a política `PROVISIONAL` do core;
 - qualquer assinatura XML com alvo específico usa `XmlSignatureOptions`;
 - o build consumidor continua compatível com Java 8.

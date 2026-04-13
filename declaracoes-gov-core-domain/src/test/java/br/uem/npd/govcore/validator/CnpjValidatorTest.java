@@ -50,3 +50,5 @@ public class CnpjValidatorTest {
         assertEquals("12ABC34501DE35", alfaValidator.strip("12.ABC.345/01DE-35"));
     }
 }
+
+
