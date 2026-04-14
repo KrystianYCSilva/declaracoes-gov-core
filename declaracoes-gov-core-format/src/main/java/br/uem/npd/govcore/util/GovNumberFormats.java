@@ -11,10 +11,22 @@ public final class GovNumberFormats {
         // Prevents instantiation
     }
 
+    /**
+     * Converts to plain string.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     public static String toPlainString(BigDecimal value) {
         return value == null ? null : value.toPlainString();
     }
 
+    /**
+     * Parses big decimal.
+     *
+     * @param value the value
+     * @return the big decimal
+     */
     public static BigDecimal parseBigDecimal(String value) {
         if (value == null) {
             return null;

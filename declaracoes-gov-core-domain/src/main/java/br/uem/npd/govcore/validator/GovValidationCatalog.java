@@ -81,18 +81,36 @@ public final class GovValidationCatalog {
         // Prevents instantiation
     }
 
+    /**
+     * Performs the for inscricao operation.
+     *
+     * @param tipo the tipo
+     * @return the validation metadata
+     */
     public static ValidationMetadata forInscricao(TipoInscricao tipo) {
         return tipo == null ? null : INSCRICOES.get(tipo);
     }
 
+    /**
+     * Performs the cpf operation.
+     * @return the validation metadata
+     */
     public static ValidationMetadata cpf() {
         return CPF;
     }
 
+    /**
+     * Performs the nis operation.
+     * @return the validation metadata
+     */
     public static ValidationMetadata nis() {
         return NIS;
     }
 
+    /**
+     * Performs the all operation.
+     * @return the list
+     */
     public static List<ValidationMetadata> all() {
         return ALL;
     }

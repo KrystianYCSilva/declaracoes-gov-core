@@ -50,6 +50,14 @@ public final class GovJsonFactory {
         // Forçamos a serialização via PlainString (ex: "10.00").
         SimpleModule govModule = new SimpleModule("GovFinanceModule");
         govModule.addSerializer(BigDecimal.class, new StdSerializer<BigDecimal>(BigDecimal.class) {
+            /**
+             * Serializes the data.
+             *
+             * @param value the value
+             * @param gen the gen
+             * @param provider the provider
+             * @throws IOException if a io error occurs
+             */
             @Override
             public void serialize(BigDecimal value, JsonGenerator gen, SerializerProvider provider) throws IOException {
                 gen.writeString(GovNumberFormats.toPlainString(value));

@@ -7,6 +7,12 @@ public class NisValidator implements DocumentValidator {
 
     private static final int[] WEIGHTS = {3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
 
+    /**
+     * Performs the is valid operation.
+     *
+     * @param value the value
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean isValid(String value) {
         if (value == null) {
@@ -26,6 +32,12 @@ public class NisValidator implements DocumentValidator {
         return expectedDv == actualDv;
     }
 
+    /**
+     * Performs the strip operation.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     @Override
     public String strip(String value) {
         return value == null ? "" : value.replaceAll("[^0-9]", "");

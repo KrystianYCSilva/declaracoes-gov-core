@@ -23,6 +23,12 @@ public final class Nis implements Serializable {
         this.value = value;
     }
 
+    /**
+     * Creates an instance from the given value.
+     *
+     * @param nis the nis
+     * @return the nis
+     */
     public static Nis of(String nis) {
         if (nis == null || nis.trim().isEmpty()) {
             throw new InvalidDocumentException("NIS/PIS não pode ser nulo ou vazio");
@@ -35,6 +41,12 @@ public final class Nis implements Serializable {
         return new Nis(stripDigits(nis));
     }
 
+    /**
+     * Creates an instance from provisionally validated.
+     *
+     * @param nis the nis
+     * @return the nis
+     */
     public static Nis ofProvisionallyValidated(String nis) {
         if (nis == null || nis.trim().isEmpty()) {
             throw new InvalidDocumentException("NIS/PIS não pode ser nulo ou vazio");
@@ -47,10 +59,12 @@ public final class Nis implements Serializable {
         return new Nis(stripDigits(nis));
     }
 
+    /** {@return the unformatted} */
     public String getUnformatted() {
         return this.value;
     }
 
+    /** {@return the formatted} */
     public String getFormatted() {
         return String.format("%s.%s.%s-%s",
                 value.substring(0, 3),
@@ -59,6 +73,12 @@ public final class Nis implements Serializable {
                 value.substring(10, 11));
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,11 +87,19 @@ public final class Nis implements Serializable {
         return value.equals(nis.value);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return getFormatted();

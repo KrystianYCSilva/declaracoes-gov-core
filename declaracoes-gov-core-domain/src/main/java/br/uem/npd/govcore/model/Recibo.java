@@ -38,10 +38,17 @@ public final class Recibo implements Serializable {
         return new Recibo(limpo);
     }
 
+    /** {@return the numero} */
     public String getNumero() {
         return numero;
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,11 +57,19 @@ public final class Recibo implements Serializable {
         return numero.equals(recibo.numero);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(numero);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return numero;

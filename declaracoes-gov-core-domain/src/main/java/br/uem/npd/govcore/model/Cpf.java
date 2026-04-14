@@ -60,16 +60,19 @@ public final class Cpf implements IdentificadorEmpregador {
         return new Cpf(stripDigits(cpf));
     }
 
+    /** {@return the tipo inscricao} */
     @Override
     public TipoInscricao getTipoInscricao() {
         return TipoInscricao.CPF;
     }
 
+    /** {@return the unformatted} */
     @Override
     public String getUnformatted() {
         return this.value;
     }
 
+    /** {@return the formatted} */
     @Override
     public String getFormatted() {
         return String.format("%s.%s.%s-%s",
@@ -79,6 +82,12 @@ public final class Cpf implements IdentificadorEmpregador {
                 value.substring(9, 11));
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,11 +96,19 @@ public final class Cpf implements IdentificadorEmpregador {
         return value.equals(cpf.value);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return getFormatted();

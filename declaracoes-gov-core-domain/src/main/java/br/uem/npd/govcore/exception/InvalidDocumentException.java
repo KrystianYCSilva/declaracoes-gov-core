@@ -9,6 +9,11 @@ public class InvalidDocumentException extends GovCoreException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new {@code InvalidDocumentException} instance.
+     *
+     * @param message the message
+     */
     public InvalidDocumentException(String message) {
         super(message);
     }

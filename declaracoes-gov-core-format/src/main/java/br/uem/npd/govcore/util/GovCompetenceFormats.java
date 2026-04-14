@@ -17,14 +17,32 @@ public final class GovCompetenceFormats {
         // Prevents instantiation
     }
 
+    /**
+     * Converts to xml format.
+     *
+     * @param competence the competence
+     * @return the resulting string
+     */
     public static String toXmlFormat(YearMonth competence) {
         return competence == null ? null : competence.format(FORMAT_YYYY_MM);
     }
 
+    /**
+     * Converts to compact format.
+     *
+     * @param competence the competence
+     * @return the resulting string
+     */
     public static String toCompactFormat(YearMonth competence) {
         return competence == null ? null : competence.format(FORMAT_YYYYMM);
     }
 
+    /**
+     * Parses the data.
+     *
+     * @param value the value
+     * @return the year month
+     */
     public static YearMonth parse(String value) {
         if (value == null) {
             return null;
