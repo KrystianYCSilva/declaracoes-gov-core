@@ -22,6 +22,12 @@ public final class Caepf implements InscricaoGovernamental {
         this.value = normalizedValue;
     }
 
+    /**
+     * Creates an instance from the given value.
+     *
+     * @param value the value
+     * @return the caepf
+     */
     public static Caepf of(String value) {
         if (!GovValidators.isCaepfStructureValid(value)) {
             throw new InvalidDocumentException("CAEPF deve conter 14 digitos numericos apos normalizacao: " + value);
@@ -29,21 +35,30 @@ public final class Caepf implements InscricaoGovernamental {
         return new Caepf(stripDigits(value));
     }
 
+    /** {@return the tipo inscricao} */
     @Override
     public TipoInscricao getTipoInscricao() {
         return TipoInscricao.CAEPF;
     }
 
+    /** {@return the unformatted} */
     @Override
     public String getUnformatted() {
         return value;
     }
 
+    /** {@return the formatted} */
     @Override
     public String getFormatted() {
         return value;
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,11 +67,19 @@ public final class Caepf implements InscricaoGovernamental {
         return value.equals(caepf.value);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return getFormatted();

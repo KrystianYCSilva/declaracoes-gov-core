@@ -18,10 +18,22 @@ public final class GovTextNormalizer {
         // Prevents instantiation
     }
 
+    /**
+     * Performs the digits only operation.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     public static String digitsOnly(String value) {
         return value == null ? null : NON_DIGITS.matcher(value).replaceAll("");
     }
 
+    /**
+     * Performs the compact whitespace operation.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     public static String compactWhitespace(String value) {
         if (value == null) {
             return null;

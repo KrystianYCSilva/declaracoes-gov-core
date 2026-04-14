@@ -9,10 +9,21 @@ public class GovCoreException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new {@code GovCoreException} instance.
+     *
+     * @param message the message
+     */
     public GovCoreException(String message) {
         super(message);
     }
 
+    /**
+     * Creates a new {@code GovCoreException} instance.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
     public GovCoreException(String message, Throwable cause) {
         super(message, cause);
     }

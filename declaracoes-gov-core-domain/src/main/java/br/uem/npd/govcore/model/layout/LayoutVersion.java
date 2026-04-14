@@ -15,6 +15,14 @@ public class LayoutVersion implements Serializable {
     private final NormativeSource normativeSource;
     private final ValidityWindow validityWindow;
 
+    /**
+     * Creates a new {@code LayoutVersion} instance.
+     *
+     * @param id the id
+     * @param name the name
+     * @param normativeSource the normative source
+     * @param validityWindow the validity window
+     */
     public LayoutVersion(String id, String name, NormativeSource normativeSource, ValidityWindow validityWindow) {
         this.id = Objects.requireNonNull(id, "Id cannot be null");
         this.name = Objects.requireNonNull(name, "Name cannot be null");
@@ -22,22 +30,32 @@ public class LayoutVersion implements Serializable {
         this.validityWindow = validityWindow;
     }
 
+    /** {@return the id} */
     public String getId() {
         return id;
     }
 
+    /** {@return the name} */
     public String getName() {
         return name;
     }
 
+    /** {@return the normative source} */
     public NormativeSource getNormativeSource() {
         return normativeSource;
     }
 
+    /** {@return the validity window} */
     public ValidityWindow getValidityWindow() {
         return validityWindow;
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,11 +67,19 @@ public class LayoutVersion implements Serializable {
                Objects.equals(validityWindow, that.validityWindow);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name, normativeSource, validityWindow);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return "LayoutVersion{" +

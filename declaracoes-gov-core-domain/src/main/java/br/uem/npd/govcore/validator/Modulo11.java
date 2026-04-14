@@ -12,6 +12,13 @@ public final class Modulo11 {
         // Prevents instantiation
     }
 
+    /**
+     * Performs the compute dv operation.
+     *
+     * @param values the values
+     * @param weights the weights
+     * @return the computed value
+     */
     public static int computeDv(int[] values, int[] weights) {
         if (values == null || weights == null) {
             throw new IllegalArgumentException("Values e weights nao podem ser nulos.");
@@ -29,6 +36,12 @@ public final class Modulo11 {
         return remainder < 2 ? 0 : 11 - remainder;
     }
 
+    /**
+     * Performs the compute dv operation.
+     *
+     * @param values the values
+     * @return the computed value
+     */
     public static int computeDv(int[] values) {
         if (values == null) {
             throw new IllegalArgumentException("Values nao podem ser nulos.");
@@ -48,6 +61,12 @@ public final class Modulo11 {
         return remainder < 2 ? 0 : 11 - remainder;
     }
 
+    /**
+     * Performs the char to value operation.
+     *
+     * @param value the value
+     * @return the computed value
+     */
     public static int charToValue(char value) {
         char normalized = Character.toUpperCase(value);
         if (Character.isDigit(normalized)) {

@@ -43,16 +43,19 @@ public final class Cnpj implements IdentificadorEmpregador {
         return new Cnpj(stripped);
     }
 
+    /** {@return the tipo inscricao} */
     @Override
     public TipoInscricao getTipoInscricao() {
         return TipoInscricao.CNPJ;
     }
 
+    /** {@return the unformatted} */
     @Override
     public String getUnformatted() {
         return this.value;
     }
 
+    /** {@return the formatted} */
     @Override
     public String getFormatted() {
         // A formatação é a mesma tanto para Numérico quanto Alfanumérico (XX.XXX.XXX/XXXX-XX)
@@ -64,6 +67,12 @@ public final class Cnpj implements IdentificadorEmpregador {
                 value.substring(12, 14));
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,11 +81,19 @@ public final class Cnpj implements IdentificadorEmpregador {
         return value.equals(cnpj.value);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return getFormatted();

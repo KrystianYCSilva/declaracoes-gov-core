@@ -26,32 +26,61 @@ public final class XmlSignatureOptions {
         this.fallbackToRootWhenTargetMissing = fallbackToRootWhenTargetMissing;
     }
 
+    /**
+     * Performs the defaults operation.
+     * @return the xml signature options
+     */
     public static XmlSignatureOptions defaults() {
         return DEFAULTS;
     }
 
+    /**
+     * Performs the for id attribute operation.
+     *
+     * @param idAttributeName the id attribute name
+     * @param fallbackToRootWhenTargetMissing the fallback to root when target missing
+     * @return the xml signature options
+     */
     public static XmlSignatureOptions forIdAttribute(String idAttributeName, boolean fallbackToRootWhenTargetMissing) {
         return new XmlSignatureOptions(null, idAttributeName, fallbackToRootWhenTargetMissing);
     }
 
+    /**
+     * Performs the for element operation.
+     *
+     * @param targetElementLocalName the target element local name
+     * @param idAttributeName the id attribute name
+     * @return the xml signature options
+     */
     public static XmlSignatureOptions forElement(String targetElementLocalName, String idAttributeName) {
         return new XmlSignatureOptions(targetElementLocalName, idAttributeName, false);
     }
 
+    /**
+     * Performs the for element operation.
+     *
+     * @param targetElementLocalName the target element local name
+     * @param idAttributeName the id attribute name
+     * @param fallbackToRootWhenTargetMissing the fallback to root when target missing
+     * @return the xml signature options
+     */
     public static XmlSignatureOptions forElement(String targetElementLocalName,
                                                  String idAttributeName,
                                                  boolean fallbackToRootWhenTargetMissing) {
         return new XmlSignatureOptions(targetElementLocalName, idAttributeName, fallbackToRootWhenTargetMissing);
     }
 
+    /** {@return the target element local name} */
     public String getTargetElementLocalName() {
         return targetElementLocalName;
     }
 
+    /** {@return the id attribute name} */
     public String getIdAttributeName() {
         return idAttributeName;
     }
 
+    /** {@return the fallback to root when target missing} */
     public boolean isFallbackToRootWhenTargetMissing() {
         return fallbackToRootWhenTargetMissing;
     }

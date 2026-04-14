@@ -8,10 +8,21 @@ public class GovCommunicationException extends GovCoreException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new {@code GovCommunicationException} instance.
+     *
+     * @param message the message
+     */
     public GovCommunicationException(String message) {
         super(message);
     }
 
+    /**
+     * Creates a new {@code GovCommunicationException} instance.
+     *
+     * @param message the message
+     * @param cause the cause
+     */
     public GovCommunicationException(String message, Throwable cause) {
         super(message, cause);
     }

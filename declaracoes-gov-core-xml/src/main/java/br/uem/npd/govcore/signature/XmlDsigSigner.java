@@ -33,10 +33,21 @@ public final class XmlDsigSigner implements XmlSigner {
     private final CertificateProvider certificateProvider;
     private final XmlSignatureOptions options;
 
+    /**
+     * Creates a new {@code XmlDsigSigner} instance.
+     *
+     * @param certificateProvider the certificate provider
+     */
     public XmlDsigSigner(CertificateProvider certificateProvider) {
         this(certificateProvider, XmlSignatureOptions.defaults());
     }
 
+    /**
+     * Creates a new {@code XmlDsigSigner} instance.
+     *
+     * @param certificateProvider the certificate provider
+     * @param options the options
+     */
     public XmlDsigSigner(CertificateProvider certificateProvider, XmlSignatureOptions options) {
         if (certificateProvider == null) {
             throw new IllegalArgumentException("O CertificateProvider é obrigatório para assinar XML.");
@@ -48,6 +59,12 @@ public final class XmlDsigSigner implements XmlSigner {
         this.options = options;
     }
 
+    /**
+     * Signs the data.
+     *
+     * @param xml the xml
+     * @return the resulting string
+     */
     @Override
     public String sign(String xml) {
         if (xml == null || xml.trim().isEmpty()) {

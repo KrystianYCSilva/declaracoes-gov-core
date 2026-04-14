@@ -22,22 +22,37 @@ public class RecordDefinition implements Serializable {
         this.fields = new ArrayList<>(builder.fields);
     }
 
+    /**
+     * Performs the builder operation.
+     *
+     * @param id the id
+     * @param description the description
+     * @return the builder
+     */
     public static Builder builder(String id, String description) {
         return new Builder(id, description);
     }
 
+    /** {@return the id} */
     public String getId() {
         return id;
     }
 
+    /** {@return the description} */
     public String getDescription() {
         return description;
     }
 
+    /** {@return the fields} */
     public List<FieldDefinition> getFields() {
         return new ArrayList<>(fields);
     }
 
+    /**
+     * Builder for constructing  instances.
+     *
+     * @since 1.0.0
+     */
     public static class Builder {
         private final String id;
         private final String description;
@@ -48,11 +63,21 @@ public class RecordDefinition implements Serializable {
             this.description = description;
         }
 
+        /**
+         * Adds field.
+         *
+         * @param field the field
+         * @return the builder
+         */
         public Builder addField(FieldDefinition field) {
             this.fields.add(field);
             return this;
         }
 
+        /**
+         * Builds the data.
+         * @return the record definition
+         */
         public RecordDefinition build() {
             return new RecordDefinition(this);
         }

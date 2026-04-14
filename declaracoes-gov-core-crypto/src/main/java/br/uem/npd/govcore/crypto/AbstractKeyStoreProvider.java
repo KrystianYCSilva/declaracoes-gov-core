@@ -89,31 +89,37 @@ public abstract class AbstractKeyStoreProvider implements CertificateProvider {
         throw new GovSecurityException("Nenhum alias válido contendo chave privada foi encontrado no KeyStore.");
     }
 
+    /** {@return the key store} */
     @Override
     public KeyStore getKeyStore() {
         return keyStore;
     }
 
+    /** {@return the key password} */
     @Override
     public char[] getKeyPassword() {
         return Arrays.copyOf(keyPassword, keyPassword.length);
     }
 
+    /** {@return the key alias} */
     @Override
     public String getKeyAlias() {
         return keyAlias;
     }
 
+    /** {@return the private key} */
     @Override
     public PrivateKey getPrivateKey() {
         return privateKey;
     }
 
+    /** {@return the certificate} */
     @Override
     public X509Certificate getCertificate() {
         return certificate;
     }
 
+    /** {@return the certificate chain} */
     @Override
     public X509Certificate[] getCertificateChain() {
         return Arrays.copyOf(certificateChain, certificateChain.length);

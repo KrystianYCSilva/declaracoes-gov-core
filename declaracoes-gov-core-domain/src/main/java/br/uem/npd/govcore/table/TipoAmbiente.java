@@ -26,6 +26,12 @@ public enum TipoAmbiente {
         this.description = description;
     }
 
+    /**
+     * Creates an instance from code.
+     *
+     * @param code the code
+     * @return the optional
+     */
     public static Optional<TipoAmbiente> fromCode(int code) {
         for (TipoAmbiente t : values()) {
             if (t.code == code) return Optional.of(t);
@@ -33,10 +39,12 @@ public enum TipoAmbiente {
         return Optional.empty();
     }
 
+    /** {@return the code} */
     public int getCode() {
         return code;
     }
 
+    /** {@return the description} */
     public String getDescription() {
         return description;
     }

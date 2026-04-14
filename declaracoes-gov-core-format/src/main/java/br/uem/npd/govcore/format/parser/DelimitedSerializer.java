@@ -12,10 +12,18 @@ public class DelimitedSerializer {
 
     private final String delimiter;
 
+    /**
+     * Creates a new {@code DelimitedSerializer} instance.
+     *
+     * @param delimiter the delimiter
+     */
     public DelimitedSerializer(String delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * Creates a new {@code DelimitedSerializer} instance.
+     */
     public DelimitedSerializer() {
         this.delimiter = "|";
     }

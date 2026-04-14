@@ -22,10 +22,17 @@ public enum Uf {
         this.nome = nome;
     }
 
+    /** {@return the nome} */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Creates an instance from sigla.
+     *
+     * @param sigla the sigla
+     * @return the optional
+     */
     public static Optional<Uf> fromSigla(String sigla) {
         if (sigla == null || sigla.trim().isEmpty()) {
             return Optional.empty();

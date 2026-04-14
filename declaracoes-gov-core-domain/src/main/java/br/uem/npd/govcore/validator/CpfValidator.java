@@ -8,6 +8,12 @@ public class CpfValidator implements DocumentValidator {
     private static final int[] WEIGHT_DV1 = {10, 9, 8, 7, 6, 5, 4, 3, 2};
     private static final int[] WEIGHT_DV2 = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
+    /**
+     * Performs the is valid operation.
+     *
+     * @param value the value
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean isValid(String value) {
         if (value == null) {
@@ -29,6 +35,12 @@ public class CpfValidator implements DocumentValidator {
             && dv2 == Character.getNumericValue(digits.charAt(10));
     }
 
+    /**
+     * Performs the strip operation.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     @Override
     public String strip(String value) {
         return value == null ? "" : value.replaceAll("[^0-9]", "");

@@ -13,10 +13,18 @@ public class DelimitedParser {
 
     private final String delimiterRegex;
 
+    /**
+     * Creates a new {@code DelimitedParser} instance.
+     *
+     * @param delimiterRegex the delimiter regex
+     */
     public DelimitedParser(String delimiterRegex) {
         this.delimiterRegex = delimiterRegex;
     }
 
+    /**
+     * Creates a new {@code DelimitedParser} instance.
+     */
     public DelimitedParser() {
         this.delimiterRegex = "\\|"; // Default para SPED/DIRF
     }

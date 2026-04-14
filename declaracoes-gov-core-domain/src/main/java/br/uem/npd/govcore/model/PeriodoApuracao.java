@@ -56,10 +56,12 @@ public final class PeriodoApuracao implements Comparable<PeriodoApuracao>, Seria
         }
     }
 
+    /** {@return the ano} */
     public int getAno() {
         return periodo.getYear();
     }
 
+    /** {@return the mes} */
     public int getMes() {
         return periodo.getMonthValue();
     }
@@ -78,27 +80,53 @@ public final class PeriodoApuracao implements Comparable<PeriodoApuracao>, Seria
         return periodo.format(FORMAT_YYYYMM);
     }
 
+    /** {@return the mes seguinte} */
     public PeriodoApuracao getMesSeguinte() {
         return new PeriodoApuracao(periodo.plusMonths(1));
     }
 
+    /** {@return the mes anterior} */
     public PeriodoApuracao getMesAnterior() {
         return new PeriodoApuracao(periodo.minusMonths(1));
     }
 
+    /**
+     * Performs the is before operation.
+     *
+     * @param other the other
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public boolean isBefore(PeriodoApuracao other) {
         return this.periodo.isBefore(other.periodo);
     }
 
+    /**
+     * Performs the is after operation.
+     *
+     * @param other the other
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public boolean isAfter(PeriodoApuracao other) {
         return this.periodo.isAfter(other.periodo);
     }
 
+    /**
+     * Compares this object with the specified object for ordering.
+     *
+     * @param o the o
+     * @return the computed value
+     */
     @Override
     public int compareTo(PeriodoApuracao o) {
         return this.periodo.compareTo(o.periodo);
     }
 
+    /**
+     * Checks equality with another object.
+     *
+     * @param o the o
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,11 +135,19 @@ public final class PeriodoApuracao implements Comparable<PeriodoApuracao>, Seria
         return periodo.equals(that.periodo);
     }
 
+    /**
+     * Returns the hash code for this object.
+     * @return the computed value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(periodo);
     }
 
+    /**
+     * Returns a string representation of this object.
+     * @return the resulting string
+     */
     @Override
     public String toString() {
         return toXmlFormat();

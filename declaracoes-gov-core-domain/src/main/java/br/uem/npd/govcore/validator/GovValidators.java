@@ -26,10 +26,22 @@ public final class GovValidators {
         // Prevents instantiation
     }
 
+    /**
+     * Performs the is cnpj valid operation.
+     *
+     * @param cnpj the cnpj
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCnpjValid(String cnpj) {
         return CNPJ_CHAIN.stream().anyMatch(validator -> validator.isValid(cnpj));
     }
 
+    /**
+     * Performs the strip cnpj if valid operation.
+     *
+     * @param cnpj the cnpj
+     * @return the resulting string
+     */
     public static String stripCnpjIfValid(String cnpj) {
         return CNPJ_CHAIN.stream()
             .filter(v -> v.isValid(cnpj))
@@ -38,18 +50,42 @@ public final class GovValidators {
             .orElse(null);
     }
 
+    /**
+     * Performs the is cpf structure valid operation.
+     *
+     * @param cpf the cpf
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCpfStructureValid(String cpf) {
         return hasDigitsCount(cpf, 11);
     }
 
+    /**
+     * Performs the is nis structure valid operation.
+     *
+     * @param nis the nis
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isNisStructureValid(String nis) {
         return hasDigitsCount(nis, 11);
     }
 
+    /**
+     * Performs the is cpf provisionally valid operation.
+     *
+     * @param cpf the cpf
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCpfProvisionallyValid(String cpf) {
         return CPF_VALIDATOR.isValid(cpf);
     }
 
+    /**
+     * Performs the is nis provisionally valid operation.
+     *
+     * @param nis the nis
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isNisProvisionallyValid(String nis) {
         return NIS_VALIDATOR.isValid(nis);
     }
@@ -74,14 +110,32 @@ public final class GovValidators {
         return isNisProvisionallyValid(nis);
     }
 
+    /**
+     * Performs the is caepf structure valid operation.
+     *
+     * @param numero the numero
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCaepfStructureValid(String numero) {
         return hasDigitsCount(numero, 14);
     }
 
+    /**
+     * Performs the is cno structure valid operation.
+     *
+     * @param numero the numero
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCnoStructureValid(String numero) {
         return hasDigitsCount(numero, 12);
     }
 
+    /**
+     * Performs the is cei structure valid operation.
+     *
+     * @param numero the numero
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     public static boolean isCeiStructureValid(String numero) {
         return hasDigitsCount(numero, 12);
     }

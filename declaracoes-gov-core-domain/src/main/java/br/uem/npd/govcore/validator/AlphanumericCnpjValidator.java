@@ -6,6 +6,12 @@ package br.uem.npd.govcore.validator;
  */
 public class AlphanumericCnpjValidator implements DocumentValidator {
 
+    /**
+     * Performs the is valid operation.
+     *
+     * @param value the value
+     * @return {@code true} if the condition is met, {@code false} otherwise
+     */
     @Override
     public boolean isValid(String value) {
         if (value == null) {
@@ -27,6 +33,12 @@ public class AlphanumericCnpjValidator implements DocumentValidator {
             && dv2 == Character.getNumericValue(digits.charAt(13));
     }
 
+    /**
+     * Performs the strip operation.
+     *
+     * @param value the value
+     * @return the resulting string
+     */
     @Override
     public String strip(String value) {
         return value == null ? "" : value.replaceAll("[^0-9A-Za-z]", "");
