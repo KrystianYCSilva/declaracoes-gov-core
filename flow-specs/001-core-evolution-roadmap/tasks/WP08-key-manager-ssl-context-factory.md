@@ -1,7 +1,7 @@
 ---
 work_package_id: WP08
 title: KeyManagerFactoryBuilder + GovSslContextFactory
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.183157+00:00'
 subtasks:
@@ -11,6 +11,10 @@ subtasks:
 - T004: Atualizar `SslContextBuilder` se houver sobreposição
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:47:39.880315+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T21:58:24.553380+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP08 — KeyManagerFactoryBuilder + GovSslContextFactory
@@ -154,3 +158,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP08
 ## Activity Log
 
 - 2026-04-20T21:47:39Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:58:24Z – unknown – lane=done – Moved to done

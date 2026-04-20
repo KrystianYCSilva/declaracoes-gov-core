@@ -41,7 +41,8 @@ public class AlphanumericCnpjValidator implements DocumentValidator {
      */
     @Override
     public String strip(String value) {
-        return value == null ? "" : value.replaceAll("[^0-9A-Za-z]", "");
+        return value == null ?
+                "" : value.replaceAll("[^0-9A-Za-z]", "");
     }
 
     private int[] toAlphanumericValues(String digits) {

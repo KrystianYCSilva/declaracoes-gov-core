@@ -1,7 +1,7 @@
 ---
 work_package_id: WP09
 title: Submódulo Kotlin — Extension Functions
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-20T21:13:24.195910+00:00'
 subtasks:
@@ -11,6 +11,8 @@ subtasks:
 - T004: Extension functions de coleção/null-safety
 - T005: Extension functions JSON (opcional, jackson-module-kotlin)
 - T006: Testes para todas as extensions Kotlin
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:58:28.606428+00:00"
 ---
 
 # WP09 — Submódulo Kotlin — Extension Functions
@@ -220,3 +222,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP09
 ```
+
+## Activity Log
+
+- 2026-04-20T21:58:28Z – unknown – lane=doing – Moved to doing
