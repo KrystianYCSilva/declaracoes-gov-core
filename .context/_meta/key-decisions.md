@@ -57,6 +57,20 @@ description: |
 **Decision**: Javadoc and inline comments in Portuguese. `.context/`, `AGENTS.md`, and AI-facing docs in English.  
 **Consequences**: + Bilingual clarity. − Need to sync two doc streams.
 
+## ADR-008: Neutral Transport Module in Core Reactor
+
+**Status**: Accepted  
+**Date**: 2026-04-20  
+**Context**: AR-001 prohibits "transport concerns" in the core repository. However, 3 transmitter projects (`esocial`, `reinf`, `serpro`) all duplicate similar HTTP transport infrastructure (Apache HttpClient 5, proxy config, mTLS, retry logic). Extracting a commons module aligns with the DRY principle, but risks violating the declaration-agnostic boundary.
+
+**Decision**: Permit a `declaracoes-gov-core-transport` module in the same reactor, with strict boundaries:
+- SPI-first: `RestTransport`, `HttpRequest`, `HttpResponse`, `ProxyConfig`, `RetryPolicy`, `TransportException`.
+- Default implementation: Apache HttpClient 5 (Java 8 compatible).
+- No declaration-specific endpoints, no OAuth2, no SOAP envelopes, no government contracts.
+- Heavy deps (HttpClient 5) confined to `core-transport` only; must not leak to other core modules.
+
+**Consequences**: + Eliminates duplication across transmitters. + Consumers can inject custom transport implementations. − Slightly blurs the "no transport" line; requires discipline to keep SPI neutral.
+
 ## ADR-007: Multi-Agent Memory Pattern
 
 **Status**: Accepted  

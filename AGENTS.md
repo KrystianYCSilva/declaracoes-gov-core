@@ -174,7 +174,7 @@ Consumers should import the BOM and then pick only the modules they need:
 
 The following must **never** be added to this repository:
 
-- HTTP/SOAP/REST clients or transport logic
+- HTTP/SOAP/REST clients or transport logic (except a neutral, composition-first transport SPI as `core-transport`; see AR-001 exception and ADR-008)
 - OAuth2, token handling, queues, polling, or delivery orchestration
 - Declaration-specific business rules (e.g., eSocial, EFD-Reinf payloads)
 - Code generated from official government XSDs/Schemas

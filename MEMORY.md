@@ -12,6 +12,7 @@ description: |
 | Agent | Topic | Status |
 |-------|-------|--------|
 | — | — | idle |
+| 002-core-transport | Kimi | Reviewing spec and ADR-008 alignment |
 
 ## Completed
 <!-- date | agent | brief summary (one line per item) -->

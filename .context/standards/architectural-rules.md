@@ -10,7 +10,12 @@ description: |
 
 ## AR-001 — Keep the Core Declaration-Agnostic
 
-**Rule**: No declaration-specific payload DTOs, schema bundles, or transport concerns (SOAP, REST, OAuth2, HTTP clients).
+**Rule**: No declaration-specific payload DTOs, schema bundles, or transport concerns (SOAP, REST, OAuth2, HTTP clients) **in the core modules** (`domain`, `format`, `xml`, `crypto`).
+
+> **Exception** (ADR-008): A **neutral transport SPI** (`core-transport`) is permitted as a separate module in the same reactor, provided it is:
+> - Declaration-agnostic (no government endpoints, no SOAP/REST contracts, no OAuth2).
+> - Composition-first (SPI + default Apache HttpClient 5 implementation).
+> - Consumed by declaration-specific transmitters via dependency injection, never the other way around.
 
 // CORRECT
 ```java
