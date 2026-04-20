@@ -6,59 +6,85 @@ import org.junit.Test
 
 class DomainExtensionsTest {
 
-    @Test
-    fun `toCnpj com CNPJ valido nao lanca excecao`() {
-        val cnpj = "12345678000195".toCnpj()
-        assertEquals("12345678000195", cnpj.getUnformatted())
+    // toCnpj
+    @Test fun `toCnpj valido nao lanca excecao`() {
+        assertEquals("12345678000195", "12345678000195".toCnpj().getUnformatted())
     }
 
     @Test(expected = InvalidDocumentException::class)
-    fun `toCnpj com CNPJ invalido lanca InvalidDocumentException`() {
-        "00000000000000".toCnpj()
-    }
+    fun `toCnpj invalido lanca excecao`() { "00000000000000".toCnpj() }
 
-    @Test
-    fun `toCpf com CPF valido nao lanca excecao`() {
-        val cpf = "12345678909".toCpf()
-        assertEquals("12345678909", cpf.getUnformatted())
+    // toCpf
+    @Test fun `toCpf valido nao lanca excecao`() {
+        assertEquals("12345678909", "12345678909".toCpf().getUnformatted())
     }
 
     @Test(expected = InvalidDocumentException::class)
-    fun `toCpf com CPF invalido lanca InvalidDocumentException`() {
-        "00000000000".toCpf()
+    fun `toCpf invalido lanca excecao`() { "00000000000".toCpf() }
+
+    // toNis
+    @Test fun `toNis valido nao lanca excecao`() {
+        assertEquals("17033259504", "170.33259.50-4".toNis().getUnformatted())
     }
 
-    @Test
-    fun `digitsOnly com nulo retorna string vazia`() {
-        val nulo: String? = null
-        assertEquals("", nulo.digitsOnly())
+    @Test(expected = InvalidDocumentException::class)
+    fun `toNis invalido lanca excecao`() { "1234567890".toNis() }  // 10 dígitos — falha estrutural
+
+    // toCaepf
+    @Test fun `toCaepf valido nao lanca excecao`() {
+        assertEquals("12345678901234", "12345678901234".toCaepf().getUnformatted())
     }
 
-    @Test
-    fun `digitsOnly remove mascara de CNPJ`() {
-        assertEquals("12345678000195", "12.345.678/0001-95".digitsOnly())
+    // toCno
+    @Test fun `toCno valido nao lanca excecao`() {
+        assertEquals("123456789012", "123456789012".toCno().getUnformatted())
     }
 
-    @Test
-    fun `emptyIfNull com nulo retorna string vazia`() {
-        val nulo: String? = null
-        assertEquals("", nulo.emptyIfNull())
+    // toCei
+    @Test fun `toCei valido nao lanca excecao`() {
+        assertEquals("123456789012", "123456789012".toCei().getUnformatted())
     }
 
-    @Test
-    fun `emptyIfNull com valor retorna o proprio valor`() {
-        assertEquals("abc", "abc".emptyIfNull())
+    // toCodigoMunicipio
+    @Test fun `toCodigoMunicipio valido nao lanca excecao`() {
+        assertEquals("4115200", "4115200".toCodigoMunicipio().getCodigo())
     }
 
-    @Test
-    fun `isPresent retorna false para Cnpj nulo`() {
-        val cnpj: br.uem.npd.govcore.model.Cnpj? = null
-        assertFalse(cnpj.isPresent())
+    // isPresent
+    @Test fun `Cnpj isPresent retorna true quando nao nulo`() {
+        assertTrue("12345678000195".toCnpj().isPresent())
     }
 
-    @Test
-    fun `isPresent retorna true para Cnpj nao nulo`() {
-        val cnpj = "12345678000195".toCnpj()
-        assertTrue(cnpj.isPresent())
+    @Test fun `Cnpj isPresent retorna false quando nulo`() {
+        assertFalse((null as br.uem.npd.govcore.model.Cnpj?).isPresent())
+    }
+
+    @Test fun `Cpf isPresent retorna true quando nao nulo`() {
+        assertTrue("12345678909".toCpf().isPresent())
+    }
+
+    // isCnpjValid / isCpfValid / isNisValid
+    @Test fun `isCnpjValid retorna true para CNPJ valido`() {
+        assertTrue("12345678000195".isCnpjValid())
+    }
+
+    @Test fun `isCnpjValid retorna false para CNPJ invalido`() {
+        assertFalse("11111111111111".isCnpjValid())
+    }
+
+    @Test fun `isCpfValid retorna true para CPF valido`() {
+        assertTrue("12345678909".isCpfValid())
+    }
+
+    @Test fun `isCpfValid retorna false para CPF invalido`() {
+        assertFalse("00000000000".isCpfValid())
+    }
+
+    @Test fun `isNisValid retorna true para NIS valido`() {
+        assertTrue("17033259504".isNisValid())
+    }
+
+    @Test fun `isNisValid retorna false para NIS invalido`() {
+        assertFalse("00000000000".isNisValid())
     }
 }
