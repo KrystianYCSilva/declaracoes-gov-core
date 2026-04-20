@@ -1,0 +1,16 @@
+{
+  "target_branch": "develop",
+  "friendly_name": "Core Evolution Roadmap",
+  "source_description": "Hotfix C14N + expansão domain/format/crypto + módulo Kotlin (extensions) na declaracoes-gov-core.",
+  "discovery_mode": "external",
+  "discovery_source": {
+    "type": "generic-discovery",
+    "path": "C:/Users/krystian.silva_conta/.copilot/session-state/fdb81c68-455d-4d81-bb8b-78f780a74830/plan.md",
+    "date": "2026-04-20"
+  },
+  "complexity_level": "complex",
+  "implementation_path": "full",
+  "prd_content": "Síntese de análise multi-projeto (Copilot CLI × Gemini CLI) — 18+ projetos analisados. Identificou: bug crítico C14N no XmlDsigSigner (Erro 142 no portal gov), 40+ candidatos a extração zero-dep em 4 módulos existentes, novo submódulo Kotlin para extensions funcionais, e roadmap de 4 projetos cloud futuros.",
+  "prd_id": null,
+  "vcs": "git"
+}
