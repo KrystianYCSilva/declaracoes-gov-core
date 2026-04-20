@@ -5,6 +5,8 @@ compatibility: "Requires spec-kit project structure with .specify/ directory"
 metadata:
   author: "github-spec-kit"
   source: "templates/commands/analyze.md"
+activation: Manual
+estimated_tokens: 1960
 ---
 
 

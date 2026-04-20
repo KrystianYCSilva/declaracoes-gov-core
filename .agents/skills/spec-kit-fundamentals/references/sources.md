@@ -1,8 +1,8 @@
 ---
 name: sources
 description: |
-  Spec Kit workflow references. Use when: creating specs, plans, and tasks.
-Last verified: 2025-07-09
+  Spec Kit workflow references and spec-driven development methodology. Use when: creating specs, plans, and tasks or understanding the artifact flow.
+Last verified: 2026-04-15
 ---
 # Sources
 
@@ -10,32 +10,23 @@ References for the Spec Kit workflow and spec-driven development.
 
 ## Project-Local Artifacts
 
-- Repository governance and agent instructions: `AGENTS.md` (repository root)
-- Architecture documentation: `docs/DOCUMENTO-ARQUITETURA.md`
-- Release notes: `docs/RELEASE-v0.1.md`
-- Implementation cascade: `docs/CASCATA-IMPLEMENTACAO.md`
+- Repository context and agent instructions: `AGENTS.md` (repository root)
+- Architecture documentation: `docs/` directory (project-specific)
 
-## Spec Kit Runtime Agents (repository-local)
+## Spec Kit Skills (loaded from `.agents/skills/`)
 
-These are the skill agents that implement Spec Kit stages.
-Each is a SKILL.md under `.agents/skills/`:
+Each skill implements one stage of the Spec Kit workflow:
 
-| Agent | Stage |
+| Skill | Stage |
 |-------|-------|
-| `speckit.specify` | Create or update the feature specification |
-| `speckit.clarify` | Surface underspecified areas in the spec |
-| `speckit.plan` | Generate the implementation plan from the spec |
-| `speckit.tasks` | Generate ordered tasks from the plan |
-| `speckit.implement` | Execute tasks from tasks.md |
-| `speckit.analyze` | Cross-artifact consistency check |
-| `speckit.checklist` | Generate a feature-specific checklist |
-| `speckit.constitution` | Create or update the project constitution |
-
-## Upstream Spec Kit
-
-Spec Kit is the upstream framework that owns the spec/plan/tasks artifact flow.
-The public project and documentation, if available, should be consulted before
-modifying the upstream artifact templates or bootstrap behavior.
+| `speckit-specify` | Create or update the feature specification |
+| `speckit-clarify` | Surface underspecified areas in the spec |
+| `speckit-plan` | Generate the implementation plan from the spec |
+| `speckit-tasks` | Generate ordered tasks from the plan |
+| `speckit-implement` | Execute tasks from tasks.md |
+| `speckit-analyze` | Cross-artifact consistency check |
+| `speckit-checklist` | Generate a feature-specific checklist |
+| `speckit-taskstoissues` | Convert tasks into GitHub issues |
 
 ## Spec-Driven Development Methodology
 
@@ -48,6 +39,6 @@ modifying the upstream artifact templates or bootstrap behavior.
 
 ## Usage Notes
 
-- Consult `AGENTS.md` for active backend configuration and governance contract.
-- Use the agent table above to route to the correct skill for each Spec Kit stage.
-- External SDD resources provide methodology context; the local skill agents own execution.
+- Consult `AGENTS.md` for active backend configuration and conventions.
+- Use the skill table above to route to the correct skill for each Spec Kit stage.
+- Governance enforcement belongs to CI/CD pipelines — Spec Kit generates artifacts, it does not enforce them.

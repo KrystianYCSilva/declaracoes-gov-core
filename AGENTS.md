@@ -202,6 +202,14 @@ The following must **never** be added to this repository:
 - `docs/03-PLANO-TESTES.md` — Test plan and gate definitions.
 - `docs/04-IMPLANTACAO.md` — Deployment and consumption guide.
 - `docs/05-MATRIZ-VALIDADORES.md` — Validator confidence matrix (source of truth for `GovValidationCatalog`).
-- `.context/rules.md` — Enforceable architectural rules (AR-001 through AR-009).
-- `.context/tech.md` — Technology stack reference.
-- `.context/project.md` — Project overview for AI agents.
+- `.context/README.md` — AI context navigation hub (Tier system, load order).
+- `.context/ai-assistant-guide.md` — Full AI protocol (bootstrap, request routing, Definition of Done).
+- `.context/standards/architectural-rules.md` — T0 enforceable rules (AR-001 through AR-009).
+- `.context/standards/code-quality.md` — T1 design conventions and package organization.
+- `.context/standards/testing-strategy.md` — T1 test framework, coverage gates, patterns.
+- `.context/_meta/project-overview.md` — T2 project identity, scope, module map, boundaries.
+- `.context/_meta/tech-stack.md` — T2 exact dependency/plugin versions and constraints.
+- `.context/_meta/key-decisions.md` — T2 consolidated ADRs (Java 8, framework-agnostic, confidence model, etc.).
+- `.context/patterns/architecture.md` — T1 design blueprints (value objects, validator tiers, options objects).
+- `.context/knowledge/domain-concepts.md` — T3 Brazilian fiscal identifiers, Modulo 11, XMLDSIG profile.
+- `.context/workflows/development-workflows.md` — T2 build, test, publish, and troubleshooting flows.

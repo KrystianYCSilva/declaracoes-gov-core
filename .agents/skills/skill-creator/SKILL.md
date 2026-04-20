@@ -5,6 +5,8 @@ description: |
   and reusable scripts, references, or assets.
   Use when: creating, rewriting, or standardizing a skill under `.agents/skills`
   or another Codex-discoverable skill directory.
+activation: Manual
+estimated_tokens: 630
 ---
 
 # Skill Creator
@@ -48,3 +50,6 @@ and `references/output-patterns.md`.
 - keep repository-specific rules inside the local skill, not in hidden assumptions
 - use `references/sources.md` when you need the canonical Skill and Agent Skills sources
 - prefer revision by real usage over speculative abstraction
+- use `references/common-skill-anti-patterns.md` for the 5 most common skill design failures (theory without templates, bloated SKILL.md, dead references, missing frontmatter, no cross-references)
+- use `references/quality-checklist.md` for a 13-point pass/fail gate before deploying a skill
+- use `references/cli-directory-mapping.md` for the exact folder paths and variable syntax when distributing skills to 7+ CLIs (Copilot, Claude, Gemini, Codex, Cursor, Qwen, OpenCode)

@@ -3,6 +3,8 @@ name: prompt-engineering-advanced
 description: |
   Guide advanced prompt design with structure, decomposition, and evaluation-focused reasoning patterns.
   Use when: crafting high-stakes prompts, shaping multi-step analysis, or improving reliability without bloating context.
+activation: Manual
+estimated_tokens: 560
 ---
 
 # Advanced Prompt Engineering
@@ -60,3 +62,5 @@ Check whether the prompt:
 For common structural pitfalls, read `references/warnings.md`.
 For terminology clarification, read `references/glossary.md`.
 Load `references/sources.md` when the discussion needs canonical URLs or paper citations for any referenced technique.
+Load `references/prompt-failure-patterns.md` for the 6 most common prompt failures with fixes (kitchen sink, implicit constraints, ask-vs-execute, zero-shot, contradictions, temperature).
+Load `templates/prompt-audit-checklist.md` for a 5-point quality gate to score prompts before use.

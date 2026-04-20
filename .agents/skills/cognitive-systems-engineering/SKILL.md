@@ -3,6 +3,8 @@ name: cognitive-systems-engineering
 description: |
   Guide engineering cognitive systems for AI agents with explicit memory, decision, and multi-agent coordination structures.
   Use when: translating cognitive architecture ideas into implementable system designs or operating models.
+activation: Manual
+estimated_tokens: 610
 ---
 
 # Cognitive Systems Engineering

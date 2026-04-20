@@ -1,0 +1,66 @@
+---
+description: |
+  Consolidated Architecture Decision Records (ADRs) for declaracoes-gov-core.
+  Use when: evaluating changes that challenge established design choices.
+---
+
+# Key Decisions — declaracoes-gov-core
+
+## ADR-001: Java 8 Baseline
+
+**Status**: Accepted  
+**Date**: 2024-01  
+**Context**: Government infrastructure and consumer modules still run on Java 8 JVMs.  
+**Decision**: Lock source/target to `1.8`. Prohibit Java 9+ language features and APIs.  
+**Consequences**: + Compatibility with legacy runtimes. − Cannot use `var`, `Optional` enhancements, or new time APIs.
+
+## ADR-002: Framework-Agnostic Core
+
+**Status**: Accepted  
+**Date**: 2024-01  
+**Context**: Core must be usable by Spring, Jakarta EE, and plain Java consumers alike.  
+**Decision**: No Spring, no Jakarta EE, no Bean Validation, no Lombok, no injection frameworks.  
+**Consequences**: + Maximum reusability. − More boilerplate (explicit constructors, no Lombok `@Value`).
+
+## ADR-003: Validator Confidence Model
+
+**Status**: Accepted  
+**Date**: 2024-02  
+**Context**: Market sells heuristic CPF/CNPJ checks as "official". Need transparent confidence levels.  
+**Decision**: Three-tier model:
+- `OFFICIAL` — fail-fast, backed by catalogued government source.
+- `PROVISIONAL` — algorithm known but source not fully catalogued; opt-in only.
+- `STRUCTURAL` — normalization, length, basic form.
+**Consequences**: + Prevents misleading validation claims. − Slightly more complex API (explicit opt-in methods).
+
+## ADR-004: Module Isolation with Internal BOM
+
+**Status**: Accepted  
+**Date**: 2024-01  
+**Context**: Heavy dependencies (Jackson, xmlsec) must not leak to consumers that only need domain objects.  
+**Decision**: Five-module reactor with `core-bom` for version alignment. `domain` stays JDK-only.  
+**Consequences**: + Clean dependency graph. − More modules to publish and version.
+
+## ADR-005: XMLDSIG Defaults (RSA-SHA256)
+
+**Status**: Accepted  
+**Date**: 2024-03  
+**Context**: Brazilian government systems require specific signature profiles.  
+**Decision**: Fix defaults to RSA-SHA256, SHA-256 digest, inclusive canonicalization, enveloped transform. Use `XmlSignatureOptions` for explicit target selection.  
+**Consequences**: + Predictable signing behavior. − Less flexibility (by design).
+
+## ADR-006: AI Context in English, Human Docs in Portuguese
+
+**Status**: Accepted  
+**Date**: 2025-04  
+**Context**: Developers speak Portuguese; AI agents and international collaborators need English.  
+**Decision**: Javadoc and inline comments in Portuguese. `.context/`, `AGENTS.md`, and AI-facing docs in English.  
+**Consequences**: + Bilingual clarity. − Need to sync two doc streams.
+
+## ADR-007: Multi-Agent Memory Pattern
+
+**Status**: Accepted  
+**Date**: 2026-04-20  
+**Context**: Multiple LLM CLIs (Claude, Cursor, Gemini, Kimi, etc.) operate on this repo. Need shared state without interference.  
+**Decision**: `MEMORY.md` (root) for shared cross-session state + `memory/agent-local-memory.md` per agent for private notes. Root `AGENTS.md` is the single source of truth.  
+**Consequences**: + Context recovery across sessions and agents. − Requires discipline to update MEMORY.md at task boundaries.

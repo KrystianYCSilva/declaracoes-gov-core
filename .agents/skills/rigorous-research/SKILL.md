@@ -4,6 +4,8 @@ description: |
   Conduct source-verified research with academic, institutional, and regulatory rigor.
   Use when: answering questions that require authoritative sources, citation-grade evidence,
   policy or compliance analysis, or a clear separation between evidence, interpretation, and opinion.
+activation: Manual
+estimated_tokens: 670
 ---
 
 # Rigorous Research

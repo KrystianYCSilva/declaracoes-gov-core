@@ -4,6 +4,8 @@ description: |
   Guide requirements engineering from elicitation through specification, validation, and traceability.
   Use when: defining clear, testable requirements, separating business intent from implementation detail,
   or controlling scope change across engineering delivery.
+activation: Manual
+estimated_tokens: 620
 ---
 
 # Requirements Engineering
@@ -65,6 +67,9 @@ Change requests should answer:
 If a requirement change invalidates the current card or technical bundle, reopen planning instead of patching around the drift.
 
 Use `references/change-control.md` for the minimum change record structure.
+Use `references/common-traps.md` for the 5 most common requirements failures with LLM agents.
+Use `templates/traceability-matrix.md` for linking requirements to tests with code conventions.
+Use `templates/change-impact-form.md` for assessing downstream effects of requirement changes.
 
 ## How to Stay Accurate
 

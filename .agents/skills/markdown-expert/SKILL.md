@@ -3,6 +3,8 @@ name: markdown-expert
 description: |
   Guide writing technical documentation and reports in Markdown with portable structure and diagram-aware formatting.
   Use when: writing READMEs, technical reports, RFCs, or Markdown documents that must render cleanly across common tooling.
+activation: Auto
+estimated_tokens: 510
 ---
 
 # Markdown Expert

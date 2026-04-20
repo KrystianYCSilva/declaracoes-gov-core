@@ -2,13 +2,19 @@
 name: spec-kit-fundamentals
 description: |
   Guide spec-driven development workflows with conditional backend selection and Spec Kit artifact discipline.
-  Use when: creating specs, plans, and tasks under `backend=spec-kit-native`.
+  Use when: creating specs, plans, and tasks under `backend=spec-kit-native`, or clarifying
+  how Spec Kit separates artifact ownership from project governance.
+activation: Auto
+estimated_tokens: 890
 ---
 
 # Spec Kit Fundamentals
 
-This skill applies only when the active backend is `spec-kit-native`.
-Spec Kit owns the spec-driven execution artifacts and bootstrap.
+Spec Kit is a spec-driven development framework that owns the spec/plan/tasks artifact flow.
+Project governance (CI/CD gates, code review, release criteria) remains separate and is NOT
+part of Spec Kit — it belongs to the repository's own CI/CD pipeline and AGENTS.md.
+
+For the boundary between artifact flow and project governance, read `references/artifact-vs-governance.md`.
 
 ## How to Start a Spec-Kit Cycle
 
@@ -43,26 +49,26 @@ Use the upstream artifact flow:
 3. approved task breakdown
 4. implementation against the approved artifacts
 
-Keep `.specify/` as upstream runtime metadata
-and `specs/` as the active technical tree when that contract is installed.
-If one artifact is rejected, fix that artifact instead of skipping ahead.
+Keep `.specify/` as runtime metadata and the feature directory as the active
+technical tree. If one artifact is rejected, fix that artifact instead of skipping ahead.
 
-## How to Separate Upstream From Local Governance
+## How to Separate Artifact Flow From Project Governance
 
-Upstream Spec Kit owns:
+Spec Kit owns:
 
-- the upstream bootstrap and tool verification surfaces
+- the bootstrap and tool verification surfaces
 - the spec/plan/tasks artifact flow
 - its template semantics
 - its runtime metadata under `.specify/`
 
-Repository governance owns:
+Project governance (external to Spec Kit) owns:
 
-- bootstrap routing into the current backend
-- macro lifecycle state
-- source-of-truth precedence
+- CI/CD pipeline enforcement
+- code review and approval gates
+- release readiness criteria
+- AGENTS.md context and conventions
 
-Never let Spec Kit update memory, context governance, or closure state by itself.
+Spec Kit generates artifacts. Governance validates and enforces them via CI/CD — not via prompts.
 
 ## How to Treat Local Overlays and Repairs
 
@@ -82,4 +88,5 @@ Tasks should be executable and traceable back to the approved plan.
 
 ## How to Navigate This Skill
 
-- `references/sources.md`: project-local artifact locations, runtime agent routing table, and SDD methodology references
+- `references/artifact-vs-governance.md`: boundary between Spec Kit artifact flow and project governance
+- `references/sources.md`: artifact locations, skill routing table, and SDD methodology references

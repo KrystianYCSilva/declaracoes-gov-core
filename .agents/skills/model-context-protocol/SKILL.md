@@ -3,6 +3,8 @@ name: model-context-protocol
 description: |
   Connect AI agents to external data sources using the standardized Model Context Protocol (MCP).
   Use when: integrating agents with databases, file systems, APIs, or building custom MCP servers.
+activation: Manual
+estimated_tokens: 370
 ---
 
 # Model Context Protocol

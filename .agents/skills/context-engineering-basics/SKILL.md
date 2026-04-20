@@ -3,6 +3,8 @@ name: context-engineering-basics
 description: |
   Guide context engineering with metadata, JIT loading, compression, and multi-agent boundary control.
   Use when: designing AI context structures, reducing token waste, or deciding what information should be loaded for a task.
+activation: Auto
+estimated_tokens: 550
 ---
 
 # Context Engineering Basics
@@ -53,4 +55,5 @@ For memory patterns, read `references/memory-management.md`.
 For multi-agent workflow patterns and router or chain architectures, read `references/multi-agent-workflows.md`.
 
 Load `references/sources.md` when the discussion needs canonical URLs, paper citations, or specific links for any referenced concept.
+Load `references/common-traps.md` for the 5 most common context failures (overload paradox, stale context, JIT→eager, no enforcement, multi-agent leakage).
 

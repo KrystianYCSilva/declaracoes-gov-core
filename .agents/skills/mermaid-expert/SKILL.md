@@ -3,6 +3,8 @@ name: mermaid-expert
 description: |
   Guide creating Mermaid diagrams with readable structure, stable syntax, and pragmatic complexity control.
   Use when: generating any Mermaid diagram type (flowcharts, sequence, state, ER, Gantt, class, mindmap, timeline, git graph, or C4) in Markdown.
+activation: Auto
+estimated_tokens: 500
 ---
 
 # Mermaid Expert

@@ -4,6 +4,8 @@ description: |
   Compare AI coding tools and recommend a workflow based on reviewability, control, and delivery risk.
   Use when: choosing between IDE and CLI agents, comparing coding assistants,
   or shaping an AI-assisted development process for a team or repository.
+activation: Auto
+estimated_tokens: 520
 ---
 
 # Coding Agent Tools
@@ -38,3 +40,5 @@ Use this skill to compare tool shapes and adoption strategy, not to re-explain e
 - separate tool facts from preference or opinion
 - prefer the official sources in `references/sources.md` when product behavior is uncertain
 - load deeper references only for the tool or workflow currently under discussion
+- use `references/common-traps.md` for the 5 most common coding agent failures (over-governance, lock-in, no review gate, tool-to-control-tools, parallel conflicts)
+- use `templates/ci-gate-template.yml.md` for a GitHub Actions quality gate template for AI-assisted workflows

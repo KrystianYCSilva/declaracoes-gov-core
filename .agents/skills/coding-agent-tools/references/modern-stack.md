@@ -40,7 +40,7 @@ This layer matters when tasks stop being single-turn:
 - orchestrator-worker patterns
 - review and closure stages
 
-Spec Kit and similar frameworks live here in different ways.
+Spec Kit and workflow skills all live here in different ways.
 
 ## Layer 4: Retrieval and Memory
 
@@ -66,7 +66,7 @@ Keep vendor and framework examples as examples, not as the main taxonomy:
 
 - protocol layer examples: Model Context Protocol and other tool-integration surfaces
 - skill and prompt surface examples: vendor-specific skill systems or repository-local skill catalogs
-- orchestration examples: LangGraph, AutoGen, CrewAI, and governed in-repo orchestration
+- orchestration examples: LangGraph, AutoGen, CrewAI, and governed in-repo orchestration via AGENTS.md + skills
 - retrieval examples: Pinecone, Qdrant, Chroma, or repository-local retrieval layers
 
 If a decision depends on a specific vendor, load the vendor-specific reference next instead of bloating this file into a directory of product docs.

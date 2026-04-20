@@ -3,6 +3,8 @@ name: quality-assurance
 description: |
   Guide QA practices for risk-based validation, release readiness, and defect prevention in software delivery.
   Use when: setting release criteria, designing risk-based test strategy, or checking whether a change is safe to ship.
+activation: Auto
+estimated_tokens: 580
 ---
 
 # Quality Assurance
@@ -57,6 +59,10 @@ Report by risk and decision impact:
 4. what must happen before release
 
 Use `references/risk-based-testing.md` for a deeper prioritization lens.
+Use `references/common-traps.md` for the 5 most common QA failures with AI-generated code.
+Use `templates/test-case-template.md` for Given-When-Then test structure and naming conventions.
+Use `templates/risk-assessment-matrix.md` for a fillable risk/impact scoring template.
+Use `templates/release-readiness-checklist.md` for a pre-release gate checklist.
 
 ## How to Stay Accurate
 

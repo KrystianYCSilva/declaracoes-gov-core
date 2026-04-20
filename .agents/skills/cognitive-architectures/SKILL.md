@@ -3,6 +3,8 @@ name: cognitive-architectures
 description: |
   Guide cognitive architecture choices for language agents, from memory organization to decision loops and tool use.
   Use when: designing autonomous agents, choosing reasoning loops, or comparing architectural patterns for agent systems.
+activation: Manual
+estimated_tokens: 550
 ---
 
 # Cognitive Architectures

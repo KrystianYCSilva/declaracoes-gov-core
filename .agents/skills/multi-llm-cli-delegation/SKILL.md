@@ -4,6 +4,8 @@ description: |
   Invoke external LLM CLIs from chat with explicit authorization, narrow scope, and post-run validation.
   Use when: delegating work to another terminal LLM, selecting the right CLI for a bounded task,
   or enforcing a safe multi-CLI orchestration flow.
+activation: Manual
+estimated_tokens: 580
 ---
 
 # Multi-LLM CLI Delegation
@@ -51,3 +53,4 @@ After the third failure, stop delegating that prompt shape and return control to
 - keep repository instructions, release decisions, and closure in the main workflow
 - prefer official docs over vendor blog posts when behavior is uncertain
 - use `references/sources.md` for the authoritative vendor documentation index and per-CLI links
+- use `references/error-recovery-patterns.md` for retry strategy, model tier escalation, and script-vs-agent decision tree

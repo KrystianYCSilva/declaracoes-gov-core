@@ -3,6 +3,8 @@ name: agent-memory-management
 description: |
   Guide architecting memory systems for AI agents from short-context buffers to retrieval-backed and multi-agent state models.
   Use when: designing stateful agents, solving context limit issues, or choosing how durable memory should be represented.
+activation: Manual
+estimated_tokens: 730
 ---
 
 # Agent Memory Management
@@ -55,6 +57,8 @@ Global mutable memory without ownership rules becomes a source of drift and race
 
 Use `references/multi-agent-memory.md` when the design crosses agent boundaries or ownership layers.
 If the system mixes private reasoning with shared truth, stop and define write ownership before adding more memory.
+
+Use `references/common-traps.md` for the 5 most common memory failures (unbounded growth, poisoning, ghost context, staleness, context-as-memory).
 
 ## How to Evaluate a Memory Design
 
