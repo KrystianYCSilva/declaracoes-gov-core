@@ -27,12 +27,15 @@ public class GovValidationCatalogTest {
     }
 
     @Test
-    public void testProvisionalPolicies() {
+    public void testCpfOfficialPolicy() {
         ValidationMetadata cpf = GovValidationCatalog.cpf();
-        ValidationMetadata nis = GovValidationCatalog.nis();
+        assertEquals(ValidationLevel.OFFICIAL, cpf.getLevel());
+        assertTrue(cpf.allowsFailFast());
+    }
 
-        assertEquals(ValidationLevel.PROVISIONAL, cpf.getLevel());
-        assertFalse(cpf.allowsFailFast());
+    @Test
+    public void testProvisionalPolicies() {
+        ValidationMetadata nis = GovValidationCatalog.nis();
         assertEquals(ValidationLevel.PROVISIONAL, nis.getLevel());
         assertFalse(nis.allowsFailFast());
     }

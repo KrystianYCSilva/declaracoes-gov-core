@@ -77,3 +77,18 @@ test-output/
 .github/memory/
 .github/prompts/
 .github/copilot-instructions.md
+
+# AI Agent directories (added by flow CLI)
+# These contain auth tokens and should NEVER be committed
+.windsurf/
+.kilocode/
+.augment/
+.roo/
+.amazonq/
+.github/copilot/
+
+# Added by flow CLI (auto-managed)
+.worktrees/
+.flowflow/
+.idea/
+.github/*.agent.md

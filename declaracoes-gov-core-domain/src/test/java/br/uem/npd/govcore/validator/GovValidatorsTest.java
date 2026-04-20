@@ -41,7 +41,7 @@ public class GovValidatorsTest {
     public void testStrongInscricaoValidation() {
         assertTrue(GovValidators.isInscricaoValid(TipoInscricao.CNPJ, "11.222.333/0001-81"));
         assertTrue(GovValidators.isInscricaoValid(TipoInscricao.CGC, "11.222.333/0001-81"));
-        assertFalse(GovValidators.isInscricaoValid(TipoInscricao.CPF, "123.456.789-09"));
+        assertTrue(GovValidators.isInscricaoValid(TipoInscricao.CPF, "123.456.789-09"));
 
         assertFalse(GovValidators.isInscricaoValid(TipoInscricao.CAEPF, "12345678901234"));
         assertFalse(GovValidators.isInscricaoValid(TipoInscricao.CNO, "123456789012"));

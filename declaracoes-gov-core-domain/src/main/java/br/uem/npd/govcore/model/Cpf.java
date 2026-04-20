@@ -23,18 +23,21 @@ public final class Cpf implements IdentificadorEmpregador {
 
     /**
      * Instancia um CPF a partir de uma String.
-     * Aplica apenas checagem estrutural de 11 dígitos.
+     * Aplica validação completa do dígito verificador (Módulo 11).
+     * Rejeita sequências homogêneas ("00000000000".."99999999999").
+     *
      * @param cpf O CPF com ou sem formatação.
      * @return O objeto Cpf imutável.
-     * @throws InvalidDocumentException se o CPF for nulo, vazio ou estruturalmente inválido.
+     * @throws InvalidDocumentException se o CPF for nulo, vazio, estruturalmente inválido
+     *                                  ou com dígitos verificadores incorretos.
      */
     public static Cpf of(String cpf) {
         if (cpf == null || cpf.trim().isEmpty()) {
             throw new InvalidDocumentException("CPF não pode ser nulo ou vazio");
         }
 
-        if (!GovValidators.isCpfStructureValid(cpf)) {
-            throw new InvalidDocumentException("CPF inválido (Falha estrutural): " + cpf);
+        if (!GovValidators.isCpfValid(cpf)) {
+            throw new InvalidDocumentException("CPF inválido (dígito verificador ou estrutura): " + cpf);
         }
 
         return new Cpf(stripDigits(cpf));

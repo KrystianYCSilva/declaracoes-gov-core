@@ -1,7 +1,7 @@
 ---
 work_package_id: WP02
 title: CNPJ Alfanumérico RF 2026
-lane: planned
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.102057+00:00'
 subtasks:
@@ -11,6 +11,14 @@ subtasks:
 - T004: Criar `CnpjValidationContext`
 - T005: Expandir `Cnpj.of()` para aceitar CNPJ alfanumérico
 - T006: Testes para todas as classes de validação e Cnpj expandido
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:16:49.046771+00:00"
+loops_doing_to_for_review: "1"
+for_review_started_at: "2026-04-20T21:28:03.157260+00:00"
+loops_for_review_to_done: "1"
+ended_at: "2026-04-20T21:28:23.426513+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP02 — CNPJ Alfanumérico RF 2026
@@ -197,3 +205,9 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP02
 ```
+
+## Activity Log
+
+- 2026-04-20T21:16:49Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:28:03Z – unknown – lane=for_review – Moved to for_review
+- 2026-04-20T21:28:23Z – unknown – lane=done – Moved to done

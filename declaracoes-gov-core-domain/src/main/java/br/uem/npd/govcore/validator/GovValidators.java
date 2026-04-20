@@ -91,13 +91,14 @@ public final class GovValidators {
     }
 
     /**
-     * @deprecated Use {@link #isCpfStructureValid(String)} para o contrato padrão
-     *             do core ou {@link #isCpfProvisionallyValid(String)} para o algoritmo
-     *             legado explicitamente provisório.
+     * Valida o CPF aplicando o algoritmo oficial do dígito verificador (Módulo 11).
+     * Rejeita sequências homogêneas e comprimento diferente de 11 dígitos.
+     *
+     * @param cpf o CPF com ou sem formatação.
+     * @return {@code true} se o CPF for válido.
      */
-    @Deprecated
     public static boolean isCpfValid(String cpf) {
-        return isCpfProvisionallyValid(cpf);
+        return CPF_VALIDATOR.isValid(cpf);
     }
 
     /**
@@ -152,10 +153,11 @@ public final class GovValidators {
             case CNPJ:
             case CGC:
                 return isCnpjValid(numero);
+            case CPF:
+                return isCpfValid(numero);
             case CAEPF:
             case CNO:
             case CEI:
-            case CPF:
             default:
                 return false;
         }

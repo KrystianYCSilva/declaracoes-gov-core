@@ -21,6 +21,19 @@ public class CpfTest {
     }
 
     @Test
+    public void testCreationValidCpfSemMascara() {
+        Cpf cpf = Cpf.of("12345678909");
+        assertEquals("12345678909", cpf.getUnformatted());
+    }
+
+    @Test
+    public void testCreationOutroCpfValido() {
+        // CPF 000.000.001-91 é válido
+        Cpf cpf = Cpf.of("00000000191");
+        assertEquals("00000000191", cpf.getUnformatted());
+    }
+
+    @Test
     public void testEqualsAndHashCode() {
         Cpf left = Cpf.of("123.456.789-09");
         Cpf right = Cpf.of("12345678909");
@@ -34,10 +47,21 @@ public class CpfTest {
         assertNotEquals(left, "12345678909");
     }
 
-    @Test
-    public void testCreationUsesStructuralValidationOnly() {
-        Cpf cpf = Cpf.of("111.111.111-11");
-        assertEquals("11111111111", cpf.getUnformatted());
+    @Test(expected = InvalidDocumentException.class)
+    public void testCreationSequenciaHomogeneaRejeitada() {
+        // Cpf.of() agora aplica dígito verificador; sequências homogêneas são inválidas
+        Cpf.of("111.111.111-11");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testCreationTodosZerosRejeitado() {
+        Cpf.of("000.000.000-00");
+    }
+
+    @Test(expected = InvalidDocumentException.class)
+    public void testCreationDvErrado() {
+        // DV correto seria 09; usando 00 deve falhar
+        Cpf.of("123.456.789-00");
     }
 
     @Test

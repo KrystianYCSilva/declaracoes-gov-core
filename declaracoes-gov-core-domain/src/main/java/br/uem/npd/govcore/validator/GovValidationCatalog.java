@@ -24,9 +24,9 @@ public final class GovValidationCatalog {
     private static final ValidationMetadata CPF = new ValidationMetadata(
         "CPF",
         "CPF",
-        ValidationLevel.PROVISIONAL,
-        "Fonte primaria de digito verificador ainda nao catalogada no core.",
-        "O core publica checagem estrutural por padrao e mantem a validacao algoritmica apenas por opt-in provisório."
+        ValidationLevel.OFFICIAL,
+        "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cpf",
+        "Validacao algoritmica oficial do digito verificador CPF (Modulo 11) integrada ao core. Cpf.of() aplica validacao completa por padrao."
     );
 
     private static final ValidationMetadata NIS = new ValidationMetadata(

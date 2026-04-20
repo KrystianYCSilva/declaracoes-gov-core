@@ -1,7 +1,7 @@
 ---
 work_package_id: WP06
 title: GovZipUtils + GovStringUtils + GovNumberUtils
-lane: planned
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.155220+00:00'
 subtasks:
@@ -11,6 +11,14 @@ subtasks:
 - T004: Criar `GovBigDecimalConstants`
 - T005: Testes para `GovZipUtils` com fixtures cross-projeto
 - T006: Testes para `GovStringUtils`/`GovNumberUtils`
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:16:52.767458+00:00"
+loops_doing_to_for_review: "1"
+for_review_started_at: "2026-04-20T21:28:27.956497+00:00"
+loops_for_review_to_done: "1"
+ended_at: "2026-04-20T21:28:32.492471+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP06 — GovZipUtils + GovStringUtils + GovNumberUtils
@@ -222,3 +230,9 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP06
 ```
+
+## Activity Log
+
+- 2026-04-20T21:16:52Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:28:27Z – unknown – lane=for_review – Moved to for_review
+- 2026-04-20T21:28:32Z – unknown – lane=done – Moved to done
