@@ -1,7 +1,7 @@
 ---
 work_package_id: WP07
 title: GovDateUtils + VigenciaConverter + GovCollections + GovFileUtils
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.169349+00:00'
 subtasks:
@@ -14,6 +14,10 @@ subtasks:
 - T007: Verificar BOM para novos módulos se necessário
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:34:59.359798+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T21:47:32.147642+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP07 — GovDateUtils + VigenciaConverter + GovCollections + GovFileUtils
@@ -245,3 +249,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP07
 ## Activity Log
 
 - 2026-04-20T21:34:59Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:47:32Z – unknown – lane=done – Moved to done

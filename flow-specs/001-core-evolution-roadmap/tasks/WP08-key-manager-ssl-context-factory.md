@@ -1,7 +1,7 @@
 ---
 work_package_id: WP08
 title: KeyManagerFactoryBuilder + GovSslContextFactory
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-20T21:13:24.183157+00:00'
 subtasks:
@@ -9,6 +9,8 @@ subtasks:
 - T002: Criar `GovSslContextFactory`
 - T003: Testes de integração com infra crypto test-jar
 - T004: Atualizar `SslContextBuilder` se houver sobreposição
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:47:39.880315+00:00"
 ---
 
 # WP08 — KeyManagerFactoryBuilder + GovSslContextFactory
@@ -148,3 +150,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP08
 ```
+
+## Activity Log
+
+- 2026-04-20T21:47:39Z – unknown – lane=doing – Moved to doing
