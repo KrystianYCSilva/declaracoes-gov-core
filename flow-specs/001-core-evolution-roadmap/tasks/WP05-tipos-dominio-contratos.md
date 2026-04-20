@@ -1,7 +1,7 @@
 ---
 work_package_id: WP05
 title: Tipos de Domínio e Contratos
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.141434+00:00'
 subtasks:
@@ -12,6 +12,10 @@ subtasks:
 - T005: Criar annotations `@Description`, `@IgnoreElement` e enum `FieldType`
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:47:36.223813+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T21:53:08.791309+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP05 — Tipos de Domínio e Contratos
@@ -192,3 +196,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP05
 ## Activity Log
 
 - 2026-04-20T21:47:36Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:53:09Z – unknown – lane=done – Moved to done
