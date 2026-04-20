@@ -1,7 +1,7 @@
 ---
 work_package_id: WP04
 title: Hierarquia de Exceções Expandida
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.129559+00:00'
 subtasks:
@@ -12,6 +12,10 @@ subtasks:
 - T005: Criar `PeriodoFaltanteException` e `PeriodoRepetidoException`
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:34:55.340569+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T21:41:02.049235+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP04 — Hierarquia de Exceções Expandida
@@ -188,3 +192,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP04
 ## Activity Log
 
 - 2026-04-20T21:34:55Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:41:02Z – unknown – lane=done – Moved to done
