@@ -68,10 +68,10 @@ test-output/
 .junie/
 .kimi/
 .qwen/
-#.specify/
+.specify/
 .opencode/
 .vibe/
-.worktree/
+.worktrees/
 .github/skills/
 .github/agents/
 .github/memory/
