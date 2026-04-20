@@ -68,7 +68,7 @@ test-output/
 .junie/
 .kimi/
 .qwen/
-.specify/
+#.specify/
 .opencode/
 .vibe/
 .worktree/
