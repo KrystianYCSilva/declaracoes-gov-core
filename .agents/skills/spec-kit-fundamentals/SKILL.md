@@ -2,18 +2,13 @@
 name: spec-kit-fundamentals
 description: |
   Guide spec-driven development workflows with conditional backend selection and Spec Kit artifact discipline.
-  Use when: creating specs, plans, and tasks under `backend=spec-kit-native`, or clarifying
-  the difference between upstream Spec Kit and Itzamna governance overlays.
+  Use when: creating specs, plans, and tasks under `backend=spec-kit-native`.
 ---
 
 # Spec Kit Fundamentals
 
 This skill applies only when the active backend is `spec-kit-native`.
-Itzamna owns macro governance, state, and closure.
-Upstream Spec Kit owns the spec-driven execution artifacts and bootstrap.
-Itzamna still owns macro governance even when Spec Kit owns the technical artifact flow.
-
-For the upstream versus local overlay contract, read `references/upstream-vs-itzamna.md`.
+Spec Kit owns the spec-driven execution artifacts and bootstrap.
 
 ## How to Start a Spec-Kit Cycle
 
@@ -48,7 +43,7 @@ Use the upstream artifact flow:
 3. approved task breakdown
 4. implementation against the approved artifacts
 
-In Itzamna-managed repositories, keep `.specify/` as upstream runtime metadata
+Keep `.specify/` as upstream runtime metadata
 and `specs/` as the active technical tree when that contract is installed.
 If one artifact is rejected, fix that artifact instead of skipping ahead.
 
@@ -61,13 +56,11 @@ Upstream Spec Kit owns:
 - its template semantics
 - its runtime metadata under `.specify/`
 
-Itzamna owns:
+Repository governance owns:
 
 - bootstrap routing into the current backend
 - macro lifecycle state
-- card and epic governance
 - source-of-truth precedence
-- closure after merge
 
 Never let Spec Kit update memory, context governance, or closure state by itself.
 
@@ -89,5 +82,4 @@ Tasks should be executable and traceable back to the approved plan.
 
 ## How to Navigate This Skill
 
-- `references/upstream-vs-itzamna.md`: boundary contract between upstream Spec Kit and Itzamna governance
 - `references/sources.md`: project-local artifact locations, runtime agent routing table, and SDD methodology references

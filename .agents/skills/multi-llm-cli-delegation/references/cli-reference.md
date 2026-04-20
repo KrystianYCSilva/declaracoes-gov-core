@@ -23,7 +23,7 @@ Before running any CLI delegation command:
 3. confirm whether the run is read-only, patching, or broader execution
 4. prefer the safest permission mode supported by the tool
 
-If vendor docs show automation shortcuts or safety-bypass examples, do not import them into Itzamna-managed workflows.
+If vendor docs show automation shortcuts or safety-bypass examples, do not import them into governed workflows.
 
 ---
 

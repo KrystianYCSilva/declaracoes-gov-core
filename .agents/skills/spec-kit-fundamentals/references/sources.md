@@ -1,12 +1,12 @@
 ---
 name: sources
 description: |
-  Spec Kit workflow references and Itzamna governance documentation. Use when: creating specs, plans, and tasks or clarifying Spec Kit vs Itzamna differences.
+  Spec Kit workflow references. Use when: creating specs, plans, and tasks.
 Last verified: 2025-07-09
 ---
 # Sources
 
-References for the Spec Kit workflow, Itzamna governance, and spec-driven development.
+References for the Spec Kit workflow and spec-driven development.
 
 ## Project-Local Artifacts
 
@@ -17,7 +17,7 @@ References for the Spec Kit workflow, Itzamna governance, and spec-driven develo
 
 ## Spec Kit Runtime Agents (repository-local)
 
-These are the Itzamna-managed skill agents that implement Spec Kit stages.
+These are the skill agents that implement Spec Kit stages.
 Each is a SKILL.md under `.agents/skills/`:
 
 | Agent | Stage |
@@ -36,11 +36,6 @@ Each is a SKILL.md under `.agents/skills/`:
 Spec Kit is the upstream framework that owns the spec/plan/tasks artifact flow.
 The public project and documentation, if available, should be consulted before
 modifying the upstream artifact templates or bootstrap behavior.
-
-## Upstream vs. Local Governance Boundary
-
-Read `references/upstream-vs-itzamna.md` for the boundary contract between
-upstream Spec Kit artifact ownership and Itzamna macro governance.
 
 ## Spec-Driven Development Methodology
 
