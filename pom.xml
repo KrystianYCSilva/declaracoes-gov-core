@@ -15,6 +15,38 @@
         de dominio, formatacao, XML e criptografia para o contexto brasileiro.
     </description>
 
+    <licenses>
+        <license>
+            <comments>This project is under Contabilizei Policy Rights</comments>
+            <name>Contabilizei License</name>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <organization>
+        <name>Contabilizei</name>
+        <url>http://www.contabilizei.br</url>
+    </organization>
+
+    <repositories>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>${env.GITLAB_MAVEN_PACKAGES_URL}</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>${env.GITLAB_MAVEN_PACKAGES_URL}</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>declaracoes-gov-core-bom</module>
         <module>declaracoes-gov-core-domain</module>
@@ -40,6 +72,9 @@
         <jacoco.skip>false</jacoco.skip>
         <jacoco.line.minimum>0.90</jacoco.line.minimum>
         <jacoco.branch.minimum>0.90</jacoco.branch.minimum>
+
+        <jgitflow.version>1.0-m5.1</jgitflow.version>
+        <sonar.host.url>https://services.contabilizei.com/sonar</sonar.host.url>
     </properties>
 
     <dependencyManagement>
@@ -124,6 +159,15 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>${jgitflow.version}</version>
+                <configuration>
+                    <noDeploy>true</noDeploy>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
@@ -193,4 +237,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>sonarjacocojava17</id>
+            <properties>
+                <sonar.host.url>https://services.contabilizei.com/sonarqube/</sonar.host.url>
+                <sonar.login>${SONARQUBE_PWD}</sonar.login>
+                <sonar.sources>src/main,pom.xml</sonar.sources>
+                <argLine>--add-opens java.base/java.time=ALL-UNNAMED -Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -1,0 +1,141 @@
+options:
+  size: 4x
+  runtime:
+    cloud:
+      atlassian-ip-ranges: true
+
+image:
+  name: contabilizeidevops/maven:3.8.4-openjdk-17
+  username: $DOCKER_HUB_USERNAME
+  password: $DOCKER_HUB_PASSWORD
+  email: $DOCKER_HUB_EMAIL
+
+definitions:
+  caches:
+    sonar: ~/.sonar
+  steptypes:
+    - sec_sast_step: &sast_insider
+        name: SAST Analyzer
+        image:
+          name: contabilizeidevops/mechanism-sast
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_PASSWORD
+          email: $DOCKER_HUB_EMAIL
+        script:
+          - python3 /app/fullscan.py ./ $BITBUCKET_REPO_FULL_NAME
+        artifacts:
+          - defectdojo_report.json
+
+    - sonar_log_artifact: &sonar_log_artifact
+        name: Sonar Publish
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn -s /usr/share/maven/ref/settings-sonar.xml -B verify sonar:sonar -U -Dsonar.host.url=${SONARQUBE_URL} -P sonarjacocojava17,\!sonar
+
+    - sonar_pr: &sonar_pr
+        name: Sonar Preview PR
+        caches:
+          - maven
+          - sonar
+        script:
+          - git fetch origin "+refs/heads/master:refs/remotes/origin/master"
+          - git fetch origin "+refs/heads/develop:refs/remotes/origin/develop"
+          - export INCLUSIONS=$(git diff --name-only ${BITBUCKET_BRANCH} origin/develop | tr '\n' ",")
+          - mvn -s /usr/share/maven/ref/settings-sonar.xml -B -DskipTests=false verify sonar:sonar -Dsonar.branch.name=${BITBUCKET_BRANCH} -Dsonar.login=${SONARQUBE_PWD} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.inclusions=${INCLUSIONS}
+          - mvn -s /usr/share/maven/ref/settings-sonar.xml -B verify sonar:sonar -U -Dsonar.pullrequest.branch=${BITBUCKET_BRANCH} -Dsonar.pullrequest.key=${BITBUCKET_PR_ID} -Dsonar.login=${SONARQUBE_PWD} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.inclusions=${INCLUSIONS} -Dsonar.qualitygate.wait=true -P sonarjacocojava17,\!sonar
+
+    - verify_artifact: &verify_artifact
+        name: Sonar Preview
+        caches:
+          - maven
+          - sonar
+        script:
+          - git fetch origin "+refs/heads/master:refs/remotes/origin/master"
+          - git fetch origin "+refs/heads/develop:refs/remotes/origin/develop"
+          - export INCLUSIONS=$(git diff --name-only ${BITBUCKET_BRANCH} origin/develop | tr '\n' ",")
+          - echo $INCLUSIONS
+          - mvn -s /usr/share/maven/ref/settings-sonar.xml -B verify sonar:sonar -Dsonar.branch.name=${BITBUCKET_BRANCH} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_PWD} -Dsonar.inclusions=${INCLUSIONS} -Dsonar.qualitygate.wait=true -P sonarjacocojava17,\!sonar
+
+    - publish_artifactory_lib_master: &publish_artifactory_lib_master
+        name: Publica biblioteca no artifactory
+        image:
+          name: gcr.io/contabilizei-tools-production/maven:3-jdk-8
+          username: _json_key
+          password: '$GCR_DEVOPS_KEY'
+        caches:
+          - maven
+        script:
+          - mvn -s /usr/share/maven/ref/settings.xml install deploy -DaltDeploymentRepository=central::default::https://services.contabilizei.com/artifactory/libs-release-local -DskipTests
+
+    - publish_artifactory_lib_snapshot: &publish_artifactory_lib_snapshot
+        name: Publica biblioteca no artifactory
+        image:
+          name: gcr.io/contabilizei-tools-production/maven:3-jdk-8
+          username: _json_key
+          password: '$GCR_DEVOPS_KEY'
+        caches:
+          - maven
+        script:
+          - mvn -s /usr/share/maven/ref/settings.xml install deploy -DaltDeploymentRepository=central::default::https://services.contabilizei.com/artifactory/libs-snapshot-local -DskipTests
+
+    - fecha_release: &fecha_release
+        name: Fecha release
+        image:
+          name: gcr.io/contabilizei-tools-production/maven:3-jdk-8
+          username: _json_key
+          password: '$GCR_DEVOPS_KEY'
+        caches:
+          - maven
+        script:
+          - git-flow-maven release-finish
+
+    - test_artifact: &test_artifact
+        name: Run Unit Tests
+        image:
+          name: gcr.io/contabilizei-tools-production/maven:3-jdk-8
+          username: _json_key
+          password: '$GCR_DEVOPS_KEY'
+        caches:
+          - maven
+        script:
+          - mvn -s /usr/share/maven/ref/settings.xml -B verify
+
+pipelines:
+  pull-requests:
+    '**':
+      - step: *sast_insider
+      - parallel:
+          - step: *sonar_pr
+      - parallel:
+          - step: *verify_artifact
+  branches:
+    master:
+      - parallel:
+          - step: *sonar_log_artifact
+          - step: *publish_artifactory_lib_master
+
+    develop:
+      - step:
+          name: Abre release
+          image:
+            name: gcr.io/contabilizei-tools-production/maven:3-jdk-8
+            username: _json_key
+            password: '$GCR_DEVOPS_KEY'
+          caches:
+            - maven
+          script:
+            - git-flow-maven release-start
+
+    release/*:
+      - step:
+          <<: *fecha_release
+
+  custom:
+    verify_sonar:
+      - step: *verify_artifact
+      - step: *test_artifact
+
+    publica_versao_snapshot:
+      - step: *publish_artifactory_lib_snapshot
