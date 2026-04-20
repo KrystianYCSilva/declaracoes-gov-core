@@ -1,7 +1,7 @@
 ---
 work_package_id: WP07
 title: GovDateUtils + VigenciaConverter + GovCollections + GovFileUtils
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-20T21:13:24.169349+00:00'
 subtasks:
@@ -12,6 +12,8 @@ subtasks:
 - T005: Criar `GovFileUtils`
 - T006: Testes para todas as novas classes
 - T007: Verificar BOM para novos módulos se necessário
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:34:59.359798+00:00"
 ---
 
 # WP07 — GovDateUtils + VigenciaConverter + GovCollections + GovFileUtils
@@ -239,3 +241,7 @@ O módulo `format` precisa de quatro grupos de utilitários desacoplados de Spri
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP07
 ```
+
+## Activity Log
+
+- 2026-04-20T21:34:59Z – unknown – lane=doing – Moved to doing

@@ -1,7 +1,7 @@
 ---
 work_package_id: WP03
 title: CPF + Domínio Período/Vigência
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.115716+00:00'
 subtasks:
@@ -13,6 +13,10 @@ subtasks:
 - T006: Testes para todas as novas classes
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:29:39.693628+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T21:34:50.921787+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP03 — CPF + Domínio Período/Vigência
@@ -207,3 +211,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP03
 ## Activity Log
 
 - 2026-04-20T21:29:39Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:34:51Z – unknown – lane=done – Moved to done

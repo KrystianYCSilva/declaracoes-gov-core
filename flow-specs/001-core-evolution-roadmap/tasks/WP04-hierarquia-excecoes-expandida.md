@@ -1,7 +1,7 @@
 ---
 work_package_id: WP04
 title: Hierarquia de Exceções Expandida
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-20T21:13:24.129559+00:00'
 subtasks:
@@ -10,6 +10,8 @@ subtasks:
 - T003: Criar `CertificadoInvalidoException`
 - T004: Criar `ArquivoInvalidoReciboException`, `SemConexaoException`, `RetryableException`
 - T005: Criar `PeriodoFaltanteException` e `PeriodoRepetidoException`
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:34:55.340569+00:00"
 ---
 
 # WP04 — Hierarquia de Exceções Expandida
@@ -182,3 +184,7 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP04
 ```
+
+## Activity Log
+
+- 2026-04-20T21:34:55Z – unknown – lane=doing – Moved to doing
