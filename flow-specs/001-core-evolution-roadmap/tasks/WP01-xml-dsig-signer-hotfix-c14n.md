@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: XmlDsigSigner — Hotfix C14N Inclusive
-lane: planned
+lane: "for_review"
 dependencies: []
 created_at: '2026-04-20T21:13:24.088051+00:00'
 subtasks:
@@ -9,6 +9,10 @@ subtasks:
 - T002: Modificar `XmlDsigSigner.createReference()` para incluir C14N
 - T003: Atualizar testes de assinatura XML com cenários C14N
 - T004: Verificar alinhamento de versões no BOM
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-20T21:16:45.306824+00:00"
+loops_doing_to_for_review: "1"
+for_review_started_at: "2026-04-20T21:27:34.250317+00:00"
 ---
 
 # WP01 — XmlDsigSigner — Hotfix C14N Inclusive
@@ -134,3 +138,8 @@ O `XmlDsigSigner` atual injeta apenas a transformação `ENVELOPED` na referênc
 # When dependencies are ready:
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP01
 ```
+
+## Activity Log
+
+- 2026-04-20T21:16:45Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T21:27:34Z – unknown – lane=for_review – Moved to for_review
