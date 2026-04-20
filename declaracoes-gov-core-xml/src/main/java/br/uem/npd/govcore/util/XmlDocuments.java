@@ -91,6 +91,40 @@ public final class XmlDocuments {
     }
 
     /**
+     * Busca na árvore o primeiro atributo de Id em qualquer profundidade.
+     */
+    public static String extractFirstId(String xml) {
+        Document document = parse(xml);
+        Element root = document.getDocumentElement();
+        if (root == null) {
+            throw new GovCoreException("XML sem elemento raiz.");
+        }
+
+        Element found = findFirstElementWithAttribute(root, "Id");
+        if (found == null) {
+            found = findFirstElementWithAttribute(root, "id");
+        }
+        if (found == null) {
+            throw new IllegalArgumentException("Nao foi encontrado atributo Id no XML informado");
+        }
+        return found.hasAttribute("Id") ? found.getAttribute("Id") : found.getAttribute("id");
+    }
+
+    /**
+     * Escapa texto livre para inserção segura em conteúdo XML.
+     */
+    public static String escape(String value) {
+        if (value == null) {
+            return "";
+        }
+        String escaped = value.replace("&", "&amp;");
+        escaped = escaped.replace("<", "&lt;");
+        escaped = escaped.replace(">", "&gt;");
+        escaped = escaped.replace("\"", "&quot;");
+        return escaped.replace("'", "&apos;");
+    }
+
+    /**
      * Busca um elemento na árvore recursivamente que contenha um atributo específico.
      * Útil para encontrar a tag raiz assinada que a RFB exige o Id="ID1...".
      */
@@ -107,6 +141,22 @@ public final class XmlDocuments {
                     return found;
                 }
             }
+        }
+        return null;
+    }
+
+    /**
+     * Busca recursivamente o primeiro elemento pelo nome local informado a partir de um nó qualquer.
+     */
+    public static Element findFirstElementByLocalName(Node node, String localName) {
+        if (node == null) {
+            return null;
+        }
+        if (node instanceof Document) {
+            return findFirstElementByLocalName(((Document) node).getDocumentElement(), localName);
+        }
+        if (node instanceof Element) {
+            return findFirstElementByLocalName((Element) node, localName);
         }
         return null;
     }

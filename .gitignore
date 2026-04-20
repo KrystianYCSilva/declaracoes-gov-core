@@ -58,3 +58,21 @@ certs/
 ### Test Artifacts ###
 test-output/
 *.ser
+
+### LLMs ###
+.codebuddy/
+.cursor/
+.claude/
+.codex/
+.gemini/
+.junie/
+.kimi/
+.qwen/
+.specify/
+.opencode/
+.vibe/
+.github/skills/
+.github/agents/
+.github/memory/
+.github/prompts/
+.github/copilot-instructions.md

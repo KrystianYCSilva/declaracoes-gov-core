@@ -113,4 +113,29 @@ public class XmlDocumentsTest {
         Document document = XmlDocuments.parse("<root><evento><info/></evento></root>");
         assertNull(XmlDocuments.findFirstElementByLocalName(document.getDocumentElement(), null));
     }
+
+    @Test
+    public void testFindFirstElementByLocalNameStartingFromNode() {
+        Document document = XmlDocuments.parse("<root xmlns=\"urn:test\"><evento><info><detalhe/></info></evento></root>");
+        assertEquals("detalhe", XmlDocuments.findFirstElementByLocalName((org.w3c.dom.Node) document, "detalhe").getLocalName());
+        assertEquals("evento", XmlDocuments.findFirstElementByLocalName((org.w3c.dom.Node) document.getDocumentElement(), "evento").getLocalName());
+        assertNull(XmlDocuments.findFirstElementByLocalName((org.w3c.dom.Node) document.createTextNode("x"), "evento"));
+    }
+
+    @Test
+    public void testExtractFirstIdSupportsUppercaseAndLowercase() {
+        assertEquals("ID100", XmlDocuments.extractFirstId("<root><evento Id=\"ID100\"><det/></evento></root>"));
+        assertEquals("evt-200", XmlDocuments.extractFirstId("<root><evento id=\"evt-200\"><det/></evento></root>"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExtractFirstIdMissingAttribute() {
+        XmlDocuments.extractFirstId("<root><evento><det/></evento></root>");
+    }
+
+    @Test
+    public void testEscape() {
+        assertEquals("&lt;tag&gt;&amp;&quot;&apos;", XmlDocuments.escape("<tag>&\"'"));
+        assertEquals("", XmlDocuments.escape(null));
+    }
 }
