@@ -36,7 +36,7 @@
         <mockito.version>4.11.0</mockito.version>
         <bouncycastle.version>1.78.1</bouncycastle.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <kotlin.version>1.9.23</kotlin.version>
+        <kotlin.version>1.8.22</kotlin.version>
         <jacoco.skip>false</jacoco.skip>
         <jacoco.line.minimum>0.90</jacoco.line.minimum>
         <jacoco.branch.minimum>0.90</jacoco.branch.minimum>
