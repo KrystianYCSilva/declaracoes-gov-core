@@ -43,7 +43,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Consolidar as 4 cópias idênticas de compressão GZIP+Base64 em uma implementação canônica no módulo `format`, com comportamento verificado por fixtures dos projetos originais.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovZipUtils.java`
+1. Criar `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovZipUtils.java`
 2. Declarar como `public final class GovZipUtils` com construtor privado
 3. Implementar `compressAndEncodeBase64(String content): String`:
    - Converter string para bytes (UTF-8)
@@ -62,7 +62,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 7. Javadoc em português para cada método
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovZipUtils.java`
+- `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovZipUtils.java`
 
 **Validação:**
 - Round-trip: `decompress(Base64.decode(compressAndEncodeBase64("teste")))` retorna bytes de "teste"
@@ -81,7 +81,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Adicionar ~10 métodos de manipulação de strings encontrados em projetos de origem sem criar classe paralela se `GovTextNormalizer` já existir com métodos compatíveis.
 
 **Passos:**
-1. **Primeiro:** Verificar `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovTextNormalizer.java` — listar métodos existentes
+1. **Primeiro:** Verificar `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovTextNormalizer.java` — listar métodos existentes
 2. **Se métodos existentes são compatíveis:** adicionar novos métodos à classe existente
 3. **Se não existir ou incompatível:** criar `GovStringUtils.java` com todos os métodos
 4. Adicionar os seguintes métodos (se não existirem):
@@ -97,8 +97,8 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 5. Javadoc em português para cada método novo
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovTextNormalizer.java` — expandir (preferencial)
-- OU `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovStringUtils.java` — criar se necessário
+- `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovTextNormalizer.java` — expandir (preferencial)
+- OU `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovStringUtils.java` — criar se necessário
 
 **Validação:**
 - `emptyIfNull(null)` retorna `""`
@@ -118,7 +118,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Centralizar operações null-safe de `BigDecimal` encontradas em 11 métodos distribuídos entre `contabilizei-back-core` e `contabilizei-framework`, evitando `NullPointerException` em cálculos financeiros.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovNumberUtils.java`
+1. Criar `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovNumberUtils.java`
 2. Declarar como `public final class GovNumberUtils` com construtor privado
 3. Implementar métodos null-safe (tratar `null` como `BigDecimal.ZERO`):
    - `add(BigDecimal a, BigDecimal b): BigDecimal`
@@ -136,7 +136,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 6. Javadoc em português para cada método
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovNumberUtils.java`
+- `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovNumberUtils.java`
 
 **Validação:**
 - `add(null, BigDecimal.ONE)` retorna `BigDecimal.ONE`
@@ -154,7 +154,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Fornecer constantes de `BigDecimal` frequentemente usadas em cálculos financeiros para evitar instanciação repetida.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovBigDecimalConstants.java`
+1. Criar `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovBigDecimalConstants.java`
 2. Declarar como `public final class GovBigDecimalConstants` com construtor privado
 3. Definir constantes:
    - `public static final BigDecimal CEM = BigDecimal.valueOf(100L)`
@@ -163,7 +163,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 5. Javadoc em português
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/main/java/br/uem/npd/govcore/util/GovBigDecimalConstants.java`
+- `declaracoes-gov-core-format/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/GovBigDecimalConstants.java`
 
 **Validação:**
 - `GovBigDecimalConstants.CEM.compareTo(BigDecimal.valueOf(100)) == 0`
@@ -179,7 +179,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Garantir que o comportamento de `GovZipUtils` é idêntico ao das 4 implementações originais usando fixtures reais.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovZipUtilsTest.java`
+1. Criar `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovZipUtilsTest.java`
 2. Teste de round-trip: `decompress(Base64.decode(compressAndEncodeBase64(input)))` retorna bytes de `input`
 3. Teste de fixture cross-projeto: usar string payload de teste idêntica à usada nos testes originais dos 4 projetos — verificar que o output Base64 é idêntico
 4. Teste de nulo: `compressAndEncodeBase64(null)` lança exceção esperada
@@ -187,7 +187,7 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 6. Teste de `zipToString`: objeto `Serializable` é comprimido e string resultante pode ser decomprimida
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovZipUtilsTest.java`
+- `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovZipUtilsTest.java`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-format` verde
@@ -204,14 +204,14 @@ Três categorias de utilitários estão fortemente duplicadas no ecossistema: (1
 **Objetivo:** Garantir cobertura ≥ 90% nos métodos de string e número com foco em entradas nulas, vazias e de fronteira.
 
 **Passos:**
-1. Criar/expandir `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovTextNormalizerTest.java` (ou `GovStringUtilsTest.java`)
-2. Criar `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovNumberUtilsTest.java`
+1. Criar/expandir `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovTextNormalizerTest.java` (ou `GovStringUtilsTest.java`)
+2. Criar `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovNumberUtilsTest.java`
 3. Para cada método: testar entrada nula, entrada vazia, entrada válida e caso de fronteira
 4. Para `GovNumberUtils`: testar todos os 11 métodos com pelo menos 3 cenários cada
 
 **Arquivos:**
-- `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovTextNormalizerTest.java`
-- `declaracoes-gov-core-format/src/test/java/br/uem/npd/govcore/util/GovNumberUtilsTest.java`
+- `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovTextNormalizerTest.java`
+- `declaracoes-gov-core-format/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/GovNumberUtilsTest.java`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-format` verde

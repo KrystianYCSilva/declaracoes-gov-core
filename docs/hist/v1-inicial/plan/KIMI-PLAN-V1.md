@@ -36,7 +36,7 @@ A `declaracoes-gov-core` é a **fundação do ecossistema fiscal brasileiro** - 
 ### 2.1 Estrutura Existente
 
 ```
-src/main/java/br/uem/npd/govcore/
+src/main/java/br/com/contabilizei/obrigacoes/govcore/
 ├── crypto/           # Provedores de keystore, certificados (PKCS11, PKCS12)
 ├── exception/        # Hierarquia de exceções (GovCoreException, etc.)
 ├── model/            # Value Objects: Cnpj, Cpf, Nis, PeriodoApuracao, Vigencia, etc.
@@ -92,7 +92,7 @@ declaracoes-gov-core/
 ### 3.2 Diagrama de Pacotes
 
 ```java
-br.uem.npd.govcore
+br.com.contabilizei.obrigacoes.govcore
 ├── .lang                    # Try<T>, Result<T>, Preconditions
 ├── .text                    # StringFiscal.normalize(), removeAccents()
 ├── .io                      # SpedFileReader, EncodingDetector
@@ -113,7 +113,7 @@ br.uem.npd.govcore
 
 ## 4. CATÁLOGO DE ARTEFATOS (v1.0.0)
 
-### 4.1 Documentos (br.uem.npd.govcore.document)
+### 4.1 Documentos (br.com.contabilizei.obrigacoes.govcore.document)
 
 | Classe | Descrição | Validação | Formatação |
 |--------|-----------|-----------|------------|
@@ -129,7 +129,7 @@ br.uem.npd.govcore
 | `Cei` | Cadastro Específico INSS | 12 dígitos | DV módulo 11 |
 | `InscricaoEstadual` | IE por estado | UF-dependent | - |
 
-### 4.2 Períodos Fiscais (br.uem.npd.govcore.fiscal.period)
+### 4.2 Períodos Fiscais (br.com.contabilizei.obrigacoes.govcore.fiscal.period)
 
 | Classe | Formato | Uso Principal |
 |--------|---------|---------------|
@@ -139,7 +139,7 @@ br.uem.npd.govcore
 | `AnoCalendario` | yyyy | IRPF, DIRF |
 | `DataFiscal` | LocalDate com validações | Datas em contexto fiscal |
 
-### 4.3 Tabelas Fiscais (br.uem.npd.govcore.fiscal.table)
+### 4.3 Tabelas Fiscais (br.com.contabilizei.obrigacoes.govcore.fiscal.table)
 
 | Enum | Descrição | Fonte |
 |------|-----------|-------|
@@ -150,7 +150,7 @@ br.uem.npd.govcore
 | `CodigoImposto` | IRPJ, CSLL, PIS, COFINS, etc. | SPED/DCTF |
 | `IndicadorMes` | Janeiro a Dezembro + 13º | Folha de pagamento |
 
-### 4.4 Utilitários de Texto (br.uem.npd.govcore.text)
+### 4.4 Utilitários de Texto (br.com.contabilizei.obrigacoes.govcore.text)
 
 | Classe | Função |
 |--------|--------|
@@ -162,7 +162,7 @@ br.uem.npd.govcore
 | `StringFiscal.lpad(String, int, char)` | Preenche à esquerda |
 | `StringFiscal.rpad(String, int, char)` | Preenche à direita |
 
-### 4.5 IO (br.uem.npd.govcore.io)
+### 4.5 IO (br.com.contabilizei.obrigacoes.govcore.io)
 
 | Classe | Função |
 |--------|--------|
@@ -171,7 +171,7 @@ br.uem.npd.govcore
 | `EncodingDetector` | Detecta encoding de arquivos fiscais |
 | `DelimitedFileParser` | Parser genérico para arquivos delimitados |
 
-### 4.6 Lang (br.uem.npd.govcore.lang)
+### 4.6 Lang (br.com.contabilizei.obrigacoes.govcore.lang)
 
 | Classe | Inspirado em | Função |
 |--------|--------------|--------|
@@ -280,12 +280,12 @@ pa.toString();       // "202501"
 ### Fase 1: Fundação (Semanas 1-2)
 
 ```markdown
-- [ ] Criar pacote `br.uem.npd.govcore.lang`
+- [ ] Criar pacote `br.com.contabilizei.obrigacoes.govcore.lang`
   - [ ] Implementar `Result<T>` com Success/Failure
   - [ ] Implementar `Try<T>` com map/recover
   - [ ] Implementar `Preconditions` (nonNull, nonEmpty, checkArgument)
   
-- [ ] Criar pacote `br.uem.npd.govcore.text`
+- [ ] Criar pacote `br.com.contabilizei.obrigacoes.govcore.text`
   - [ ] Implementar `StringFiscal` com normalização Unicode
   - [ ] Implementar remoção de acentos (NFKD)
   - [ ] Implementar sanitização XML

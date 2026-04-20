@@ -40,7 +40,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 **Objetivo:** Criar builder Java que constrói um `KeyManagerFactory` a partir de um certificado PFX em Base64 e sua senha, traduzindo a implementação Kotlin de `obrigacoes-service-reinf` para Java idiomático.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-crypto/src/main/java/br/uem/npd/govcore/crypto/KeyManagerFactoryBuilder.java`
+1. Criar `declaracoes-gov-core-crypto/src/main/java/br/com/contabilizei/obrigacoes/govcore/crypto/KeyManagerFactoryBuilder.java`
 2. Declarar como `public final class KeyManagerFactoryBuilder`
 3. Método principal: `public KeyManagerFactory build(String pfxBase64, String senha) throws CertificadoInvalidoException`
    - Decodificar `pfxBase64` com `java.util.Base64`
@@ -52,7 +52,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 6. Javadoc em português
 
 **Arquivos:**
-- `declaracoes-gov-core-crypto/src/main/java/br/uem/npd/govcore/crypto/KeyManagerFactoryBuilder.java`
+- `declaracoes-gov-core-crypto/src/main/java/br/com/contabilizei/obrigacoes/govcore/crypto/KeyManagerFactoryBuilder.java`
 
 **Validação:**
 - Com PFX de teste (Base64) e senha correta: retorna `KeyManagerFactory` inicializado
@@ -71,7 +71,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 **Objetivo:** Criar factory de `SSLContext` dinâmico que aceita certificado por CNPJ do chamador, permitindo multi-tenancy em cenários onde cada tenant tem seu próprio certificado (ex: tombamento eSocial).
 
 **Passos:**
-1. Criar `declaracoes-gov-core-crypto/src/main/java/br/uem/npd/govcore/crypto/GovSslContextFactory.java`
+1. Criar `declaracoes-gov-core-crypto/src/main/java/br/com/contabilizei/obrigacoes/govcore/crypto/GovSslContextFactory.java`
 2. Declarar como `public final class GovSslContextFactory`
 3. Método principal: `public SSLContext create(String pfxBase64, String senha) throws CertificadoInvalidoException`
    - Usar `KeyManagerFactoryBuilder.build()` para obter o `KeyManagerFactory`
@@ -83,7 +83,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 6. Javadoc em português; documentar que o SSLContext não é cacheado (responsabilidade do chamador)
 
 **Arquivos:**
-- `declaracoes-gov-core-crypto/src/main/java/br/uem/npd/govcore/crypto/GovSslContextFactory.java`
+- `declaracoes-gov-core-crypto/src/main/java/br/com/contabilizei/obrigacoes/govcore/crypto/GovSslContextFactory.java`
 
 **Validação:**
 - Com PFX de teste válido: retorna `SSLContext` com protocolo `TLSv1.2` ou superior
@@ -104,18 +104,18 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 **Passos:**
 1. Verificar a infraestrutura de testes do `crypto` test-jar em `declaracoes-gov-core-crypto/src/test/`
 2. Localizar utilitários de geração de certificado de teste (BouncyCastle) já existentes
-3. Criar `declaracoes-gov-core-crypto/src/test/java/br/uem/npd/govcore/crypto/KeyManagerFactoryBuilderTest.java`:
+3. Criar `declaracoes-gov-core-crypto/src/test/java/br/com/contabilizei/obrigacoes/govcore/crypto/KeyManagerFactoryBuilderTest.java`:
    - Gerar certificado PFX de teste via BouncyCastle
    - Encodar em Base64
    - Verificar que `KeyManagerFactoryBuilder.build()` retorna `KeyManagerFactory` funcional
    - Verificar que senha errada lança `CertificadoInvalidoException`
-4. Criar `declaracoes-gov-core-crypto/src/test/java/br/uem/npd/govcore/crypto/GovSslContextFactoryTest.java`:
+4. Criar `declaracoes-gov-core-crypto/src/test/java/br/com/contabilizei/obrigacoes/govcore/crypto/GovSslContextFactoryTest.java`:
    - Verificar que `SSLContext` criado com certificado de teste não é nulo
    - Verificar protocolo TLS
 
 **Arquivos:**
-- `declaracoes-gov-core-crypto/src/test/java/br/uem/npd/govcore/crypto/KeyManagerFactoryBuilderTest.java`
-- `declaracoes-gov-core-crypto/src/test/java/br/uem/npd/govcore/crypto/GovSslContextFactoryTest.java`
+- `declaracoes-gov-core-crypto/src/test/java/br/com/contabilizei/obrigacoes/govcore/crypto/KeyManagerFactoryBuilderTest.java`
+- `declaracoes-gov-core-crypto/src/test/java/br/com/contabilizei/obrigacoes/govcore/crypto/GovSslContextFactoryTest.java`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-crypto` verde
@@ -138,7 +138,7 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 4. Garantir que nenhum teste existente quebrou
 
 **Arquivos:**
-- `declaracoes-gov-core-crypto/src/main/java/br/uem/npd/govcore/crypto/SslContextBuilder.java` — revisão (somente leitura se não mudar)
+- `declaracoes-gov-core-crypto/src/main/java/br/com/contabilizei/obrigacoes/govcore/crypto/SslContextBuilder.java` — revisão (somente leitura se não mudar)
 
 **Validação:**
 - `mvn -B -q verify` no reactor completo sem regressões

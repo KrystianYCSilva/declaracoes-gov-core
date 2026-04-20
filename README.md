@@ -1,6 +1,6 @@
 # declaracoes-gov-core
 
-Reator Maven e fundação Java 8 do ecossistema `declaracoes-*`. Este diretório mantém o parent `br.uem.npd:declaracoes-gov-core-parent:1.0.0` e os módulos manuais reutilizados por leiautes, transmissores e consumidores Java.
+Reator Maven e fundação Java 8 do ecossistema `declaracoes-*`. Este diretório mantém o parent `br.com.contabilizei.obrigacoes:declaracoes-gov-core-parent:1.0.0` e os módulos manuais reutilizados por leiautes, transmissores e consumidores Java.
 
 ## Papel no portfólio
 
@@ -42,7 +42,7 @@ Consumidores do ecossistema normalmente importam o BOM interno do core e escolhe
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>br.uem.npd</groupId>
+            <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
@@ -55,11 +55,11 @@ Consumidores do ecossistema normalmente importam o BOM interno do core e escolhe
 ```xml
 <dependencies>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-domain</artifactId>
     </dependency>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-xml</artifactId>
     </dependency>
 </dependencies>

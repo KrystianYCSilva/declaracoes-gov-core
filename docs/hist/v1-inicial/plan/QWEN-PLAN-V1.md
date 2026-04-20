@@ -111,7 +111,7 @@ Análise profunda dos WSDLs/XSDs oficiais de eSocial e REINF revelou:
 A estrutura será reorganizada em **pacotes lógicos** (semelhante ao Apache Commons, mas contextualizado):
 
 ```
-br.uem.npd.govcore/
+br.com.contabilizei.obrigacoes.govcore/
 ├── docs/                    → Documentos Brasileiros (CNPF, CPF, IE, etc.)
 ├── fiscal/                  → Utilitários Fiscais (períodos, competências, exercícios)
 ├── monetary/                → Valores Monetários (BigDecimal ↔ formato XSD)
@@ -311,10 +311,10 @@ validation/
 **Configuração:**
 ```
 META-INF/services/
-├── br.uem.npd.govcore.spi.DocumentValidatorProvider
-├── br.uem.npd.govcore.spi.TabelaOficialProvider
-├── br.uem.npd.govcore.spi.FeriadosProvider
-└── br.uem.npd.govcore.spi.HttpInterceptorProvider
+├── br.com.contabilizei.obrigacoes.govcore.spi.DocumentValidatorProvider
+├── br.com.contabilizei.obrigacoes.govcore.spi.TabelaOficialProvider
+├── br.com.contabilizei.obrigacoes.govcore.spi.FeriadosProvider
+└── br.com.contabilizei.obrigacoes.govcore.spi.HttpInterceptorProvider
 ```
 
 #### 2.3.12 Pacote `util/` (Expandir Utilitários)

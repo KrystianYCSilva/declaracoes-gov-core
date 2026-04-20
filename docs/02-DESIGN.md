@@ -16,15 +16,15 @@
 
 | Pacote | Conteúdo atual | Papel |
 | --- | --- | --- |
-| `br.uem.npd.govcore.model` | `Cnpj`, `Cpf`, `Nis`, `Caepf`, `Cno`, `Cei`, `CodigoMunicipio`, `PeriodoApuracao`, `Recibo`, `Vigencia`, interfaces de inscrição | domínio brasileiro reutilizável |
-| `br.uem.npd.govcore.model.layout` | `LayoutVersion`, `NormativeSource`, `RecordDefinition`, `FieldDefinition`, `Constraint`, `ValidityWindow` | metadados manuais para catálogos de leiaute |
-| `br.uem.npd.govcore.table` | `TipoInscricao`, `TipoAmbiente`, `Uf` | tabelas manuais estáveis |
-| `br.uem.npd.govcore.validator` | `GovValidators`, `GovValidationCatalog`, `ValidationMetadata`, `ValidationLevel`, `Modulo11` e validadores concretos | contrato público de validação |
-| `br.uem.npd.govcore.exception` | `GovCoreException` e derivadas | hierarquia coesa de erro |
-| `br.uem.npd.govcore.format.parser` | `DelimitedParser`, `DelimitedSerializer`, `FixedLengthParser`, `FixedLengthSerializer` | parsers manuais de arquivo |
-| `br.uem.npd.govcore.util` | normalizadores, formatos, JSON e datas XML | utilitários leves de integração |
-| `br.uem.npd.govcore.crypto` | providers e `SSLContext` | segurança e certificado |
-| `br.uem.npd.govcore.signature` | `XmlSigner`, `XmlDsigSigner`, `XmlSignatureOptions` | assinatura XML configurável |
+| `br.com.contabilizei.obrigacoes.govcore.model` | `Cnpj`, `Cpf`, `Nis`, `Caepf`, `Cno`, `Cei`, `CodigoMunicipio`, `PeriodoApuracao`, `Recibo`, `Vigencia`, interfaces de inscrição | domínio brasileiro reutilizável |
+| `br.com.contabilizei.obrigacoes.govcore.model.layout` | `LayoutVersion`, `NormativeSource`, `RecordDefinition`, `FieldDefinition`, `Constraint`, `ValidityWindow` | metadados manuais para catálogos de leiaute |
+| `br.com.contabilizei.obrigacoes.govcore.table` | `TipoInscricao`, `TipoAmbiente`, `Uf` | tabelas manuais estáveis |
+| `br.com.contabilizei.obrigacoes.govcore.validator` | `GovValidators`, `GovValidationCatalog`, `ValidationMetadata`, `ValidationLevel`, `Modulo11` e validadores concretos | contrato público de validação |
+| `br.com.contabilizei.obrigacoes.govcore.exception` | `GovCoreException` e derivadas | hierarquia coesa de erro |
+| `br.com.contabilizei.obrigacoes.govcore.format.parser` | `DelimitedParser`, `DelimitedSerializer`, `FixedLengthParser`, `FixedLengthSerializer` | parsers manuais de arquivo |
+| `br.com.contabilizei.obrigacoes.govcore.util` | normalizadores, formatos, JSON e datas XML | utilitários leves de integração |
+| `br.com.contabilizei.obrigacoes.govcore.crypto` | providers e `SSLContext` | segurança e certificado |
+| `br.com.contabilizei.obrigacoes.govcore.signature` | `XmlSigner`, `XmlDsigSigner`, `XmlSignatureOptions` | assinatura XML configurável |
 
 ## 3. Dependências internas
 

@@ -11,11 +11,11 @@ description: |
 
 Shared Java 8 foundation library for the `declaracoes-*` workspace. It provides immutable fiscal identifiers, a public validator confidence policy, text/number/date/JSON formatting utilities, secure XML parsing and XMLDSIG signing, and certificate/SSLContext abstractions for the Brazilian government declarations ecosystem.
 
-- **GroupId:** `br.uem.npd`
+- **GroupId:** `br.com.contabilizei.obrigacoes`
 - **ArtifactId:** `declaracoes-gov-core-parent`
 - **Version:** `1.1.0-SNAPSHOT`
 - **Packaging:** `pom` (Maven reactor parent)
-- **Base package:** `br.uem.npd.govcore`
+- **Base package:** `br.com.contabilizei.obrigacoes.govcore`
 
 ## Tech Stack
 
@@ -87,7 +87,7 @@ mvn verify -Djacoco.skip=true
 ### Package Organization
 
 ```
-br.uem.npd.govcore
+br.com.contabilizei.obrigacoes.govcore
 ├── model              # Fiscal value objects (Cnpj, Cpf, Nis, ...)
 ├── model/layout       # Layout metadata (RecordDefinition, FieldDefinition, ...)
 ├── table              # Stable enums (Uf, TipoInscricao, TipoAmbiente)
@@ -153,7 +153,7 @@ Consumers should import the BOM and then pick only the modules they need:
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>br.uem.npd</groupId>
+            <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
             <version>1.1.0-SNAPSHOT</version>
             <type>pom</type>

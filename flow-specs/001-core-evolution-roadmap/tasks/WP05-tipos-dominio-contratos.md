@@ -41,7 +41,7 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 **Objetivo:** Definir o contrato de callback assíncrono genérico que aparece em múltiplos projetos para comunicação de resultado de operações não-bloqueantes, sem dependência de framework.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/CallbackAsync.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/CallbackAsync.java`
 2. Declarar como `public interface CallbackAsync<O>`
 3. Métodos:
    - `void onSuccess(O result)` — chamado quando a operação assíncrona conclui com sucesso
@@ -49,7 +49,7 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 4. Javadoc em português: "Contrato de callback para operações assíncronas. Não introduz dependência de framework; o controle de execução assíncrona é responsabilidade do consumidor."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/CallbackAsync.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/CallbackAsync.java`
 
 **Validação:**
 - Interface compila sem dependências externas
@@ -65,7 +65,7 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 **Objetivo:** Consolidar o DTO de certificado digital (base64 + senha) que está duplicado em `microservico-ecd` e `microservico-ecf` em uma classe compartilhada, imutável e serializável.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/CertificadoDTO.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/CertificadoDTO.java`
 2. Declarar como `public final class CertificadoDTO implements Serializable`
 3. Campos: `private final String certificadoBase64`, `private final String senha`
 4. Construtor privado
@@ -76,7 +76,7 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 9. Javadoc em português
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/CertificadoDTO.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/CertificadoDTO.java`
 
 **Validação:**
 - `CertificadoDTO.of("base64...", "senha123").getSenha()` retorna `"senha123"`
@@ -94,12 +94,12 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 **Objetivo:** Criar estrutura de filtro genérica (name/value) com coleção fluente encontrada em `contabilizei-framework-datastore` e `contabilizei-back-core`, para uso em queries de repositório sem dependência de framework.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Filter.java`:
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Filter.java`:
    - `public final class Filter`
    - Campos: `private final String name`, `private final Object value`
    - Construtor privado; factory `Filter.of(String name, Object value)`
    - Getters `getName()`, `getValue()`
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/FilterCollection.java`:
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/FilterCollection.java`:
    - `public final class FilterCollection implements Iterable<Filter>`
    - Backing: `private final List<Filter> filters` internamente
    - Método fluente: `public FilterCollection add(String name, Object value)` — retorna `this`
@@ -109,8 +109,8 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 3. Javadoc em português para ambas as classes
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Filter.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/FilterCollection.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Filter.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/FilterCollection.java`
 
 **Validação:**
 - `FilterCollection.empty().add("cnpj", "123").add("periodo", 202501).size() == 2`
@@ -127,19 +127,19 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 **Objetivo:** Centralizar enums de perfil de ambiente e formato de data que estão espalhados em múltiplos projetos.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/table/ActiveProfile.java`:
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/table/ActiveProfile.java`:
    - `public enum ActiveProfile { PROD, HOM, DEV }`
    - Método helper: `public static ActiveProfile fromString(String value)` — case-insensitive
    - Javadoc em português: "Perfis de ambiente de execução. Usar para decisões de configuração sem dependência de framework."
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/table/DateFormatType.java`:
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/table/DateFormatType.java`:
    - `public enum DateFormatType { YYYY_MM_DD, YYYYMM }`
    - Campo `private final String pattern` — ex: `"yyyy-MM-dd"`, `"yyyyMM"`
    - Getter `getPattern(): String`
    - Javadoc: "Tipos de formato de data utilizados em conversões e serializações."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/table/ActiveProfile.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/table/DateFormatType.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/table/ActiveProfile.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/table/DateFormatType.java`
 
 **Validação:**
 - `ActiveProfile.fromString("prod") == ActiveProfile.PROD`
@@ -156,24 +156,24 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 **Objetivo:** Fornecer annotations de metadata de campos de layout encontradas em `contabilizei-framework-metadata`, necessárias para documentação e processamento de campos de registros SPED/eSocial sem dependência de framework.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/Description.java`:
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/Description.java`:
    - `@interface Description` com `@Retention(RetentionPolicy.RUNTIME)` e `@Target({ElementType.FIELD, ElementType.METHOD})`
    - Atributo: `String value() default ""`
    - Javadoc em português
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/IgnoreElement.java`:
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/IgnoreElement.java`:
    - `@interface IgnoreElement` com `@Retention(RetentionPolicy.RUNTIME)` e `@Target({ElementType.FIELD})`
    - Sem atributos (marcador)
    - Javadoc: "Marca um campo para ser ignorado em serialização/deserialização de layout."
-3. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/FieldType.java`:
+3. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/FieldType.java`:
    - `public enum FieldType { STRING, INTEGER, DATE, BOOLEAN, DECIMAL, LONG, TIME, TIMESTAMP }`
    - Javadoc em português
 4. Criar testes que verificam `@Retention` e `@Target` usando reflection
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/Description.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/IgnoreElement.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/layout/FieldType.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/model/layout/LayoutAnnotationsTest.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/Description.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/IgnoreElement.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/layout/FieldType.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/model/layout/LayoutAnnotationsTest.java`
 
 **Validação:**
 - `Description.class.getAnnotation(Retention.class).value() == RetentionPolicy.RUNTIME`

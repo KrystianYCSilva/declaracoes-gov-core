@@ -31,7 +31,7 @@ description: |
 ## Package Organization
 
 ```
-br.uem.npd.govcore
+br.com.contabilizei.obrigacoes.govcore
 ├── model              # Fiscal value objects (Cnpj, Cpf, Nis, ...)
 ├── model/layout       # Layout metadata (RecordDefinition, FieldDefinition, ...)
 ├── table              # Stable enums (Uf, TipoInscricao, TipoAmbiente)

@@ -19,11 +19,11 @@ Seu objetivo é centralizar as responsabilidades técnicas transversais que se r
 
 ## 3. Migração de Código Existente
 Para construir este módulo, iremos extrair (refatorar) as seguintes classes e pacotes que atualmente estão embutidos (ou duplicados) nos projetos `declaracoes-esocial-leiautes` e `declaracoes-esocial-transmissor`:
-- `br.uem.npd.esocial.table.TipoAmbiente` -> `br.uem.npd.gov.core.domain.Environment`
-- `br.uem.npd.esocial.table.TipoInscricao` -> `br.uem.npd.gov.core.domain.TaxIdType`
-- `br.uem.npd.esocial.validators.*` -> `br.uem.npd.gov.core.validation.*`
-- `br.uem.npd.esocial.transmissor.security.CertificateProvider` -> `br.uem.npd.gov.core.security.CertificateProvider`
-- `br.uem.npd.esocial.transmissor.signature.XmlSigner` -> `br.uem.npd.gov.core.signature.XmlSigner`
+- `br.com.contabilizei.obrigacoes.esocial.table.TipoAmbiente` -> `br.com.contabilizei.obrigacoes.gov.core.domain.Environment`
+- `br.com.contabilizei.obrigacoes.esocial.table.TipoInscricao` -> `br.com.contabilizei.obrigacoes.gov.core.domain.TaxIdType`
+- `br.com.contabilizei.obrigacoes.esocial.validators.*` -> `br.com.contabilizei.obrigacoes.gov.core.validation.*`
+- `br.com.contabilizei.obrigacoes.esocial.transmissor.security.CertificateProvider` -> `br.com.contabilizei.obrigacoes.gov.core.security.CertificateProvider`
+- `br.com.contabilizei.obrigacoes.esocial.transmissor.signature.XmlSigner` -> `br.com.contabilizei.obrigacoes.gov.core.signature.XmlSigner`
 
 ## 4. Dependências
 - `jackson-databind` e `jackson-datatype-jsr310` (Para o módulo JSON).

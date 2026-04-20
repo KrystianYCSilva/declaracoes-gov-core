@@ -11,11 +11,11 @@ description: |
 | Field | Value |
 |-------|-------|
 | **Name** | `declaracoes-gov-core` |
-| **GroupId** | `br.uem.npd` |
+| **GroupId** | `br.com.contabilizei.obrigacoes` |
 | **ArtifactId** | `declaracoes-gov-core-parent` |
 | **Version** | `1.1.0-SNAPSHOT` |
 | **Packaging** | `pom` (Maven reactor parent) |
-| **Base Package** | `br.uem.npd.govcore` |
+| **Base Package** | `br.com.contabilizei.obrigacoes.govcore` |
 
 ## Purpose
 

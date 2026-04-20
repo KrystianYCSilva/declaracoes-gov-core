@@ -47,7 +47,7 @@ Agora, a linha `1.0.0` foi separada em:
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>br.uem.npd</groupId>
+            <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
@@ -60,11 +60,11 @@ Agora, a linha `1.0.0` foi separada em:
 ```xml
 <dependencies>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-domain</artifactId>
     </dependency>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-xml</artifactId>
     </dependency>
 </dependencies>

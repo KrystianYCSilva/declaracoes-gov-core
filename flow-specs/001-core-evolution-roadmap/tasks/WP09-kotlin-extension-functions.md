@@ -1,7 +1,7 @@
 ---
 work_package_id: WP09
 title: Submódulo Kotlin — Extension Functions
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-20T21:13:24.195910+00:00'
 subtasks:
@@ -13,6 +13,10 @@ subtasks:
 - T006: Testes para todas as extensions Kotlin
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-20T21:58:28.606428+00:00"
+loops_doing_to_done: "1"
+ended_at: "2026-04-20T22:50:01.674293+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP09 — Submódulo Kotlin — Extension Functions
@@ -52,14 +56,14 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
    - `jackson-module-kotlin` com scope opcional
    - `kotlin-maven-plugin` com goals `compile` e `test-compile`
    - JaCoCo gate: linha ≥ 90%, branch ≥ 90%
-6. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/` (diretório)
-7. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/` (diretório)
+6. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/` (diretório)
+7. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/` (diretório)
 8. Adicionar `<module>declaracoes-gov-core-kotlin</module>` ao `pom.xml` raiz
 
 **Arquivos:**
 - `pom.xml` (raiz) — adicionar `kotlin.version`, `kotlin-maven-plugin` em `pluginManagement`, novo módulo em `<modules>`
 - `declaracoes-gov-core-kotlin/pom.xml` — criar do zero
-- `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/.gitkeep`
+- `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/.gitkeep`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-kotlin` compila sem erros (módulo vazio)
@@ -76,7 +80,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 **Objetivo:** Criar wrappers idiomáticos Kotlin sobre os value objects do módulo `domain`, tornando o uso em Kotlin mais natural e null-safe.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/DomainExtensions.kt`
+1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DomainExtensions.kt`
 2. Implementar:
    - `fun String.toCnpj(): Cnpj = Cnpj.of(this)` — chama factory Java; propaga `InvalidDocumentException`
    - `fun String.toCpf(): Cpf = Cpf.of(this)` — idem para CPF
@@ -87,7 +91,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 4. Garantir que as functions são top-level (não em objeto companion ou classe)
 
 **Arquivos:**
-- `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/DomainExtensions.kt`
+- `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DomainExtensions.kt`
 
 **Validação:**
 - `"12345678000195".toCnpj()` não lança exceção para CNPJ válido
@@ -105,7 +109,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 **Objetivo:** Criar wrappers idiomáticos Kotlin para conversões de data e período frequentes nos projetos consumidores.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/DateExtensions.kt`
+1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DateExtensions.kt`
 2. Implementar:
    - `fun LocalDate.toYearMonth(): YearMonth = YearMonth.of(this.year, this.month)`
    - `fun YearMonth.toPeriodo(): Int = this.year * 100 + this.monthValue` — formato yyyyMM como Int
@@ -116,7 +120,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 3. KDoc em português para cada função; documentar timezone para `toUtc` e `toBrasilia`
 
 **Arquivos:**
-- `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/DateExtensions.kt`
+- `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DateExtensions.kt`
 
 **Validação:**
 - `LocalDate.of(2025, 1, 15).toYearMonth() == YearMonth.of(2025, 1)`
@@ -134,7 +138,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 **Objetivo:** Criar wrappers idiomáticos Kotlin sobre os utilitários de coleção e conversões null-safe da lib, complementando as stdlib Kotlin.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/CollectionExtensions.kt`
+1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/CollectionExtensions.kt`
 2. Implementar:
    - `fun <T> List<T>?.orNull(): List<T>? = if (this.isNullOrEmpty()) null else this`
    - `fun <T> List<T>?.getFirst(): T? = this?.firstOrNull()`
@@ -143,7 +147,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 3. KDoc em português para cada função
 
 **Arquivos:**
-- `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/CollectionExtensions.kt`
+- `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/CollectionExtensions.kt`
 
 **Validação:**
 - `emptyList<String>().orNull() == null`
@@ -163,7 +167,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 **Objetivo:** Fornecer wrappers null-safe de serialização/deserialização JSON usando Jackson, para uso opcional em projetos que já têm Jackson como dependência.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/JsonExtensions.kt`
+1. Criar `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/JsonExtensions.kt`
 2. Verificar se `jackson-module-kotlin` está declarado como opcional no `pom.xml` do módulo kotlin
 3. Implementar:
    - `private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()` — singleton interno
@@ -172,7 +176,7 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 4. KDoc em português; documentar que o `ObjectMapper` interno é para conveniência e que consumidores com configuração específica devem usar seu próprio mapper
 
 **Arquivos:**
-- `declaracoes-gov-core-kotlin/src/main/kotlin/br/uem/npd/govcore/ext/JsonExtensions.kt`
+- `declaracoes-gov-core-kotlin/src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/JsonExtensions.kt`
 
 **Validação:**
 - `mapOf("key" to "value").toJsonOrNull()` retorna `"""{"key":"value"}"""`
@@ -191,18 +195,18 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 **Objetivo:** Garantir cobertura ≥ 90% de todas as extensions usando JUnit 4 em Kotlin.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/DomainExtensionsTest.kt`
-2. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/DateExtensionsTest.kt`
-3. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/CollectionExtensionsTest.kt`
-4. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/JsonExtensionsTest.kt`
+1. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DomainExtensionsTest.kt`
+2. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DateExtensionsTest.kt`
+3. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/CollectionExtensionsTest.kt`
+4. Criar `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/JsonExtensionsTest.kt`
 5. Usar JUnit 4 (`@Test`, `Assert.*`) — compatível com Kotlin sem dependências extras
 6. Cobrir: null inputs (sem NPE), round-trips, valores inválidos que propagam exceção
 
 **Arquivos:**
-- `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/DomainExtensionsTest.kt`
-- `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/DateExtensionsTest.kt`
-- `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/CollectionExtensionsTest.kt`
-- `declaracoes-gov-core-kotlin/src/test/kotlin/br/uem/npd/govcore/ext/JsonExtensionsTest.kt`
+- `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DomainExtensionsTest.kt`
+- `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/DateExtensionsTest.kt`
+- `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/CollectionExtensionsTest.kt`
+- `declaracoes-gov-core-kotlin/src/test/kotlin/br/com/contabilizei/obrigacoes/govcore/ext/JsonExtensionsTest.kt`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-kotlin` verde
@@ -226,3 +230,4 @@ flow agent feature implement --feature 001-core-evolution-roadmap --wp WP09
 ## Activity Log
 
 - 2026-04-20T21:58:28Z – unknown – lane=doing – Moved to doing
+- 2026-04-20T22:50:02Z – unknown – lane=done – Moved to done

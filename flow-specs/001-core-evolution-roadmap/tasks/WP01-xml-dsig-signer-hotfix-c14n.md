@@ -41,14 +41,14 @@ O `XmlDsigSigner` atual injeta apenas a transformação `ENVELOPED` na referênc
 **Objetivo:** Expor controle explícito sobre a inclusão da transformação C14N INCLUSIVE na assinatura, mantendo retrocompatibilidade com o comportamento já existente (agora documentado como bugado por default `true`).
 
 **Passos:**
-1. Abrir `declaracoes-gov-core-xml/src/main/java/br/uem/npd/govcore/signature/XmlSignatureOptions.java`
+1. Abrir `declaracoes-gov-core-xml/src/main/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlSignatureOptions.java`
 2. Adicionar campo `private boolean includeC14nTransform = true;`
 3. Adicionar getter `public boolean isIncludeC14nTransform()`
 4. Adicionar setter fluente `public XmlSignatureOptions includeC14nTransform(boolean includeC14nTransform)` (retorna `this`)
 5. Adicionar Javadoc em português: "Inclui a transformação C14N INCLUSIVE além da transformação ENVELOPED. eSocial e ReInF exigem ambas as transformações; o padrão {@code true} previne o Erro 142 no portal governamental."
 
 **Arquivos:**
-- `declaracoes-gov-core-xml/src/main/java/br/uem/npd/govcore/signature/XmlSignatureOptions.java` — adicionar campo, getter e setter fluente
+- `declaracoes-gov-core-xml/src/main/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlSignatureOptions.java` — adicionar campo, getter e setter fluente
 
 **Validação:**
 - `XmlSignatureOptionsTest` verifica que `new XmlSignatureOptions().isIncludeC14nTransform()` retorna `true`
@@ -64,7 +64,7 @@ O `XmlDsigSigner` atual injeta apenas a transformação `ENVELOPED` na referênc
 **Objetivo:** Quando `options.isIncludeC14nTransform()` for `true`, criar dois transforms (`ENVELOPED` + `CanonicalizationMethod.INCLUSIVE`) na referência de assinatura; quando `false`, manter comportamento anterior com apenas `ENVELOPED`.
 
 **Passos:**
-1. Abrir `declaracoes-gov-core-xml/src/main/java/br/uem/npd/govcore/signature/XmlDsigSigner.java`
+1. Abrir `declaracoes-gov-core-xml/src/main/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlDsigSigner.java`
 2. Localizar o método `createReference()` (ou equivalente que constrói a lista de transforms)
 3. Verificar a API do Apache Santuario (`org.apache.xml.security.transforms.Transforms`) para adicionar `Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS` ou `CanonicalizationMethod.INCLUSIVE`
 4. Quando `options.isIncludeC14nTransform() == true`, adicionar transform `CanonicalizationMethod.INCLUSIVE` após `ENVELOPED`
@@ -72,7 +72,7 @@ O `XmlDsigSigner` atual injeta apenas a transformação `ENVELOPED` na referênc
 6. Garantir que quando `false`, apenas `ENVELOPED` é incluído (retrocompatibilidade)
 
 **Arquivos:**
-- `declaracoes-gov-core-xml/src/main/java/br/uem/npd/govcore/signature/XmlDsigSigner.java` — modificar método de criação de referência/transforms
+- `declaracoes-gov-core-xml/src/main/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlDsigSigner.java` — modificar método de criação de referência/transforms
 
 **Validação:**
 - Assinar um documento XML real e inspecionar o XML resultante para confirmar presença de ambos os transforms
@@ -100,8 +100,8 @@ O `XmlDsigSigner` atual injeta apenas a transformação `ENVELOPED` na referênc
 4. Se `XmlSignatureOptionsTest` não existir, criar com testes do getter/setter
 
 **Arquivos:**
-- `declaracoes-gov-core-xml/src/test/java/br/uem/npd/govcore/signature/XmlDsigSignerTest.java` — adicionar testes de regressão C14N
-- `declaracoes-gov-core-xml/src/test/java/br/uem/npd/govcore/signature/XmlSignatureOptionsTest.java` — criar se não existir
+- `declaracoes-gov-core-xml/src/test/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlDsigSignerTest.java` — adicionar testes de regressão C14N
+- `declaracoes-gov-core-xml/src/test/java/br/com/contabilizei/obrigacoes/govcore/signature/XmlSignatureOptionsTest.java` — criar se não existir
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-xml` passa sem erros

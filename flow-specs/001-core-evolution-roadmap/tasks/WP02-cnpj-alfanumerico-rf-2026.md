@@ -44,13 +44,13 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Definir o contrato de validação de CNPJ como interface pura, sem dependências, para permitir múltiplas implementações selecionáveis por contexto.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/CnpjValidationStrategy.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationStrategy.java`
 2. Declarar como `public interface CnpjValidationStrategy`
 3. Método: `boolean validate(String cnpj)` — recebe CNPJ como string (com ou sem máscara)
 4. Javadoc em português: "Estratégia de validação de CNPJ. Implementações devem verificar formato e dígitos verificadores conforme a instrução normativa aplicável."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/CnpjValidationStrategy.java` — nova interface
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationStrategy.java` — nova interface
 
 **Validação:**
 - Compila sem erros; sem dependências externas
@@ -66,15 +66,15 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Extrair a lógica de validação numérica existente da classe `Cnpj` para uma strategy isolada e testável de forma independente.
 
 **Passos:**
-1. Inspecionar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/Cnpj.java` para localizar a lógica atual de validação de dígitos verificadores
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/NumericCnpjValidationStrategy.java`
+1. Inspecionar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/Cnpj.java` para localizar a lógica atual de validação de dígitos verificadores
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/NumericCnpjValidationStrategy.java`
 3. Implementar `CnpjValidationStrategy`
 4. Extrair lógica: remover máscara, verificar 14 dígitos numéricos, calcular e comparar dígitos verificadores (Módulo 11 padrão Receita Federal)
 5. Javadoc em português explicando que a estratégia valida apenas CNPJs no formato numérico clássico (14 dígitos)
 6. **Não remover ainda** a lógica do `Cnpj.java` — a refatoração acontece no T005
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/NumericCnpjValidationStrategy.java` — nova implementação
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/NumericCnpjValidationStrategy.java` — nova implementação
 
 **Validação:**
 - CNPJs numéricos válidos retornam `true`
@@ -93,7 +93,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Implementar a validação do novo formato de CNPJ alfanumérico conforme RF 2026: 12 caracteres `[0-9A-Z]` seguidos de 2 dígitos verificadores numéricos, com algoritmo de dígito verificador adaptado.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/AlphanumericCnpjValidationStrategy.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/AlphanumericCnpjValidationStrategy.java`
 2. Implementar `CnpjValidationStrategy`
 3. Compilar regex: `^[0-9A-Z]{12}[0-9]{2}$`
 4. Implementar algoritmo de dígito verificador para alfanumérico: mapear cada caractere para seu valor numérico (dígitos = valor face, letras A=10, B=11, ... Z=35); aplicar pesos 2–9 ciclicamente da direita para a esquerda; calcular dois dígitos verificadores
@@ -101,7 +101,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 6. Javadoc em português com referência à Instrução Normativa RF 2026
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/AlphanumericCnpjValidationStrategy.java` — nova implementação
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/AlphanumericCnpjValidationStrategy.java` — nova implementação
 
 **Validação:**
 - CNPJs alfanuméricos com dígitos corretos retornam `true`
@@ -120,7 +120,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Agregar as strategies disponíveis e selecionar automaticamente a strategy correta com base no formato da entrada.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/CnpjValidationContext.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationContext.java`
 2. Injetar `NumericCnpjValidationStrategy` e `AlphanumericCnpjValidationStrategy` como dependências (construtor ou constante interna)
 3. Método público: `boolean validate(String cnpj)` — inspeciona o formato e delega à strategy correta:
    - Se após normalizar (remover máscara) contém apenas dígitos → `NumericCnpjValidationStrategy`
@@ -129,7 +129,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 5. Javadoc em português explicando a delegação automática
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/CnpjValidationContext.java` — nova classe de contexto
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationContext.java` — nova classe de contexto
 
 **Validação:**
 - CNPJ numérico válido → delega a `NumericCnpjValidationStrategy` → `true`
@@ -149,7 +149,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Fazer o value object `Cnpj` aceitar CNPJs alfanuméricos RF 2026 sem quebrar o comportamento existente para CNPJs numéricos, usando o `CnpjValidationContext` criado no T004.
 
 **Passos:**
-1. Abrir `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/Cnpj.java`
+1. Abrir `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/Cnpj.java`
 2. Substituir ou completar a validação interna com delegação ao `CnpjValidationContext.validate()`
 3. Manter a exceção `InvalidDocumentException` para entradas inválidas — não alterar a assinatura de `of(String)`
 4. Verificar se `Cnpj.valor` deve armazenar o CNPJ normalizado (sem máscara) ou conforme entrado — manter consistência com comportamento atual
@@ -157,7 +157,7 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 6. Remover lógica duplicada de validação numérica inlining após confirmar que `NumericCnpjValidationStrategy` cobre os casos
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/Cnpj.java` — expandir factory `of()` e substituir validação interna
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/Cnpj.java` — expandir factory `of()` e substituir validação interna
 
 **Validação:**
 - `Cnpj.of("12345678000195")` continua funcionando (numérico)
@@ -177,17 +177,17 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 **Objetivo:** Garantir cobertura completa (≥90%) de todas as classes criadas neste WP, incluindo paridade comportamental com as implementações originais dos projetos de origem.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/NumericCnpjValidationStrategyTest.java`
-2. Criar `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/AlphanumericCnpjValidationStrategyTest.java`
-3. Criar `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/CnpjValidationContextTest.java`
-4. Expandir `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/model/CnpjTest.java` (ou criar se não existir)
+1. Criar `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/NumericCnpjValidationStrategyTest.java`
+2. Criar `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/AlphanumericCnpjValidationStrategyTest.java`
+3. Criar `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationContextTest.java`
+4. Expandir `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/model/CnpjTest.java` (ou criar se não existir)
 5. Para cada classe de teste, cobrir: entradas válidas, entradas com dígito verificador errado, comprimento errado, nulos, mascarados, alfanuméricos
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/NumericCnpjValidationStrategyTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/AlphanumericCnpjValidationStrategyTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/validator/CnpjValidationContextTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/model/CnpjTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/NumericCnpjValidationStrategyTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/AlphanumericCnpjValidationStrategyTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/validator/CnpjValidationContextTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/model/CnpjTest.java`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-domain` verde

@@ -59,7 +59,7 @@ Consumers must import the BOM before selecting modules:
 <dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>br.uem.npd</groupId>
+      <groupId>br.com.contabilizei.obrigacoes</groupId>
       <artifactId>declaracoes-gov-core-bom</artifactId>
       <version>1.1.0-SNAPSHOT</version>
       <type>pom</type>

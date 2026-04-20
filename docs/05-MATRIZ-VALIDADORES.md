@@ -4,8 +4,8 @@
 
 A matriz abaixo resume o que está implementado hoje em:
 
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/GovValidationCatalog.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/GovValidators.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/GovValidationCatalog.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/GovValidators.java`
 
 ## Classificações
 

@@ -18,26 +18,26 @@ O objetivo principal da versão 1.0.0 é fornecer uma suíte completa, robusta e
 
 A biblioteca deverá ser reorganizada nos seguintes domínios de pacote (ou submódulos Maven, a depender da complexidade futura, mas inicialmente pacotes):
 
-### 1. `br.uem.npd.govcore.documentos` (Validação e Modelagem)
+### 1. `br.com.contabilizei.obrigacoes.govcore.documentos` (Validação e Modelagem)
 Classes voltadas estritamente a documentos de identificação brasileiros, seus validadores, formatadores (máscaras) e Value Objects.
 *   **Implementados:** `Cpf`, `Cnpj` (Numérico e Alfanumérico), `Nis`.
 *   **A Implementar:** `InscricaoEstadual` (com regras por UF), `TituloEleitor`, `PisPasep`, `Cei`, `Cno`, `Caepf`, `Renavam` (opcional, se útil), Validadores para cada um, Formatadores de Máscara (`###.###.###-##`).
 
-### 2. `br.uem.npd.govcore.tempo` (Datas, Períodos e Feriados)
+### 2. `br.com.contabilizei.obrigacoes.govcore.tempo` (Datas, Períodos e Feriados)
 O contexto brasileiro e o SPED possuem regras muito específicas sobre datas, competências e vigências.
 *   **Implementados:** `PeriodoApuracao`, `Vigencia`, `XmlDates`.
 *   **A Implementar:** Cálculos de dias úteis baseados no calendário da FEBRABAN/Feriados Nacionais (extremamente útil para cálculo de vencimento de tributos), formatadores flexíveis (AAAAMM, MM/AAAA, MMAAAA).
 
-### 3. `br.uem.npd.govcore.texto` (Manipulação de Strings para SPED/TXT)
+### 3. `br.com.contabilizei.obrigacoes.govcore.texto` (Manipulação de Strings para SPED/TXT)
 Muitos sistemas, como SPED ECD, ECF e Fiscal, dependem da geração posicional e tratativa pesada de strings.
 *   **A Implementar:** `StringUtils` específico para remover acentuação (substituição por caracteres base, exigência de muitos webservices), `LPad`/`RPad` (para geração de TXT), formatadores numéricos (`BigDecimal` para string sem ponto decimal como `0000150` para representar R$ 1,50).
 
-### 4. `br.uem.npd.govcore.crypto` e `br.uem.npd.govcore.signature` (Segurança ICP-Brasil)
+### 4. `br.com.contabilizei.obrigacoes.govcore.crypto` e `br.com.contabilizei.obrigacoes.govcore.signature` (Segurança ICP-Brasil)
 O núcleo para comunicação com WebServices e assinatura de arquivos.
 *   **Implementados:** `XmlSigner`, `CertificateProvider`, `Pkcs12Provider`, `Pkcs11Provider`, `SslContextBuilder`.
 *   **A Melhorar:** Ajustes de performance para reuso de chaves A3 sem lock de driver, maior flexibilidade no `SslContextBuilder` (TLS 1.2 e TLS 1.3 force), suporte mais claro a HSMs na nuvem, validação de cadeia de certificados ICP-Brasil (verificar revogação/CRL).
 
-### 5. `br.uem.npd.govcore.tabelas` (Domínios Fundamentais Constantes)
+### 5. `br.com.contabilizei.obrigacoes.govcore.tabelas` (Domínios Fundamentais Constantes)
 Tabelas que quase não mudam e estruturam praticamente toda declaração.
 *   **Implementados:** `Uf`, `TipoAmbiente`, `TipoInscricao`.
 *   **A Implementar:** `CodigoMunicipio` (Base do IBGE completa), Tabelas básicas padronizadas transversalmente. (Nota: domínios voláteis como CST, NCM e CFOP devem ser mantidos fora do core ou num módulo separado para não exigir versionamento constante do core por conta de legislação).

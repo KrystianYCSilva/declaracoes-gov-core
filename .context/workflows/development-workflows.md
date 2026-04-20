@@ -44,8 +44,8 @@ mvn verify -Djacoco.skip=true
 
 ## Adding a New Fiscal Identifier
 
-1. Create value object in `core-domain` under `br.uem.npd.govcore.model`.
-2. Add validator in `br.uem.npd.govcore.validator` (respect confidence tier).
+1. Create value object in `core-domain` under `br.com.contabilizei.obrigacoes.govcore.model`.
+2. Add validator in `br.com.contabilizei.obrigacoes.govcore.validator` (respect confidence tier).
 3. Register in `GovValidationCatalog`.
 4. Add unit tests in `src/test/java` mirroring the package.
 5. Ensure JaCoCo gate passes.

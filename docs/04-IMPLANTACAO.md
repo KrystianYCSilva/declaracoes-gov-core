@@ -22,7 +22,7 @@ Para consumidores externos, o ponto de entrada normal é o BOM interno do core:
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>br.uem.npd</groupId>
+            <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
             <version>1.0.0</version>
             <type>pom</type>
@@ -37,15 +37,15 @@ Depois disso, cada aplicação escolhe apenas o que precisa:
 ```xml
 <dependencies>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-domain</artifactId>
     </dependency>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-crypto</artifactId>
     </dependency>
     <dependency>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-xml</artifactId>
     </dependency>
 </dependencies>

@@ -42,7 +42,7 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Objetivo:** Elevar o nível de validação do `Cpf` value object de `STRUCTURAL` para `PROVISIONAL` ou `OFFICIAL` integrando o algoritmo de dígito verificador extraído de `ValidadorCPF.java` do projeto `obrigacoes-service-esocial`.
 
 **Passos:**
-1. Localizar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/Cpf.java`
+1. Localizar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/Cpf.java`
 2. Verificar o nível de validação atual em `GovValidationCatalog` para CPF
 3. Extrair algoritmo de dígito verificador CPF de `obrigacoes-service-esocial/ValidadorCPF.java`:
    - Remover máscara, verificar 11 dígitos
@@ -53,8 +53,8 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 6. Atualizar `GovValidationCatalog` para refletir o novo nível de confiança da validação de CPF
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/model/Cpf.java` — integrar validação de dígito verificador
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/validator/GovValidationCatalog.java` — atualizar nível de confiança CPF
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/model/Cpf.java` — integrar validação de dígito verificador
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/validator/GovValidationCatalog.java` — atualizar nível de confiança CPF
 
 **Validação:**
 - CPFs com dígitos verificadores incorretos lançam `InvalidDocumentException`
@@ -72,14 +72,14 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Objetivo:** Definir o contrato de tipos de domínio que representam períodos de apuração no formato `Integer yyyyMM`, permitindo que `VigenciaConverter` e `VigenciaValidator` operem sobre qualquer tipo que implemente o contrato.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Periodico.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Periodico.java`
 2. Declarar como `public interface Periodico`
 3. Método: `Integer getPeriodo()` — retorna o período no formato `yyyyMM` como `Integer`
 4. Método default opcional: `boolean equalsIgnoringPeriod(Periodico other)` — compara dois Periodicoes ignorando o período (ex: mesma competência, diferente versão)
 5. Javadoc em português: "Contrato para tipos de domínio que possuem período de apuração no formato AAAAMM (ex: 202501 para janeiro de 2025)."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Periodico.java` — nova interface
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Periodico.java` — nova interface
 
 **Validação:**
 - Compila sem erros; interface pura sem dependências externas
@@ -97,13 +97,13 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Passos:**
 1. **Primeiro:** Verificar se `Vigencia` já existe no módulo `domain` com `grep -r "class Vigencia\|interface Vigencia" declaracoes-gov-core-domain/src/`
 2. **Se já existir:** avaliar se a assinatura é compatível com `LocalDate getInicioVigencia()` e `LocalDate getFimVigencia()` — fazer merge ou criar `VigenciaPeriodo` se houver conflito irreconciliável
-3. **Se não existir:** criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Vigencia.java`
+3. **Se não existir:** criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Vigencia.java`
 4. Métodos: `LocalDate getInicioVigencia()`, `LocalDate getFimVigencia()`
 5. Javadoc em português: "Contrato para tipos de domínio que possuem período de vigência com data de início e fim."
 6. **Nota:** `LocalDate` está disponível no Java 8 (`java.time.LocalDate`) — sem dependência externa
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/Vigencia.java` — nova interface (ou arquivo existente se merge)
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/Vigencia.java` — nova interface (ou arquivo existente se merge)
 
 **Validação:**
 - Compila sem erros
@@ -120,7 +120,7 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Objetivo:** Centralizar as operações utilitárias sobre períodos no formato `Integer yyyyMM` que estão atualmente duplicadas em múltiplos projetos.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/VigenciaUtils.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/VigenciaUtils.java`
 2. Declarar como `public final class VigenciaUtils` com construtor privado
 3. Implementar os métodos:
    - `parseAnoMes(Integer yyyyMM): YearMonth` — converte Integer para `java.time.YearMonth`
@@ -133,7 +133,7 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 5. Todos os métodos devem ser `null-safe`: lançar `IllegalArgumentException` se `null` recebido
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/VigenciaUtils.java` — nova classe utilitária
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/VigenciaUtils.java` — nova classe utilitária
 
 **Validação:**
 - `parseAnoMes(202501)` retorna `YearMonth.of(2025, 1)`
@@ -153,7 +153,7 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Objetivo:** Criar conversor bidirecional entre `YearMonth` e `Integer yyyyMM`, encontrado duplicado em `obrigacoes-service-reinf` e `obrigacoes-service-dctfweb`.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/YearMonthIntegerConverter.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/YearMonthIntegerConverter.java`
 2. Declarar como `public final class YearMonthIntegerConverter` com construtor privado (métodos estáticos)
 3. Métodos:
    - `YearMonth toYearMonth(Integer yyyyMM)` — delega a `VigenciaUtils.parseAnoMes()`
@@ -162,7 +162,7 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 5. Verificar se nos projetos de origem havia interface `Converter<F,T>` — se sim, implementar ou deixar como classe utilitária simples
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/util/YearMonthIntegerConverter.java` — novo conversor
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/util/YearMonthIntegerConverter.java` — novo conversor
 
 **Validação:**
 - `YearMonthIntegerConverter.toYearMonth(202501)` retorna `YearMonth.of(2025, 1)`
@@ -180,15 +180,15 @@ O módulo `domain` possui o value object `Cpf` mas sem validação de dígito ve
 **Objetivo:** Garantir cobertura ≥ 90% em todos os artefatos deste WP com testes de casos nominais, de fronteira e de erro.
 
 **Passos:**
-1. Criar/expandir `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/model/CpfTest.java` — cobrir dígitos verificadores válidos e inválidos
-2. Criar `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/util/VigenciaUtilsTest.java` — cobrir todos os 6 métodos, com especial atenção a rollover janeiro/dezembro
-3. Criar `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/util/YearMonthIntegerConverterTest.java` — cobrir round-trips e nulos
+1. Criar/expandir `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/model/CpfTest.java` — cobrir dígitos verificadores válidos e inválidos
+2. Criar `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/VigenciaUtilsTest.java` — cobrir todos os 6 métodos, com especial atenção a rollover janeiro/dezembro
+3. Criar `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/YearMonthIntegerConverterTest.java` — cobrir round-trips e nulos
 4. Se `Periodico` e `Vigencia` têm default methods, criar teste de contrato simples usando classe anônima
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/model/CpfTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/util/VigenciaUtilsTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/util/YearMonthIntegerConverterTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/model/CpfTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/VigenciaUtilsTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/util/YearMonthIntegerConverterTest.java`
 
 **Validação:**
 - `mvn -B -q verify -pl declaracoes-gov-core-domain` verde

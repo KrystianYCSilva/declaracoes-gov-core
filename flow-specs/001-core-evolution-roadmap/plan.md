@@ -11,7 +11,7 @@
 | CI/CD | GitHub Actions `.github/workflows/ci.yml` → `mvn -B -q verify` on push/PR to main/develop |
 | Javadoc/comments | Português (pt-BR) |
 | No frameworks | Sem Spring, Jakarta EE, Bean Validation, Lombok em nenhum módulo |
-| Package base | `br.uem.npd.govcore` |
+| Package base | `br.com.contabilizei.obrigacoes.govcore` |
 | Modules | `bom`, `domain`, `format`, `crypto`, `xml`, `transport` (existentes) + `kotlin` (novo) |
 
 ---
@@ -61,7 +61,7 @@ Nenhum arquivo `.flowflow/memory/constitution.md` encontrado. Usando como fonte 
 declaracoes-gov-core/
 ├── declaracoes-gov-core-bom/          # BOM — sem mudanças de código
 ├── declaracoes-gov-core-domain/       # WP02, WP03, WP04, WP05
-│   └── src/main/java/br/uem/npd/govcore/
+│   └── src/main/java/br/com/contabilizei/obrigacoes/govcore/
 │       ├── model/                     # Cnpj, Cpf (expand), CertificadoDTO, Filter, FilterCollection
 │       ├── model/layout/              # sem mudanças
 │       ├── table/                     # ActiveProfile (novo), DateFormatType (novo)
@@ -69,18 +69,18 @@ declaracoes-gov-core/
 │       ├── exception/                 # BusinessException, BusinessRuntimeException, SchemaValidationException, ...
 │       └── util/                      # Periodico, Vigencia, VigenciaUtils, YearMonthIntegerConverter, CallbackAsync
 ├── declaracoes-gov-core-format/       # WP06, WP07, WP08
-│   └── src/main/java/br/uem/npd/govcore/
+│   └── src/main/java/br/com/contabilizei/obrigacoes/govcore/
 │       ├── util/                      # GovZipUtils (novo), GovStringUtils (novo/expand), GovNumberUtils (novo)
 │       ├── util/                      # GovDateUtils (expand), GovCollectionUtils (novo), GovFileUtils (novo)
 │       └── util/                      # VigenciaConverter, VigenciaValidator (sem @Component)
 ├── declaracoes-gov-core-crypto/       # WP09
-│   └── src/main/java/br/uem/npd/govcore/
+│   └── src/main/java/br/com/contabilizei/obrigacoes/govcore/
 │       └── crypto/                    # KeyManagerFactoryBuilder (novo), GovSslContextFactory (novo)
 ├── declaracoes-gov-core-xml/          # WP01 (HOTFIX)
-│   └── src/main/java/br/uem/npd/govcore/
+│   └── src/main/java/br/com/contabilizei/obrigacoes/govcore/
 │       └── signature/                 # XmlDsigSigner (fix), XmlSignatureOptions (add includeC14nTransform)
 └── declaracoes-gov-core-kotlin/       # WP10 (NOVO MÓDULO)
-    └── src/main/kotlin/br/uem/npd/govcore/
+    └── src/main/kotlin/br/com/contabilizei/obrigacoes/govcore/
         └── ext/                       # extensions sobre domain, format, crypto
 ```
 

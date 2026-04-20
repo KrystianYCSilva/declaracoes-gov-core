@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>br.uem.npd</groupId>
+        <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -22,27 +22,27 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>br.uem.npd</groupId>
+                <groupId>br.com.contabilizei.obrigacoes</groupId>
                 <artifactId>declaracoes-gov-core-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>br.uem.npd</groupId>
+                <groupId>br.com.contabilizei.obrigacoes</groupId>
                 <artifactId>declaracoes-gov-core-format</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>br.uem.npd</groupId>
+                <groupId>br.com.contabilizei.obrigacoes</groupId>
                 <artifactId>declaracoes-gov-core-crypto</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>br.uem.npd</groupId>
+                <groupId>br.com.contabilizei.obrigacoes</groupId>
                 <artifactId>declaracoes-gov-core-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>br.uem.npd</groupId>
+                <groupId>br.com.contabilizei.obrigacoes</groupId>
                 <artifactId>declaracoes-gov-core-transport</artifactId>
                 <version>${project.version}</version>
             </dependency>

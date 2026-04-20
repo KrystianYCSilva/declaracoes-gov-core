@@ -16,7 +16,7 @@ Definir o estado atual da fundação manual `declaracoes-gov-core`, organizada c
 
 - reator `declaracoes-gov-core-parent` com cinco módulos filhos;
 - value objects, exceções e enums brasileiros;
-- metadados manuais de leiaute em `br.uem.npd.govcore.model.layout`;
+- metadados manuais de leiaute em `br.com.contabilizei.obrigacoes.govcore.model.layout`;
 - catálogo público de validadores e níveis de confiança;
 - utilitários manuais de formatação, JSON, XML e certificados.
 

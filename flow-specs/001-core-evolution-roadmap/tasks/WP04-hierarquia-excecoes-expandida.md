@@ -40,20 +40,20 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 **Objetivo:** Introduzir exceções de negócio com campo de código de erro numérico para permitir que consumidores programem tratamento baseado em código sem depender de mensagem de texto.
 
 **Passos:**
-1. Verificar a hierarquia existente em `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/`
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/BusinessException.java`:
+1. Verificar a hierarquia existente em `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/`
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/BusinessException.java`:
    - Extends `GovCoreException`
    - Campo `private final Integer codigo`
    - Construtores: `(Integer codigo)`, `(Integer codigo, String message)`, `(Integer codigo, String message, Throwable cause)`
    - Getter `getCodigo(): Integer`
-3. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/BusinessRuntimeException.java`:
+3. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/BusinessRuntimeException.java`:
    - Extends `RuntimeException` (não `GovCoreException` — é uma unchecked counterpart)
    - Mesma estrutura de campo `codigo` e construtores
 4. Javadoc em português para ambas, explicando a diferença checked/unchecked e o propósito do `codigo`
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/BusinessException.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/BusinessRuntimeException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/BusinessException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/BusinessRuntimeException.java`
 
 **Validação:**
 - `new BusinessException(1001).getCodigo() == 1001`
@@ -71,14 +71,14 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 **Objetivo:** Fornecer exceção específica para falhas de validação de schema XML/XSD, usada pelo módulo `xml` e por consumidores que validam payloads antes da transmissão.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/SchemaValidationException.java`
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/SchemaValidationException.java`
 2. Extends `GovCoreException`
 3. Construtores: `(String message)`, `(String message, Throwable cause)`
 4. Opcional: campo `private final String schemaName` para indicar qual schema falhou
 5. Javadoc em português: "Lançada quando um documento XML não é válido conforme o schema (XSD) esperado."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/SchemaValidationException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/SchemaValidationException.java`
 
 **Validação:**
 - `new SchemaValidationException("Documento inválido").getMessage()` retorna a mensagem
@@ -94,14 +94,14 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 **Objetivo:** Especializar a hierarquia de exceções de assinatura para o caso específico de certificado inválido, separando-o de erros genéricos de assinatura.
 
 **Passos:**
-1. Verificar se `GovSignatureException` existe em `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/`
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/CertificadoInvalidoException.java`
+1. Verificar se `GovSignatureException` existe em `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/`
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/CertificadoInvalidoException.java`
 3. Extends `GovSignatureException` (se existir) ou `GovCoreException` (fallback)
 4. Construtores: `(String message)`, `(String message, Throwable cause)`
 5. Javadoc em português: "Lançada quando o certificado digital fornecido é inválido, expirado ou não pode ser lido."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/CertificadoInvalidoException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/CertificadoInvalidoException.java`
 
 **Validação:**
 - `new CertificadoInvalidoException("Certificado expirado")` mensagem propagada
@@ -117,23 +117,23 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 **Objetivo:** Adicionar exceções para cenários de transmissão e conectividade que aparecem em múltiplos projetos sem exceção base comum.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/ArquivoInvalidoReciboException.java`:
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/ArquivoInvalidoReciboException.java`:
    - Extends `GovCoreException`
    - Construtores: `(String message)`, `(String message, Throwable cause)`
    - Javadoc: "Lançada quando o arquivo de recibo recebido do portal é inválido ou não reconhecido."
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/SemConexaoException.java`:
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/SemConexaoException.java`:
    - Extends `GovCoreException`
    - Construtores: `(String message)`, `(String message, Throwable cause)`
    - Javadoc: "Lançada quando não há conectividade com o portal governamental."
-3. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/RetryableException.java`:
+3. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/RetryableException.java`:
    - Extends `BusinessRuntimeException` (operação falhou mas pode ser retentada)
    - Construtor com `Integer codigo`
    - Javadoc: "Exceção de runtime indicando que a operação pode ser retentada. Consumidores devem implementar política de retry ao capturar esta exceção."
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/ArquivoInvalidoReciboException.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/SemConexaoException.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/RetryableException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/ArquivoInvalidoReciboException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/SemConexaoException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/RetryableException.java`
 
 **Validação:**
 - `RetryableException` é unchecked (`RuntimeException`)
@@ -150,13 +150,13 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 **Objetivo:** Fornecer exceções específicas para falhas de validação de sequências de períodos, necessárias para o `VigenciaValidator` criado no WP07.
 
 **Passos:**
-1. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/PeriodoFaltanteException.java`:
+1. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoFaltanteException.java`:
    - Extends `GovCoreException`
    - Campo `private final Integer periodoEsperado`
    - Construtores: `(Integer periodoEsperado)`, `(Integer periodoEsperado, String message)`
    - Getter `getPeriodoEsperado(): Integer`
    - Javadoc: "Lançada quando um período esperado na sequência de competências está ausente."
-2. Criar `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/PeriodoRepetidoException.java`:
+2. Criar `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoRepetidoException.java`:
    - Extends `GovCoreException`
    - Campo `private final Integer periodoRepetido`
    - Construtores: `(Integer periodoRepetido)`, `(Integer periodoRepetido, String message)`
@@ -165,11 +165,11 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 3. Criar testes para **todas** as exceções deste WP (T001–T005) em um único arquivo de testes ou arquivos separados por classe
 
 **Arquivos:**
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/PeriodoFaltanteException.java`
-- `declaracoes-gov-core-domain/src/main/java/br/uem/npd/govcore/exception/PeriodoRepetidoException.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/exception/BusinessExceptionTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/exception/PeriodoFaltanteExceptionTest.java`
-- `declaracoes-gov-core-domain/src/test/java/br/uem/npd/govcore/exception/PeriodoRepetidoExceptionTest.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoFaltanteException.java`
+- `declaracoes-gov-core-domain/src/main/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoRepetidoException.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/exception/BusinessExceptionTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoFaltanteExceptionTest.java`
+- `declaracoes-gov-core-domain/src/test/java/br/com/contabilizei/obrigacoes/govcore/exception/PeriodoRepetidoExceptionTest.java`
 
 **Validação:**
 - `new PeriodoFaltanteException(202502).getPeriodoEsperado() == 202502`
