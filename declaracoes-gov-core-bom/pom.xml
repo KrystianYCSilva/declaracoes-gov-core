@@ -41,6 +41,11 @@
                 <artifactId>declaracoes-gov-core-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>br.uem.npd</groupId>
+                <artifactId>declaracoes-gov-core-transport</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

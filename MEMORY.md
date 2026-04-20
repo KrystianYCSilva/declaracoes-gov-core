@@ -12,10 +12,11 @@ description: |
 | Agent | Topic | Status |
 |-------|-------|--------|
 | — | — | idle |
-| 002-core-transport | Kimi | Reviewing spec and ADR-008 alignment |
 
 ## Completed
 <!-- date | agent | brief summary (one line per item) -->
+| 2026-04-20 | Gemini | Feature 001 (core-extensibility) merged to develop |
+| 2026-04-20 | Kimi | Feature 002 (core-transport) merged to develop — BUILD SUCCESS |
 
 ## Rules
 - Read this file at session start. Update at task start and finish.
