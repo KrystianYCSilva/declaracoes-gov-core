@@ -71,6 +71,7 @@ test-output/
 .specify/
 .opencode/
 .vibe/
+.worktree/
 .github/skills/
 .github/agents/
 .github/memory/
