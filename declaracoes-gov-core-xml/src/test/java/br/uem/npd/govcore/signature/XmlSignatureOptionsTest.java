@@ -45,4 +45,20 @@ public class XmlSignatureOptionsTest {
     public void testRejectsBlankTargetElement() {
         XmlSignatureOptions.forElement("   ", "Id");
     }
+
+    @Test
+    public void testIncludeC14nTransformDefaultTrue() {
+        assertTrue(XmlSignatureOptions.defaults().isIncludeC14nTransform());
+        assertTrue(XmlSignatureOptions.forIdAttribute("Id", false).isIncludeC14nTransform());
+        assertTrue(XmlSignatureOptions.forElement("evento", "Id").isIncludeC14nTransform());
+    }
+
+    @Test
+    public void testIncludeC14nTransformSetterFluente() {
+        XmlSignatureOptions opts = XmlSignatureOptions.defaults().includeC14nTransform(false);
+        assertEquals(false, opts.isIncludeC14nTransform());
+
+        XmlSignatureOptions optsTrue = XmlSignatureOptions.defaults().includeC14nTransform(true);
+        assertTrue(optsTrue.isIncludeC14nTransform());
+    }
 }

@@ -5,11 +5,16 @@ package br.uem.npd.govcore.signature;
  */
 public final class XmlSignatureOptions {
 
-    private static final XmlSignatureOptions DEFAULTS = new XmlSignatureOptions(null, "Id", true);
-
     private final String targetElementLocalName;
     private final String idAttributeName;
     private final boolean fallbackToRootWhenTargetMissing;
+
+    /**
+     * Inclui a transformação C14N INCLUSIVE além da transformação ENVELOPED.
+     * eSocial e ReInF exigem ambas; o padrão {@code true} previne o Erro 142 no portal governamental.
+     * Use {@code false} apenas para XML fora do padrão eSocial/ReInF.
+     */
+    private boolean includeC14nTransform = true;
 
     private XmlSignatureOptions(String targetElementLocalName,
                                 String idAttributeName,
@@ -27,11 +32,12 @@ public final class XmlSignatureOptions {
     }
 
     /**
-     * Performs the defaults operation.
+     * Retorna uma nova instância com as opções padrão.
+     *
      * @return the xml signature options
      */
     public static XmlSignatureOptions defaults() {
-        return DEFAULTS;
+        return new XmlSignatureOptions(null, "Id", true);
     }
 
     /**
@@ -83,5 +89,25 @@ public final class XmlSignatureOptions {
     /** {@return the fallback to root when target missing} */
     public boolean isFallbackToRootWhenTargetMissing() {
         return fallbackToRootWhenTargetMissing;
+    }
+
+    /**
+     * Indica se a transformação C14N INCLUSIVE deve ser incluída junto com ENVELOPED.
+     *
+     * @return {@code true} se C14N INCLUSIVE está habilitada (padrão)
+     */
+    public boolean isIncludeC14nTransform() {
+        return includeC14nTransform;
+    }
+
+    /**
+     * Define se a transformação C14N INCLUSIVE deve ser incluída junto com ENVELOPED.
+     *
+     * @param v {@code true} para incluir C14N INCLUSIVE (padrão); {@code false} para apenas ENVELOPED
+     * @return esta instância (fluent)
+     */
+    public XmlSignatureOptions includeC14nTransform(boolean v) {
+        this.includeC14nTransform = v;
+        return this;
     }
 }

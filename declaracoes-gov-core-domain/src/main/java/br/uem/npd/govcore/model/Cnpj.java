@@ -2,18 +2,24 @@ package br.uem.npd.govcore.model;
 
 import br.uem.npd.govcore.exception.InvalidDocumentException;
 import br.uem.npd.govcore.table.TipoInscricao;
-import br.uem.npd.govcore.validator.GovValidators;
+import br.uem.npd.govcore.validator.CnpjValidationContext;
 
 import java.util.Objects;
 
 /**
  * Value Object Imutável para Cadastro Nacional de Pessoas Jurídicas.
- * Garante que apenas CNPJs matematicamente válidos (Numéricos ou Alfanuméricos) 
+ * Garante que apenas CNPJs matematicamente válidos (Numéricos ou Alfanuméricos)
  * sejam instanciados na memória da aplicação.
+ * <p>
+ * Suporta o formato numérico tradicional (14 dígitos) e o formato alfanumérico
+ * definido pela Receita Federal (RF 2026): 12 posições {@code [0-9A-Z]} seguidas
+ * de 2 dígitos verificadores numéricos.
  */
 public final class Cnpj implements IdentificadorEmpregador {
 
     private static final long serialVersionUID = 1L;
+
+    private static final CnpjValidationContext VALIDATION_CONTEXT = new CnpjValidationContext();
 
     private final String value;
 
@@ -26,21 +32,26 @@ public final class Cnpj implements IdentificadorEmpregador {
 
     /**
      * Instancia um CNPJ a partir de uma String.
-     * @param cnpj O CNPJ com ou sem formatação.
-     * @return O objeto Cnpj imutável.
-     * @throws InvalidDocumentException se o CNPJ for nulo ou inválido.
+     * <p>
+     * Aceita tanto o formato numérico (ex: {@code "11.222.333/0001-81"}) quanto
+     * o formato alfanumérico RF 2026 (ex: {@code "12.ABC.345/01DE-35"}), com ou
+     * sem caracteres de máscara.
+     *
+     * @param cnpj o CNPJ com ou sem formatação
+     * @return o objeto Cnpj imutável com valor normalizado (sem máscara, maiúsculas)
+     * @throws InvalidDocumentException se o CNPJ for nulo, vazio ou inválido
      */
     public static Cnpj of(String cnpj) {
         if (cnpj == null || cnpj.trim().isEmpty()) {
             throw new InvalidDocumentException("CNPJ não pode ser nulo ou vazio");
         }
-        
-        String stripped = GovValidators.stripCnpjIfValid(cnpj);
-        if (stripped == null) {
-            throw new InvalidDocumentException("CNPJ inválido (Falha de formato ou Dígito Verificador): " + cnpj);
+
+        if (!VALIDATION_CONTEXT.validate(cnpj)) {
+            throw new InvalidDocumentException(
+                    "CNPJ inválido (Falha de formato ou Dígito Verificador): " + cnpj);
         }
-        
-        return new Cnpj(stripped);
+
+        return new Cnpj(VALIDATION_CONTEXT.normalize(cnpj));
     }
 
     /** {@return the tipo inscricao} */

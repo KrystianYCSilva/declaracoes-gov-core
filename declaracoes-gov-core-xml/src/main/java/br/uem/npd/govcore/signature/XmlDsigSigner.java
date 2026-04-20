@@ -20,7 +20,9 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Assinador XML usando XMLDSIG enveloped com RSA-SHA256 (Exigência RFB desde 2018).
@@ -149,14 +151,25 @@ public final class XmlDsigSigner implements XmlSigner {
     }
 
     private Reference createReference(XMLSignatureFactory signatureFactory, Element target) throws Exception {
-        Transform transform = signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null);
+        // eSocial e ReInF exigem ENVELOPED seguido de C14N INCLUSIVE (previne Erro 142)
+        List<Transform> transforms;
+        if (options.isIncludeC14nTransform()) {
+            transforms = Arrays.asList(
+                    signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null),
+                    signatureFactory.newTransform(CanonicalizationMethod.INCLUSIVE, (C14NMethodParameterSpec) null)
+            );
+        } else {
+            transforms = Collections.singletonList(
+                    signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null)
+            );
+        }
 
         if (target != null && target.hasAttribute(options.getIdAttributeName())) {
             target.setIdAttribute(options.getIdAttributeName(), true);
             return signatureFactory.newReference(
                     "#" + target.getAttribute(options.getIdAttributeName()),
                     signatureFactory.newDigestMethod(DigestMethod.SHA256, null),
-                    Collections.singletonList(transform),
+                    transforms,
                     null,
                     null
             );
@@ -165,7 +178,7 @@ public final class XmlDsigSigner implements XmlSigner {
         return signatureFactory.newReference(
                 "",
                 signatureFactory.newDigestMethod(DigestMethod.SHA256, null),
-                Collections.singletonList(transform),
+                transforms,
                 null,
                 null
         );

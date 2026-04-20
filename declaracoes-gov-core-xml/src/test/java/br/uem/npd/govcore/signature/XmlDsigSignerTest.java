@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.Transform;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
@@ -205,5 +207,64 @@ public class XmlDsigSignerTest {
     public void testRejectsInvalidXml() {
         XmlDsigSigner signer = new XmlDsigSigner(TestCertificateSupport.generateCertificate());
         signer.sign("<evento>");
+    }
+
+    @Test
+    public void assinarComC14nInclusive_deveConterDoisTransforms() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        // default includeC14nTransform = true
+        XmlDsigSigner signer = new XmlDsigSigner(certificate);
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info Id=\"ID321\"><valor>abc</valor></info></evento>");
+
+        Document document = XmlDocuments.parse(signedXml);
+        Element target = XmlDocuments.findFirstElementWithAttribute(document.getDocumentElement(), "Id");
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+
+        assertNotNull(signatureElement);
+        assertNotNull(target);
+        target.setIdAttribute("Id", true);
+
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        List<?> references = xmlSignature.getSignedInfo().getReferences();
+        assertEquals(1, references.size());
+
+        List<?> transforms = ((Reference) references.get(0)).getTransforms();
+        assertEquals(2, transforms.size());
+        assertEquals(Transform.ENVELOPED, ((Transform) transforms.get(0)).getAlgorithm());
+        assertEquals(CanonicalizationMethod.INCLUSIVE, ((Transform) transforms.get(1)).getAlgorithm());
+        assertTrue(xmlSignature.validate(validateContext));
+    }
+
+    @Test
+    public void assinarSemC14n_deveConterApenasTransformEnveloped() throws Exception {
+        TestCertificateSupport.GeneratedCertificate certificate = TestCertificateSupport.generateCertificate();
+        XmlDsigSigner signer = new XmlDsigSigner(
+                certificate,
+                XmlSignatureOptions.defaults().includeC14nTransform(false)
+        );
+
+        String signedXml = signer.sign("<evento xmlns=\"urn:test\"><info Id=\"ID456\"><valor>xyz</valor></info></evento>");
+
+        Document document = XmlDocuments.parse(signedXml);
+        Element target = XmlDocuments.findFirstElementWithAttribute(document.getDocumentElement(), "Id");
+        Element signatureElement = (Element) document.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature").item(0);
+
+        assertNotNull(signatureElement);
+        assertNotNull(target);
+        target.setIdAttribute("Id", true);
+
+        DOMValidateContext validateContext = new DOMValidateContext(certificate.getCertificate().getPublicKey(), signatureElement);
+        XMLSignature xmlSignature = XMLSignatureFactory.getInstance("DOM").unmarshalXMLSignature(validateContext);
+
+        List<?> references = xmlSignature.getSignedInfo().getReferences();
+        assertEquals(1, references.size());
+
+        List<?> transforms = ((Reference) references.get(0)).getTransforms();
+        assertEquals(1, transforms.size());
+        assertEquals(Transform.ENVELOPED, ((Transform) transforms.get(0)).getAlgorithm());
+        assertTrue(xmlSignature.validate(validateContext));
     }
 }
