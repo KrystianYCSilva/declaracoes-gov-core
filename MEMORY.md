@@ -11,7 +11,8 @@ description: |
 <!-- agent | topic | status (one line) -->
 | Agent | Topic | Status |
 |-------|-------|--------|
-| — | — | idle |
+| 002-core-transport | Kimi | /speckit.implement completed — all 6 phases done, BUILD SUCCESS |
+| 001-core-extensibility | Gemini | /speckit.analyse review applied — tasks.md fixed, ready for implementation |
 
 ## Completed
 <!-- date | agent | brief summary (one line per item) -->
