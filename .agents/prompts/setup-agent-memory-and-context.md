@@ -103,7 +103,84 @@ Create or UPDATE the agent-specific context file for each detected folder. Rules
 - Bullet: `This is <build-system> multi-module core library; live implementation is in <module-pattern>/src and the related <build-files>.` (adapt to actual project)
 - Add ONE bullet about the CLI-specific folder (skills, commands, prompts) ONLY if that folder exists.
 
-## Step 5 — Validation
+## Step 5 — `.context/` Directory (RFC Full Level)
+Create the AI context directory with tiered depth that does not fit in `AGENTS.md`.
+
+### Required structure
+```
+.context/
+├── README.md                        # Navigation hub + Tier system
+├── ai-assistant-guide.md            # Full AI protocol (bootstrap, request routing, Definition of Done)
+├── _meta/                           # T2 — Project identity
+│   ├── project-overview.md          # Scope, module map, boundaries, consumers
+│   ├── tech-stack.md                # Exact dependency/plugin versions and constraints
+│   └── key-decisions.md             # Consolidated ADRs (minimum 3)
+├── standards/                       # T0-T1 — Rules and norms
+│   ├── architectural-rules.md       # T0 absolute rules with CORRECT/FORBIDDEN examples
+│   ├── code-quality.md              # T1 conventions, package organization, naming
+│   └── testing-strategy.md          # T1 test framework, coverage gates, patterns
+├── patterns/                        # T1 — Blueprints
+│   └── architecture.md              # Design patterns with code examples
+├── knowledge/                       # T3 — Deep domain knowledge
+│   └── domain-concepts.md           # Domain algorithms, tables, normalization rules
+└── workflows/                       # T2 — Operational guides
+    └── development-workflows.md     # Build, test, publish, troubleshooting
+```
+
+### Metadata contract
+Every `.context/` file MUST have YAML frontmatter:
+```yaml
+---
+description: |
+  <one-line purpose>
+  Use when: <trigger for loading this file>
+---
+```
+
+### Tier system (mandatory)
+| Tier | Kind | Authority | Directory |
+|------|------|-----------|-----------|
+| T0 | Enforcement | ABSOLUTE | `standards/architectural-rules.md` |
+| T1 | Standards | NORMATIVE | `standards/`, `patterns/` |
+| T2 | Context | INFORMATIVE | `_meta/`, `workflows/` |
+| T3 | Examples | ILLUSTRATIVE | `knowledge/` |
+
+## Step 6 — CI/CD Pipeline
+Create GitHub Actions workflow and PR governance.
+
+### 6.1 — Workflow `.github/workflows/ci.yml`
+Requirements:
+- Trigger on `push` to `main`/`master`/`develop` and on all `pull_request`.
+- JDK 8 (Temurin) with Maven cache.
+- Run `mvn -B verify` as the gate.
+- Upload surefire reports and JaCoCo HTML reports as artifacts.
+- (Optional but recommended) Post coverage summary comment on PRs.
+
+### 6.2 — PR Template `.github/pull_request_template.md`
+Must include checklists for:
+- T0 compliance (architectural rules).
+- Testing & coverage (`mvn verify`, unit tests, JaCoCo gates).
+- Documentation sync (Javadoc, AI docs, `MEMORY.md`).
+
+### 6.3 — Branch Protection Note
+Document that the team must enable in GitHub Settings:
+- Require status checks to pass before merging.
+- Select the CI workflow check (`Build & Verify`).
+
+## Step 7 — Spec Kit Constitution (if `.specify/` exists)
+If the repository contains a `.specify/` directory:
+1. Run `/speckit.constitution`.
+2. Pass the following information so the constitution understands the project structure and memory governance:
+   - Project name, purpose, and base package.
+   - Module map and dependency rules.
+   - Build system and validation gate command.
+   - Memory model: `MEMORY.md` (shared) + `agent-local-memory.md` (private).
+   - Agent folder structure and CLI-specific rules (e.g., `.cursor/rules/*.mdc`).
+   - Tier system and T0 rules summary.
+   - Definition of Done (coverage gates, test conventions).
+3. Ensure the constitution output is stored under `.specify/` and referenced from `AGENTS.md` if relevant.
+
+## Step 8 — Validation
 Before finishing, verify:
 - [ ] `AGENTS.md` exists at root and has YAML frontmatter.
 - [ ] `MEMORY.md` exists at root and has YAML frontmatter.
@@ -111,6 +188,11 @@ Before finishing, verify:
 - [ ] `.cursor` uses `.mdc` inside `rules/`, not `.md` at root.
 - [ ] `.agents/` does NOT have its own `AGENTS.md` (it is shared skills only).
 - [ ] Every `agent-local-memory.md` has YAML frontmatter.
+- [ ] `.context/` exists with all required subdirectories (`_meta/`, `standards/`, `patterns/`, `knowledge/`, `workflows/`).
+- [ ] Every `.context/` file has YAML frontmatter with `description` and `Use when`.
+- [ ] `.github/workflows/ci.yml` exists and runs `mvn -B verify` (or project-specific gate).
+- [ ] `.github/pull_request_template.md` exists with T0 and coverage checklists.
+- [ ] If `.specify/` exists, `/speckit.constitution` was executed and outputs are persisted.
 
 *** CONSTRAINTS ***
 - NEVER duplicate the full root `AGENTS.md` into an agent folder.
