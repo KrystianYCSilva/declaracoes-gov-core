@@ -10,13 +10,21 @@ import java.util.Set;
  */
 public final class ExponentialBackoff implements RetryPolicy {
 
+    private static final long DEFAULT_BASE_DELAY_MS = 1_000L;
+    private static final long DEFAULT_MAX_DELAY_MS  = 30_000L;
+    private static final int  DEFAULT_MAX_ATTEMPTS  = 3;
+
+    private static final int HTTP_BAD_GATEWAY          = 502;
+    private static final int HTTP_SERVICE_UNAVAILABLE  = 503;
+    private static final int HTTP_GATEWAY_TIMEOUT      = 504;
+
     private final long baseDelayMillis;
     private final long maxDelayMillis;
     private final int maxAttempts;
     private final Set<Integer> retryableStatusCodes;
 
     public ExponentialBackoff() {
-        this(1000, 30000, 3, defaultRetryableCodes());
+        this(DEFAULT_BASE_DELAY_MS, DEFAULT_MAX_DELAY_MS, DEFAULT_MAX_ATTEMPTS, defaultRetryableCodes());
     }
 
     public ExponentialBackoff(long baseDelayMillis, long maxDelayMillis, int maxAttempts, Set<Integer> retryableStatusCodes) {
@@ -31,9 +39,9 @@ public final class ExponentialBackoff implements RetryPolicy {
 
     public static Set<Integer> defaultRetryableCodes() {
         Set<Integer> set = new HashSet<>();
-        set.add(502);
-        set.add(503);
-        set.add(504);
+        set.add(HTTP_BAD_GATEWAY);
+        set.add(HTTP_SERVICE_UNAVAILABLE);
+        set.add(HTTP_GATEWAY_TIMEOUT);
         return set;
     }
 

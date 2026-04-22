@@ -1,11 +1,13 @@
 package br.com.contabilizei.obrigacoes.govcore.signature;
 
 import br.com.contabilizei.obrigacoes.govcore.crypto.CertificateProvider;
+import br.com.contabilizei.obrigacoes.govcore.exception.GovCoreException;
 import br.com.contabilizei.obrigacoes.govcore.exception.GovSignatureException;
 import br.com.contabilizei.obrigacoes.govcore.util.XmlDocuments;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Reference;
@@ -13,6 +15,7 @@ import javax.xml.crypto.dsig.SignatureMethod;
 import javax.xml.crypto.dsig.SignedInfo;
 import javax.xml.crypto.dsig.Transform;
 import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
@@ -20,6 +23,8 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -110,7 +115,9 @@ public final class XmlDsigSigner implements XmlSigner {
             
         } catch (GovSignatureException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (GovCoreException e) {
+            throw new GovSignatureException("XML fornecido é inválido ou não pôde ser lido para assinatura.", e);
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | MarshalException | XMLSignatureException e) {
             throw new GovSignatureException("Falha interna do Apache Santuario ao assinar documento XMLDSIG.", e);
         }
     }
@@ -150,7 +157,7 @@ public final class XmlDsigSigner implements XmlSigner {
         );
     }
 
-    private Reference createReference(XMLSignatureFactory signatureFactory, Element target) throws Exception {
+    private Reference createReference(XMLSignatureFactory signatureFactory, Element target) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         // eSocial e ReInF exigem ENVELOPED seguido de C14N INCLUSIVE (previne Erro 142)
         List<Transform> transforms;
         if (options.isIncludeC14nTransform()) {

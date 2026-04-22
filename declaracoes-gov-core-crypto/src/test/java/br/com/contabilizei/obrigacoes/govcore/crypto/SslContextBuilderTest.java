@@ -40,10 +40,49 @@ public class SslContextBuilderTest {
 
     @Test(expected = GovSecurityException.class)
     public void testWrapsProviderFailure() {
+        // GovSecurityException de provedor quebrado deve propagar sem re-wrapping
         SslContextBuilder.build(new CertificateProvider() {
             @Override
             public java.security.KeyStore getKeyStore() {
-                throw new IllegalStateException("boom");
+                throw new GovSecurityException("Certificado inválido ou expirado");
+            }
+
+            @Override
+            public char[] getKeyPassword() {
+                return new char[0];
+            }
+
+            @Override
+            public String getKeyAlias() {
+                return "alias";
+            }
+
+            @Override
+            public java.security.PrivateKey getPrivateKey() {
+                return null;
+            }
+
+            @Override
+            public java.security.cert.X509Certificate getCertificate() {
+                return null;
+            }
+
+            @Override
+            public java.security.cert.X509Certificate[] getCertificateChain() {
+                return new java.security.cert.X509Certificate[0];
+            }
+        });
+    }
+
+    @Test(expected = GovSecurityException.class)
+    public void testWrapsKeyStoreException() throws Exception {
+        // KeyStore não inicializado causa KeyStoreException em kmf.init() — deve ser envolvido em GovSecurityException
+        KeyStore uninitializedKeyStore = KeyStore.getInstance("PKCS12");
+        // Intencionalmente NÃO chamamos keyStore.load() para deixá-lo não inicializado
+        SslContextBuilder.build(new CertificateProvider() {
+            @Override
+            public java.security.KeyStore getKeyStore() {
+                return uninitializedKeyStore;
             }
 
             @Override

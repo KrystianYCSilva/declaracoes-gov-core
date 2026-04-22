@@ -5,7 +5,11 @@ import br.com.contabilizei.obrigacoes.govcore.exception.GovSecurityException;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 
 /**
  * Factory Thread-Safe para construção de Sockets TLS.
@@ -59,7 +63,7 @@ public final class SslContextBuilder {
 
             return sslContext;
             
-        } catch (Exception e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | KeyManagementException e) {
             throw new GovSecurityException("Falha irreversível ao construir a estrutura de SSLContext para comunicação mTLS.", e);
         }
     }

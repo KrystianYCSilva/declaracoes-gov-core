@@ -5,7 +5,9 @@ import br.com.contabilizei.obrigacoes.govcore.exception.GovSecurityException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -62,7 +64,7 @@ public abstract class AbstractKeyStoreProvider implements CertificateProvider {
             
         } catch (GovSecurityException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new GovSecurityException("Falha crítica ao ler o material criptográfico do KeyStore.", e);
         }
     }

@@ -3,14 +3,18 @@ package br.com.contabilizei.obrigacoes.govcore.crypto;
 import br.com.contabilizei.obrigacoes.govcore.exception.GovSecurityException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
+import java.security.cert.CertificateException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +50,7 @@ public final class Pkcs11Provider extends AbstractKeyStoreProvider {
         try {
             String configContent = new String(Files.readAllBytes(configurationFile), StandardCharsets.UTF_8);
             return loadProvider(configContent);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new GovSecurityException(
                 "Falha ao ler ou interpretar o arquivo de configuração PKCS11: " + configurationFile,
                 e
@@ -68,7 +72,7 @@ public final class Pkcs11Provider extends AbstractKeyStoreProvider {
             Provider p = (Provider) constructor.newInstance(configStream);
             Security.addProvider(p);
             return p;
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException | IOException e) {
             throw new GovSecurityException(
                 "Falha crítica ao inicializar a ponte (bridge) SunPKCS11. Verifique se a biblioteca nativa configurada está correta e compatível: "
                     + nativeLibrary,
@@ -82,7 +86,7 @@ public final class Pkcs11Provider extends AbstractKeyStoreProvider {
             KeyStore keyStore = KeyStore.getInstance(TIPO_PKCS11, provider);
             keyStore.load(null, pin);
             return keyStore;
-        } catch (Exception e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
             throw new GovSecurityException("Falha ao carregar as chaves do Token A3 via PKCS11. O PIN (senha) está incorreto ou o dispositivo não está conectado.", e);
         }
     }

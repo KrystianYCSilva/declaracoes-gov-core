@@ -9,13 +9,17 @@ import org.w3c.dom.NodeList;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import org.xml.sax.SAXException;
 
 /**
  * Utilitário seguro e limpo para parsing e serialização do DOM XML.
@@ -25,6 +29,9 @@ public final class XmlDocuments {
 
     /** Namespace W3C XMLDSIG, utilizado para localizar elementos {@code Signature}. */
     private static final String XMLDSIG_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#";
+
+    /** Feature Apache Xerces que desabilita DOCTYPE, prevenindo ataques XXE. */
+    private static final String DISALLOW_DOCTYPE_FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
 
     private XmlDocuments() {
         // Prevents instantiation
@@ -44,12 +51,12 @@ public final class XmlDocuments {
             
             // Segurança: Proteção contra XXE (XML External Entity attacks)
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature(DISALLOW_DOCTYPE_FEATURE, true);
             
             DocumentBuilder builder = factory.newDocumentBuilder();
             return builder.parse(new org.xml.sax.InputSource(new StringReader(xml)));
             
-        } catch (Exception e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new GovCoreException("Falha ao efetuar o parse seguro do XML.", e);
         }
     }
@@ -71,7 +78,7 @@ public final class XmlDocuments {
             
             return writer.toString();
             
-        } catch (Exception e) {
+        } catch (TransformerException e) {
             throw new GovCoreException("Falha ao transformar Node DOM em String.", e);
         }
     }
@@ -108,7 +115,7 @@ public final class XmlDocuments {
             found = findFirstElementWithAttribute(root, "id");
         }
         if (found == null) {
-            throw new IllegalArgumentException("Nao foi encontrado atributo Id no XML informado");
+            throw new IllegalArgumentException("Não foi encontrado atributo Id no XML informado");
         }
         return found.hasAttribute("Id") ? found.getAttribute("Id") : found.getAttribute("id");
     }

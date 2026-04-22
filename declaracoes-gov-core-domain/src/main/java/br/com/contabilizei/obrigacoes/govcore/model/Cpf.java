@@ -15,6 +15,12 @@ public final class Cpf implements IdentificadorEmpregador {
 
     private static final long serialVersionUID = 1L;
 
+    // Posições do layout da máscara CPF: XXX.XXX.XXX-XX
+    private static final int CPF_POS_BLOCO1 = 3;
+    private static final int CPF_POS_BLOCO2 = 6;
+    private static final int CPF_POS_BLOCO3 = 9;
+    private static final int CPF_LENGTH     = 11;
+
     private final String value;
 
     private Cpf(String validAndStrippedCpf) {
@@ -79,10 +85,10 @@ public final class Cpf implements IdentificadorEmpregador {
     @Override
     public String getFormatted() {
         return String.format("%s.%s.%s-%s",
-                value.substring(0, 3),
-                value.substring(3, 6),
-                value.substring(6, 9),
-                value.substring(9, 11));
+                value.substring(0, CPF_POS_BLOCO1),
+                value.substring(CPF_POS_BLOCO1, CPF_POS_BLOCO2),
+                value.substring(CPF_POS_BLOCO2, CPF_POS_BLOCO3),
+                value.substring(CPF_POS_BLOCO3, CPF_LENGTH));
     }
 
     /**

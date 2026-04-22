@@ -8,6 +8,13 @@ public final class Modulo11 {
     private static final int MIN_WEIGHT = 2;
     private static final int MAX_WEIGHT = 9;
 
+    /**
+     * Offset ASCII para letras A–Z conforme o algoritmo RF 2026 (CNPJ Alfanumérico).
+     * Produz valores 17 ('A') a 42 ('Z'): ex. 'A'=65 - 48 = 17, 'Z'=90 - 48 = 42.
+     * Especificação: Ato Declaratório Executivo COFIS nº 4/2024, Anexo I.
+     */
+    private static final int ASCII_ALFA_OFFSET = 48;
+
     private Modulo11() {
         // Prevents instantiation
     }
@@ -88,7 +95,9 @@ public final class Modulo11 {
             return normalized - '0';
         }
         if (normalized >= 'A' && normalized <= 'Z') {
-            return normalized - 48;
+            // Offset definido pela RF 2026 para CNPJ Alfanumérico:
+            // 'A'(65) - ASCII_ALFA_OFFSET = 17, 'Z'(90) - ASCII_ALFA_OFFSET = 42
+            return normalized - ASCII_ALFA_OFFSET;
         }
         throw new IllegalArgumentException("Caractere nao suportado para Modulo11: " + value);
     }

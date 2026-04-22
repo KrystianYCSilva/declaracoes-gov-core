@@ -2,10 +2,14 @@ package br.com.contabilizei.obrigacoes.govcore.crypto;
 
 import br.com.contabilizei.obrigacoes.govcore.exception.GovSecurityException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 /**
  * Provedor para certificado digital A1 (Arquivos PKCS12 / .pfx / .p12).
@@ -46,7 +50,7 @@ public final class Pkcs12Provider extends AbstractKeyStoreProvider {
             return loadFromStream(inputStream, password);
         } catch (GovSecurityException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new GovSecurityException("Falha ao abrir fluxo de leitura do arquivo PKCS12.", e);
         }
     }
@@ -59,7 +63,7 @@ public final class Pkcs12Provider extends AbstractKeyStoreProvider {
             KeyStore keyStore = KeyStore.getInstance(TIPO_PKCS12);
             keyStore.load(inputStream, password);
             return keyStore;
-        } catch (Exception e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
             throw new GovSecurityException("Falha de decriptação ao carregar arquivo PKCS12. A senha pode estar incorreta ou o arquivo corrompido.", e);
         }
     }

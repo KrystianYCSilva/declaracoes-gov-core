@@ -21,6 +21,13 @@ public final class Cnpj implements IdentificadorEmpregador {
 
     private static final CnpjValidationContext VALIDATION_CONTEXT = new CnpjValidationContext();
 
+    // Posições do layout da máscara CNPJ: XX.XXX.XXX/XXXX-XX
+    private static final int CNPJ_POS_BLOCO1_FIM  = 2;
+    private static final int CNPJ_POS_BLOCO2_FIM  = 5;
+    private static final int CNPJ_POS_BLOCO3_FIM  = 8;
+    private static final int CNPJ_POS_FILIAL_FIM  = 12;
+    private static final int CNPJ_LENGTH           = 14;
+
     private final String value;
 
     /**
@@ -71,11 +78,11 @@ public final class Cnpj implements IdentificadorEmpregador {
     public String getFormatted() {
         // A formatação é a mesma tanto para Numérico quanto Alfanumérico (XX.XXX.XXX/XXXX-XX)
         return String.format("%s.%s.%s/%s-%s",
-                value.substring(0, 2),
-                value.substring(2, 5),
-                value.substring(5, 8),
-                value.substring(8, 12),
-                value.substring(12, 14));
+                value.substring(0, CNPJ_POS_BLOCO1_FIM),
+                value.substring(CNPJ_POS_BLOCO1_FIM, CNPJ_POS_BLOCO2_FIM),
+                value.substring(CNPJ_POS_BLOCO2_FIM, CNPJ_POS_BLOCO3_FIM),
+                value.substring(CNPJ_POS_BLOCO3_FIM, CNPJ_POS_FILIAL_FIM),
+                value.substring(CNPJ_POS_FILIAL_FIM, CNPJ_LENGTH));
     }
 
     /**

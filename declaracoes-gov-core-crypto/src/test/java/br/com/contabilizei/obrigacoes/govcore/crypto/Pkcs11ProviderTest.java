@@ -64,14 +64,28 @@ public class Pkcs11ProviderTest {
         }
     }
 
-    @Test(expected = GovSecurityException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConfigurationFileWithoutLibraryDirectiveIsWrapped() throws Exception {
+        // Config sem 'library' lança IllegalArgumentException — erro de programação/configuração,
+        // não deve ser silenciado em GovSecurityException.
         Path tempFile = Files.createTempFile("govcore-pkcs11-missing-library-", ".cfg");
         Files.write(tempFile, "name = Token".getBytes(StandardCharsets.UTF_8));
         try {
             new Pkcs11Provider(tempFile, "1234".toCharArray());
         } finally {
             Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test(expected = GovSecurityException.class)
+    public void testConfigurationFileUnreadableThrowsGovSecurityException() throws Exception {
+        // Diretório passado como path de config — Files.readAllBytes() lança IOException,
+        // que deve ser capturada e envolvida em GovSecurityException.
+        Path tempDir = Files.createTempDirectory("govcore-pkcs11-ioerror-");
+        try {
+            new Pkcs11Provider(tempDir, "1234".toCharArray());
+        } finally {
+            Files.deleteIfExists(tempDir);
         }
     }
 

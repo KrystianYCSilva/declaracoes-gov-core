@@ -17,6 +17,12 @@ public final class Nis implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final NisValidator VALIDATOR = new NisValidator();
 
+    // Posições do layout da máscara NIS: XXX.XXXXX.XX-X
+    private static final int NIS_POS_BLOCO1 = 3;
+    private static final int NIS_POS_BLOCO2 = 8;
+    private static final int NIS_POS_BLOCO3 = 10;
+    private static final int NIS_LENGTH     = 11;
+
     private final String value;
 
     private Nis(String value) {
@@ -67,10 +73,10 @@ public final class Nis implements Serializable {
     /** {@return the formatted} */
     public String getFormatted() {
         return String.format("%s.%s.%s-%s",
-                value.substring(0, 3),
-                value.substring(3, 8),
-                value.substring(8, 10),
-                value.substring(10, 11));
+                value.substring(0, NIS_POS_BLOCO1),
+                value.substring(NIS_POS_BLOCO1, NIS_POS_BLOCO2),
+                value.substring(NIS_POS_BLOCO2, NIS_POS_BLOCO3),
+                value.substring(NIS_POS_BLOCO3, NIS_LENGTH));
     }
 
     /**
