@@ -55,6 +55,10 @@ public final class GovCompetenceFormats {
 
         try {
             if (trimmed.contains("-")) {
+                if (trimmed.length() != 7) {
+                    throw new IllegalArgumentException(
+                            "Competência no formato yyyy-MM inválida (esperado 7 caracteres): " + value);
+                }
                 return YearMonth.parse(trimmed, FORMAT_YYYY_MM);
             }
             if (trimmed.length() == 6) {

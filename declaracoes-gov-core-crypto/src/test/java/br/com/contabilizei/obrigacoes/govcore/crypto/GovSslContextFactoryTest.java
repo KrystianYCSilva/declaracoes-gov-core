@@ -12,6 +12,7 @@ import java.util.Base64;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class GovSslContextFactoryTest {
 
@@ -89,5 +90,21 @@ public class GovSslContextFactoryTest {
 
         assertNotNull(ctx);
         assertEquals("TLSv1.2", ctx.getProtocol());
+    }
+
+    @Test
+    public void testSslContextsIsoladosPorCertificado() throws Exception {
+        // Dois certificados distintos produzem SSLContexts independentes (multi-tenant)
+        TestCertificateSupport.GeneratedCertificate cert1 = TestCertificateSupport.generateCertificate();
+        TestCertificateSupport.GeneratedCertificate cert2 = TestCertificateSupport.generateCertificate();
+
+        SSLContext ctx1 = GovSslContextFactory.create(gerarPfxBase64(cert1), new String(cert1.getKeyPassword()));
+        SSLContext ctx2 = GovSslContextFactory.create(gerarPfxBase64(cert2), new String(cert2.getKeyPassword()));
+
+        assertNotNull(ctx1);
+        assertNotNull(ctx2);
+        assertTrue(ctx1 != ctx2);
+        assertEquals("TLSv1.2", ctx1.getProtocol());
+        assertEquals("TLSv1.2", ctx2.getProtocol());
     }
 }

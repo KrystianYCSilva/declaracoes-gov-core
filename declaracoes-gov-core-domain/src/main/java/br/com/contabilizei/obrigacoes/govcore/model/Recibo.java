@@ -20,9 +20,14 @@ public final class Recibo implements Serializable {
     }
 
     /**
-     * Instancia um número de Recibo.
-     * Os recibos do SPED costumam ter o padrão 1.2.202604.0000000000000000000-1
-     * ou serem strings alfanuméricas longas (até 50 caracteres).
+     * Instancia um número de Recibo governamental.
+     * Aplica validação estrutural básica: não-nulo, não-vazio, máximo 60 caracteres.
+     * Não valida formato específico do recibo (padrão varia por tipo de declaração:
+     * eSocial, EFD-Reinf, PGDAS, SPED, etc.).
+     *
+     * @param numero número do recibo; não pode ser {@code null} ou vazio
+     * @return instância imutável de {@link Recibo}
+     * @throws InvalidDocumentException se {@code numero} for nulo, vazio ou exceder 60 caracteres
      */
     public static Recibo of(String numero) {
         if (numero == null || numero.trim().isEmpty()) {

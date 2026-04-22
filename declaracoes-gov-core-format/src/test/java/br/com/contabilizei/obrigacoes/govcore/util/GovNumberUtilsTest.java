@@ -196,4 +196,54 @@ public class GovNumberUtilsTest {
                 new BigDecimal("100"), new BigDecimal("100"));
         assertEquals(0, result.compareTo(new BigDecimal("100.0000000000")));
     }
+
+    // -----------------------------------------------------------------------
+    // min
+    // -----------------------------------------------------------------------
+
+    @Test
+    public void testMin() {
+        assertEquals(new BigDecimal("5"),
+                GovNumberUtils.min(new BigDecimal("5"), new BigDecimal("10")));
+        assertEquals(new BigDecimal("1"),
+                GovNumberUtils.min(new BigDecimal("3"), new BigDecimal("1")));
+        assertEquals(BigDecimal.ZERO, GovNumberUtils.min(null, BigDecimal.ZERO));
+        assertEquals(BigDecimal.ZERO, GovNumberUtils.min(null, null));
+    }
+
+    // -----------------------------------------------------------------------
+    // isNegativeOrZero
+    // -----------------------------------------------------------------------
+
+    @Test
+    public void testIsNegativeOrZero() {
+        assertTrue(GovNumberUtils.isNegativeOrZero(BigDecimal.ZERO));
+        assertTrue(GovNumberUtils.isNegativeOrZero(new BigDecimal("-1")));
+        assertTrue(GovNumberUtils.isNegativeOrZero(null));
+        assertFalse(GovNumberUtils.isNegativeOrZero(new BigDecimal("0.01")));
+    }
+
+    // -----------------------------------------------------------------------
+    // isPositiveOrZero
+    // -----------------------------------------------------------------------
+
+    @Test
+    public void testIsPositiveOrZero() {
+        assertTrue(GovNumberUtils.isPositiveOrZero(BigDecimal.ZERO));
+        assertTrue(GovNumberUtils.isPositiveOrZero(new BigDecimal("1")));
+        assertTrue(GovNumberUtils.isPositiveOrZero(null));
+        assertFalse(GovNumberUtils.isPositiveOrZero(new BigDecimal("-0.01")));
+    }
+
+    // -----------------------------------------------------------------------
+    // isNotZero
+    // -----------------------------------------------------------------------
+
+    @Test
+    public void testIsNotZero() {
+        assertFalse(GovNumberUtils.isNotZero(BigDecimal.ZERO));
+        assertFalse(GovNumberUtils.isNotZero(null));
+        assertTrue(GovNumberUtils.isNotZero(new BigDecimal("1")));
+        assertTrue(GovNumberUtils.isNotZero(new BigDecimal("-1")));
+    }
 }

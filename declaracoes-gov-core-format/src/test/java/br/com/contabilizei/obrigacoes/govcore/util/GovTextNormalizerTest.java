@@ -106,6 +106,11 @@ public class GovTextNormalizerTest {
         GovTextNormalizer.lpad(null, 5, '0');
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testLpad_comprimentoNegativoLancaExcecao() {
+        GovTextNormalizer.lpad("abc", -1, '0');
+    }
+
     // -----------------------------------------------------------------------
     // rpad
     // -----------------------------------------------------------------------
@@ -128,6 +133,11 @@ public class GovTextNormalizerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRpad_nullLancaExcecao() {
         GovTextNormalizer.rpad(null, 5, ' ');
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRpad_comprimentoNegativoLancaExcecao() {
+        GovTextNormalizer.rpad("abc", -1, ' ');
     }
 
     // -----------------------------------------------------------------------

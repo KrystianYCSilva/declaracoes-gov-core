@@ -23,6 +23,9 @@ import java.io.StringWriter;
  */
 public final class XmlDocuments {
 
+    /** Namespace W3C XMLDSIG, utilizado para localizar elementos {@code Signature}. */
+    private static final String XMLDSIG_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#";
+
     private XmlDocuments() {
         // Prevents instantiation
     }
@@ -77,7 +80,7 @@ public final class XmlDocuments {
      * Verifica de forma agnóstica se a raiz contém o namespace XMLDSIG.
      */
     public static boolean hasSignature(Element root) {
-        NodeList list = root.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature");
+        NodeList list = root.getElementsByTagNameNS(XMLDSIG_NAMESPACE, "Signature");
         if (list.getLength() > 0) return true;
         
         // Fallback para procura bruta (ignorando ns) caso a formatação do prefixo fuja do padrão.

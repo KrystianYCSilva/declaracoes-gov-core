@@ -16,4 +16,13 @@ public final class GovBigDecimalConstants {
 
     /** Zero decimal; atalho semântico para {@link BigDecimal#ZERO}. */
     public static final BigDecimal ZERO_DECIMAL = BigDecimal.ZERO;
+
+    /** Um (1). */
+    public static final BigDecimal UM = BigDecimal.ONE;
+
+    /** Dois (2). */
+    public static final BigDecimal DOIS = BigDecimal.valueOf(2L);
+
+    /** Dez (10). */
+    public static final BigDecimal DEZ = BigDecimal.TEN;
 }

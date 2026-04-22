@@ -52,7 +52,12 @@ public final class GovZipUtils {
         if (compressed == null) {
             throw new IllegalArgumentException("compressed não pode ser nulo");
         }
-        byte[] gzipBytes = Base64.getDecoder().decode(compressed);
+        byte[] gzipBytes;
+        try {
+            gzipBytes = Base64.getDecoder().decode(compressed);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Entrada inválida: Base64 corrompido ou não-Base64", e);
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(gzipBytes))) {
             byte[] buffer = new byte[4096];

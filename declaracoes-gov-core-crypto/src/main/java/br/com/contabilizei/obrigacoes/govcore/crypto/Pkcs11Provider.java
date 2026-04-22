@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  */
 public final class Pkcs11Provider extends AbstractKeyStoreProvider {
 
+    private static final String TIPO_PKCS11 = "PKCS11";
     private static final Pattern LIBRARY_PATTERN = Pattern.compile("(?im)^\\s*library\\s*=\\s*(.+?)\\s*$");
 
     /**
@@ -78,7 +79,7 @@ public final class Pkcs11Provider extends AbstractKeyStoreProvider {
 
     private static KeyStore loadKeyStore(Provider provider, char[] pin) {
         try {
-            KeyStore keyStore = KeyStore.getInstance("PKCS11", provider);
+            KeyStore keyStore = KeyStore.getInstance(TIPO_PKCS11, provider);
             keyStore.load(null, pin);
             return keyStore;
         } catch (Exception e) {

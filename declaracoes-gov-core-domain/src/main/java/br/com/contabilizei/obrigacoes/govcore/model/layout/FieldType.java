@@ -2,20 +2,25 @@ package br.com.contabilizei.obrigacoes.govcore.model.layout;
 
 /**
  * Tipos de campo para mapeamento de layouts governamentais (SPED, eSocial, EFD-Reinf).
- * Os valores legados (TEXT, NUMERIC, MONEY, ALPHANUMERIC) são mantidos para compatibilidade.
+ * Os valores marcados como {@link Deprecated} são mantidos apenas para compatibilidade retroativa;
+ * prefira os equivalentes modernos em código novo.
  */
 public enum FieldType {
-    /** Texto genérico (legado). */
+    /** @deprecated Use {@link #STRING} para texto genérico. */
+    @Deprecated
     TEXT,
-    /** Numérico inteiro sem ponto decimal (legado). */
+    /** @deprecated Use {@link #INTEGER} ou {@link #LONG} para numérico inteiro. */
+    @Deprecated
     NUMERIC,
     /** Data. */
     DATE,
-    /** Valor monetário (legado). */
+    /** @deprecated Use {@link #DECIMAL} para valores monetários. */
+    @Deprecated
     MONEY,
     /** Decimal com ponto flutuante. */
     DECIMAL,
-    /** Alfanumérico (legado). */
+    /** @deprecated Use {@link #STRING} para alfanumérico. */
+    @Deprecated
     ALPHANUMERIC,
     /** Cadeia de caracteres. */
     STRING,

@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Utilitários de conversão e manipulação de datas para o ecossistema de declarações
@@ -47,17 +48,38 @@ public final class GovDateUtils {
     }
 
     /**
-     * Retorna a data com hora definida para {@code 00:00:00.000} (início do dia).
+     * Retorna a data com hora definida para {@code 00:00:00.000} (início do dia),
+     * usando o fuso horário padrão da JVM ({@code TimeZone.getDefault()}).
+     * <p>
+     * <strong>Atenção:</strong> Em ambientes cloud (ex: GCP) o fuso padrão normalmente é UTC.
+     * Para comportamento determinístico em qualquer ambiente, utilize a sobrecarga
+     * {@link #getStartMinuteDateForQuery(Date, TimeZone)}.
      *
      * @param date a data de referência; não pode ser {@code null}
-     * @return nova instância de {@link Date} com horário zerado
+     * @return nova instância de {@link Date} com horário zerado no fuso padrão da JVM
      * @throws IllegalArgumentException se {@code date} for nulo
      */
     public static Date getStartMinuteDateForQuery(Date date) {
+        return getStartMinuteDateForQuery(date, TimeZone.getDefault());
+    }
+
+    /**
+     * Retorna a data com hora definida para {@code 00:00:00.000} (início do dia)
+     * no fuso horário especificado.
+     *
+     * @param date     a data de referência; não pode ser {@code null}
+     * @param timeZone o fuso horário a usar; não pode ser {@code null}
+     * @return nova instância de {@link Date} com horário zerado no fuso informado
+     * @throws IllegalArgumentException se {@code date} ou {@code timeZone} forem nulos
+     */
+    public static Date getStartMinuteDateForQuery(Date date, TimeZone timeZone) {
         if (date == null) {
             throw new IllegalArgumentException("Data não pode ser nula");
         }
-        Calendar cal = Calendar.getInstance();
+        if (timeZone == null) {
+            throw new IllegalArgumentException("TimeZone não pode ser nulo");
+        }
+        Calendar cal = Calendar.getInstance(timeZone);
         cal.setTime(date);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -67,17 +89,38 @@ public final class GovDateUtils {
     }
 
     /**
-     * Retorna a data com hora definida para {@code 23:59:59.999} (fim do dia).
+     * Retorna a data com hora definida para {@code 23:59:59.999} (fim do dia),
+     * usando o fuso horário padrão da JVM ({@code TimeZone.getDefault()}).
+     * <p>
+     * <strong>Atenção:</strong> Em ambientes cloud (ex: GCP) o fuso padrão normalmente é UTC.
+     * Para comportamento determinístico em qualquer ambiente, utilize a sobrecarga
+     * {@link #getLastMinuteDateForQuery(Date, TimeZone)}.
      *
      * @param date a data de referência; não pode ser {@code null}
-     * @return nova instância de {@link Date} com horário no último instante do dia
+     * @return nova instância de {@link Date} com horário no último instante do dia no fuso padrão
      * @throws IllegalArgumentException se {@code date} for nulo
      */
     public static Date getLastMinuteDateForQuery(Date date) {
+        return getLastMinuteDateForQuery(date, TimeZone.getDefault());
+    }
+
+    /**
+     * Retorna a data com hora definida para {@code 23:59:59.999} (fim do dia)
+     * no fuso horário especificado.
+     *
+     * @param date     a data de referência; não pode ser {@code null}
+     * @param timeZone o fuso horário a usar; não pode ser {@code null}
+     * @return nova instância de {@link Date} com horário no último instante do dia no fuso informado
+     * @throws IllegalArgumentException se {@code date} ou {@code timeZone} forem nulos
+     */
+    public static Date getLastMinuteDateForQuery(Date date, TimeZone timeZone) {
         if (date == null) {
             throw new IllegalArgumentException("Data não pode ser nula");
         }
-        Calendar cal = Calendar.getInstance();
+        if (timeZone == null) {
+            throw new IllegalArgumentException("TimeZone não pode ser nulo");
+        }
+        Calendar cal = Calendar.getInstance(timeZone);
         cal.setTime(date);
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);

@@ -12,6 +12,8 @@ import java.security.KeyStore;
  */
 public final class Pkcs12Provider extends AbstractKeyStoreProvider {
 
+    private static final String TIPO_PKCS12 = "PKCS12";
+
     /**
      * Cria provider lendo de um arquivo físico com auto-descoberta de alias.
      */
@@ -54,7 +56,7 @@ public final class Pkcs12Provider extends AbstractKeyStoreProvider {
              throw new IllegalArgumentException("InputStream não pode ser nulo.");
         }
         try {
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            KeyStore keyStore = KeyStore.getInstance(TIPO_PKCS12);
             keyStore.load(inputStream, password);
             return keyStore;
         } catch (Exception e) {

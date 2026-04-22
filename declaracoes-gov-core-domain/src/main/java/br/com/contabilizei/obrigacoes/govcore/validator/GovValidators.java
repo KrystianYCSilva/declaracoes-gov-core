@@ -27,10 +27,15 @@ public final class GovValidators {
     }
 
     /**
-     * Performs the is cnpj valid operation.
+     * Valida um CNPJ em qualquer formato suportado: numérico (14 dígitos) ou
+     * alfanumérico RF 2026 (12 posições alfanuméricas + 2 DVs numéricos).
+     * Aceita entrada com ou sem máscara ({@code . / -}).
+     * Verifica dígitos verificadores pelo algoritmo Módulo 11.
      *
-     * @param cnpj the cnpj
-     * @return {@code true} if the condition is met, {@code false} otherwise
+     * @param cnpj o CNPJ a validar; pode ser {@code null}
+     * @return {@code true} se o CNPJ for válido por qualquer estratégia registrada;
+     *         {@code false} para {@code null}, vazio, comprimento inválido ou DV incorreto
+     * @see CnpjValidationContext
      */
     public static boolean isCnpjValid(String cnpj) {
         return CNPJ_CHAIN.stream().anyMatch(validator -> validator.isValid(cnpj));

@@ -113,6 +113,9 @@ public final class GovTextNormalizer {
         if (s == null) {
             throw new IllegalArgumentException("s não pode ser nulo");
         }
+        if (length < 0) {
+            throw new IllegalArgumentException("length não pode ser negativo: " + length);
+        }
         if (s.length() >= length) {
             return s;
         }
@@ -138,6 +141,9 @@ public final class GovTextNormalizer {
     public static String rpad(String s, int length, char padChar) {
         if (s == null) {
             throw new IllegalArgumentException("s não pode ser nulo");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("length não pode ser negativo: " + length);
         }
         if (s.length() >= length) {
             return s;

@@ -62,6 +62,21 @@ public final class Modulo11 {
     }
 
     /**
+     * Converte cada caractere da string nos valores numéricos para Módulo 11.
+     *
+     * @param digits string de dígitos (ou alfanumérica)
+     * @return array de valores inteiros correspondentes
+     * @see #charToValue(char)
+     */
+    public static int[] toNumericValues(String digits) {
+        int[] values = new int[digits.length()];
+        for (int i = 0; i < digits.length(); i++) {
+            values[i] = charToValue(digits.charAt(i));
+        }
+        return values;
+    }
+
+    /**
      * Performs the char to value operation.
      *
      * @param value the value

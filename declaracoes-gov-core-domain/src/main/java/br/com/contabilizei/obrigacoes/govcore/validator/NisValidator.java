@@ -27,7 +27,7 @@ public class NisValidator implements DocumentValidator {
             return false;
         }
 
-        int expectedDv = Modulo11.computeDv(toNumericValues(digits.substring(0, 10)), WEIGHTS);
+        int expectedDv = Modulo11.computeDv(Modulo11.toNumericValues(digits.substring(0, 10)), WEIGHTS);
         int actualDv = Character.getNumericValue(digits.charAt(10));
         return expectedDv == actualDv;
     }
@@ -41,13 +41,5 @@ public class NisValidator implements DocumentValidator {
     @Override
     public String strip(String value) {
         return value == null ? "" : value.replaceAll("[^0-9]", "");
-    }
-
-    private int[] toNumericValues(String digits) {
-        int[] values = new int[digits.length()];
-        for (int i = 0; i < digits.length(); i++) {
-            values[i] = Modulo11.charToValue(digits.charAt(i));
-        }
-        return values;
     }
 }

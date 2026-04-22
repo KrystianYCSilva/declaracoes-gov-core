@@ -161,9 +161,43 @@ public class GovFileUtilsTest {
         GovFileUtils.throwIfMalicious(new byte[0]); // sem magic numbers — não é malicioso
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void throwIfMalicious_cabecalhoMachoLe32bit_lancaExcecao() {
+        byte[] macho = {(byte) 0xFE, (byte) 0xED, (byte) 0xFA, (byte) 0xCE}; // Mach-O 32-bit big-endian
+        GovFileUtils.throwIfMalicious(macho);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwIfMalicious_cabecalhoMachoLe64bit_lancaExcecao() {
+        byte[] macho = {(byte) 0xFE, (byte) 0xED, (byte) 0xFA, (byte) 0xCF}; // Mach-O 64-bit big-endian
+        GovFileUtils.throwIfMalicious(macho);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwIfMalicious_shebang_lancaExcecao() {
+        byte[] script = {0x23, 0x21, '/', 'b', 'i', 'n', '/', 's', 'h'}; // #!/bin/sh
+        GovFileUtils.throwIfMalicious(script);
+    }
+
     @Test
-    public void throwIfMalicious_umByte_naoLancaExcecao() {
-        // Somente 1 byte — não suficiente para MZ (precisa de 2)
-        GovFileUtils.throwIfMalicious(new byte[]{0x4D});
+    public void throwIfMalicious_mensagemMachoContemMacos() {
+        byte[] macho = {(byte) 0xFE, (byte) 0xED, (byte) 0xFA, (byte) 0xCE};
+        try {
+            GovFileUtils.throwIfMalicious(macho);
+            fail("Deveria ter lançado IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().toLowerCase().contains("macos"));
+        }
+    }
+
+    @Test
+    public void throwIfMalicious_mensagemShebangContemScript() {
+        byte[] script = {0x23, 0x21};
+        try {
+            GovFileUtils.throwIfMalicious(script);
+            fail("Deveria ter lançado IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().toLowerCase().contains("script"));
+        }
     }
 }

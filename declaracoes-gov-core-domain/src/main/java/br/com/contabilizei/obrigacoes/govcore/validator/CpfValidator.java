@@ -28,8 +28,8 @@ public class CpfValidator implements DocumentValidator {
             return false;
         }
 
-        int dv1 = Modulo11.computeDv(toNumericValues(digits.substring(0, 9)), WEIGHT_DV1);
-        int dv2 = Modulo11.computeDv(toNumericValues(digits.substring(0, 10)), WEIGHT_DV2);
+        int dv1 = Modulo11.computeDv(Modulo11.toNumericValues(digits.substring(0, 9)), WEIGHT_DV1);
+        int dv2 = Modulo11.computeDv(Modulo11.toNumericValues(digits.substring(0, 10)), WEIGHT_DV2);
 
         return dv1 == Character.getNumericValue(digits.charAt(9))
             && dv2 == Character.getNumericValue(digits.charAt(10));
@@ -44,13 +44,5 @@ public class CpfValidator implements DocumentValidator {
     @Override
     public String strip(String value) {
         return value == null ? "" : value.replaceAll("[^0-9]", "");
-    }
-
-    private int[] toNumericValues(String digits) {
-        int[] values = new int[digits.length()];
-        for (int i = 0; i < digits.length(); i++) {
-            values[i] = Modulo11.charToValue(digits.charAt(i));
-        }
-        return values;
     }
 }

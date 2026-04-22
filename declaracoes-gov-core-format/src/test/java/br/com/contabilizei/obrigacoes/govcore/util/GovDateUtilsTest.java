@@ -163,4 +163,55 @@ public class GovDateUtilsTest {
 
         assertEquals(tempoOriginal, original.getTime());
     }
+
+    // -------------------------------------------------------------------------
+    // getStartMinuteDateForQuery(Date, TimeZone) — sobrecarga timezone-aware
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void getStartMinuteDateForQuery_comTimezoneUtc_retornaHorarioZeradoEmUtc() {
+        java.util.TimeZone utc = java.util.TimeZone.getTimeZone("UTC");
+        Calendar cal = Calendar.getInstance(utc);
+        cal.set(2025, Calendar.JULY, 1, 15, 45, 30);
+        Date date = cal.getTime();
+
+        Date resultado = GovDateUtils.getStartMinuteDateForQuery(date, utc);
+
+        Calendar calResult = Calendar.getInstance(utc);
+        calResult.setTime(resultado);
+        assertEquals(0, calResult.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, calResult.get(Calendar.MINUTE));
+        assertEquals(0, calResult.get(Calendar.SECOND));
+        assertEquals(0, calResult.get(Calendar.MILLISECOND));
+        assertEquals(2025, calResult.get(Calendar.YEAR));
+        assertEquals(Calendar.JULY, calResult.get(Calendar.MONTH));
+        assertEquals(1, calResult.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getStartMinuteDateForQuery_nullTimezoneLancaExcecao() {
+        GovDateUtils.getStartMinuteDateForQuery(new Date(), null);
+    }
+
+    @Test
+    public void getLastMinuteDateForQuery_comTimezoneExplicito_retornaUltimoInstante() {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone("America/Sao_Paulo");
+        Calendar cal = Calendar.getInstance(tz);
+        cal.set(2025, Calendar.DECEMBER, 31, 10, 0, 0);
+        Date date = cal.getTime();
+
+        Date resultado = GovDateUtils.getLastMinuteDateForQuery(date, tz);
+
+        Calendar calResult = Calendar.getInstance(tz);
+        calResult.setTime(resultado);
+        assertEquals(23, calResult.get(Calendar.HOUR_OF_DAY));
+        assertEquals(59, calResult.get(Calendar.MINUTE));
+        assertEquals(59, calResult.get(Calendar.SECOND));
+        assertEquals(999, calResult.get(Calendar.MILLISECOND));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getLastMinuteDateForQuery_nullTimezoneLancaExcecao() {
+        GovDateUtils.getLastMinuteDateForQuery(new Date(), null);
+    }
 }

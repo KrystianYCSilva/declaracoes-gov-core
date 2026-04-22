@@ -19,6 +19,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public final class GovSslContextFactory {
 
+    private static final String PROTOCOLO_TLS = "TLSv1.2";
+
     private GovSslContextFactory() {}
 
     /**
@@ -49,7 +51,7 @@ public final class GovSslContextFactory {
             throws CertificadoInvalidoException {
         try {
             KeyManagerFactory kmf = KeyManagerFactoryBuilder.build(pfxBase64, senha);
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+            SSLContext sslContext = SSLContext.getInstance(PROTOCOLO_TLS);
             sslContext.init(kmf.getKeyManagers(), trustManagers, null);
             return sslContext;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {

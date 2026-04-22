@@ -68,8 +68,14 @@ public final class GovFileUtils {
     }
 
     /**
-     * Lança {@link IllegalArgumentException} se o arquivo for considerado malicioso,
-     * detectando executáveis Windows (cabeçalho MZ) e Linux (cabeçalho ELF).
+     * Lança {@link IllegalArgumentException} se o arquivo for considerado malicioso.
+     * Detecta:
+     * <ul>
+     *   <li>Executável Windows — cabeçalho MZ ({@code 4D 5A})</li>
+     *   <li>Executável Linux/Unix — cabeçalho ELF ({@code 7F 45 4C 46})</li>
+     *   <li>Executável macOS — cabeçalho Mach-O 32-bit ({@code FE ED FA CE}) e 64-bit ({@code FE ED FA CF})</li>
+     *   <li>Script executável — shebang ({@code 23 21} = {@code #!})</li>
+     * </ul>
      *
      * @param fileBytes bytes do arquivo; não pode ser {@code null}
      * @throws IllegalArgumentException se {@code fileBytes} for nulo ou o arquivo for executável
@@ -82,13 +88,27 @@ public final class GovFileUtils {
         if (fileBytes.length >= 2 && fileBytes[0] == 0x4D && fileBytes[1] == 0x5A) {
             throw new IllegalArgumentException("Tipo de arquivo não permitido: executável Windows detectado");
         }
-        // Cabeçalho ELF — executável Linux
+        // Cabeçalho ELF — executável Linux/Unix
         if (fileBytes.length >= 4
                 && fileBytes[0] == 0x7F
                 && fileBytes[1] == 0x45
                 && fileBytes[2] == 0x4C
                 && fileBytes[3] == 0x46) {
             throw new IllegalArgumentException("Tipo de arquivo não permitido: executável Linux detectado");
+        }
+        // Cabeçalho Mach-O — executável macOS (big-endian 32-bit e 64-bit)
+        if (fileBytes.length >= 4
+                && (byte) fileBytes[0] == (byte) 0xFE
+                && (byte) fileBytes[1] == (byte) 0xED
+                && (byte) fileBytes[2] == (byte) 0xFA
+                && ((byte) fileBytes[3] == (byte) 0xCE || (byte) fileBytes[3] == (byte) 0xCF)) {
+            throw new IllegalArgumentException("Tipo de arquivo não permitido: executável macOS detectado");
+        }
+        // Shebang — script executável Unix (#!)
+        if (fileBytes.length >= 2
+                && fileBytes[0] == 0x23
+                && fileBytes[1] == 0x21) {
+            throw new IllegalArgumentException("Tipo de arquivo não permitido: script executável detectado");
         }
     }
 

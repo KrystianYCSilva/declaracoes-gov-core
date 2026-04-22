@@ -61,6 +61,23 @@ public class GovZipUtilsTest {
         GovZipUtils.decompress(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDecompress_base64Invalido_lancaMensagemDescritiva() {
+        byte[] invalido = "nao-e-base64!!".getBytes();
+        GovZipUtils.decompress(invalido);
+    }
+
+    @Test
+    public void testDecompress_base64Invalido_mensagemDescritiva() {
+        byte[] invalido = "nao-e-base64!!".getBytes();
+        try {
+            GovZipUtils.decompress(invalido);
+            fail("Deveria lançar IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Mensagem deve mencionar Base64", e.getMessage().toLowerCase().contains("base64"));
+        }
+    }
+
     // -----------------------------------------------------------------------
     // zipToString
     // -----------------------------------------------------------------------

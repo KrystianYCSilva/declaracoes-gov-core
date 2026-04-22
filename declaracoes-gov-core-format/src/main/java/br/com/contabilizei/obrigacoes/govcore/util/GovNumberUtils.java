@@ -137,6 +137,47 @@ public final class GovNumberUtils {
                 .multiply(GovBigDecimalConstants.CEM);
     }
 
+    /**
+     * Retorna o menor entre os dois valores; {@code null} é tratado como zero.
+     *
+     * @param a valor A
+     * @param b valor B
+     * @return min(a, b)
+     */
+    public static BigDecimal min(BigDecimal a, BigDecimal b) {
+        return safe(a).min(safe(b));
+    }
+
+    /**
+     * Retorna {@code true} se o valor é negativo ou zero ({@code null} é tratado como zero).
+     *
+     * @param value valor a verificar
+     * @return {@code true} se negativo ou zero
+     */
+    public static boolean isNegativeOrZero(BigDecimal value) {
+        return safe(value).compareTo(BigDecimal.ZERO) <= 0;
+    }
+
+    /**
+     * Retorna {@code true} se o valor é positivo ou zero ({@code null} é tratado como zero).
+     *
+     * @param value valor a verificar
+     * @return {@code true} se positivo ou zero
+     */
+    public static boolean isPositiveOrZero(BigDecimal value) {
+        return safe(value).compareTo(BigDecimal.ZERO) >= 0;
+    }
+
+    /**
+     * Retorna {@code true} se o valor é diferente de zero ({@code null} é tratado como zero).
+     *
+     * @param value valor a verificar
+     * @return {@code true} se diferente de zero
+     */
+    public static boolean isNotZero(BigDecimal value) {
+        return !isZero(value);
+    }
+
     // -----------------------------------------------------------------------
     // Auxiliar privado
     // -----------------------------------------------------------------------
