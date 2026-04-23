@@ -68,8 +68,10 @@ declaracoes-gov-core-transport/
         ├── ExponentialBackoffTest.java
         ├── MockRestTransportTest.java   # SC-003: mockability < 50 LOC
         └── apache/
-            ├── ApacheHttpClientRestTransportIT.java   # Embedded server tests
-            └── ProxyRoutingIT.java                    # Proxy integration tests
+            ├── ApacheHttpClientRestTransportTest.java # Embedded server tests
+            ├── ProxyRoutingTest.java                 # Proxy integration tests
+            ├── TimeoutTest.java
+            └── MutualTlsTest.java
 ```
 
 **Structure Decision**: Single Maven module following the existing `declaracoes-gov-core-*` conventions. Package `br.uem.npd.govcore.transport` keeps it flat and discoverable. `apache` sub-package isolates the HttpClient 5 dependency, making the SPI boundary explicit.

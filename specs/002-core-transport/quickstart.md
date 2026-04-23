@@ -58,6 +58,8 @@ public class Example {
 }
 ```
 
+When a `RetryPolicy` is configured, the transport retries retryable failures/responses and returns the first non-retryable response or the last retryable response after the configured attempts are exhausted.
+
 ## Mocking the SPI (Unit Tests)
 
 ```java

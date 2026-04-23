@@ -48,24 +48,42 @@ public final class ApacheHttpClientRestTransport implements RestTransport {
         while (true) {
             attempt++;
             try {
-                return doExecute(request);
+                HttpResponse response = doExecute(request);
+                if (!retryPolicy.isPresent()) {
+                    return response;
+                }
+
+                RetryPolicy policy = retryPolicy.get();
+                if (attempt >= policy.maxAttempts() || !policy.shouldRetry(request, response, attempt)) {
+                    return response;
+                }
+
+                sleepBeforeRetry(policy.delayMillis(attempt));
             } catch (TransportException e) {
-                if (!retryPolicy.isPresent() || attempt >= retryPolicy.get().maxAttempts()) {
+                if (!retryPolicy.isPresent()) {
                     throw e;
                 }
-                if (!retryPolicy.get().shouldRetry(request, null, attempt)) {
+
+                RetryPolicy policy = retryPolicy.get();
+                if (attempt >= policy.maxAttempts() || !policy.shouldRetry(request, null, attempt)) {
                     throw e;
                 }
-                long delay = retryPolicy.get().delayMillis(attempt);
-                if (delay > 0) {
-                    try {
-                        Thread.sleep(delay);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        throw new TransportException("Retry interrupted", ie);
-                    }
-                }
+
+                sleepBeforeRetry(policy.delayMillis(attempt));
             }
+        }
+    }
+
+    private void sleepBeforeRetry(long delay) throws TransportException {
+        if (delay <= 0) {
+            return;
+        }
+
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new TransportException("Retry interrupted", e);
         }
     }
 
@@ -175,6 +193,7 @@ public final class ApacheHttpClientRestTransport implements RestTransport {
 
         public ApacheHttpClientRestTransport build() {
             HttpClientBuilder httpBuilder = HttpClientBuilder.create();
+            httpBuilder.disableAutomaticRetries();
 
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(Timeout.of(connectTimeoutMillis, TimeUnit.MILLISECONDS))

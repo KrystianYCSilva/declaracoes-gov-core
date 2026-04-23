@@ -19,9 +19,9 @@
 
 **Purpose**: Initialize the new Maven module and verify the Java 8 baseline.
 
-- [X] T001 Create `declaracoes-gov-core-transport/pom.xml` with Java 8 source/target, parent reactor reference, and `core-crypto` + `core-domain` dependencies
+- [X] T001 Create `declaracoes-gov-core-transport/pom.xml` with Java 8 source/target, parent reactor reference, and the shared dependencies actually required by the module
 - [X] T002 [P] Add Apache HttpClient 5.2.6 dependency (`org.apache.httpcomponents.client5:httpclient5`) and Wiremock test dependency
-- [X] T003 [P] Add `declaracoes-gov-core-transport` module to root `pom.xml` reactor (order: domain → format → crypto → xml → **transport** → bom)
+- [X] T003 [P] Add `declaracoes-gov-core-transport` module to the root `pom.xml` reactor
 - [X] T004 Update `declaracoes-gov-core-bom/pom.xml` to include `declaracoes-gov-core-transport` artifact with version property
 - [X] T005 Run `mvn -B verify` from repo root to confirm module compiles (no sources yet) and reactor order is correct
 
@@ -80,10 +80,10 @@
 
 ### Tests for User Story 2 (Write First — Must Fail)
 
-- [X] T019 [P] [US2] Create `ApacheHttpClientRestTransportIT.java` — Wiremock tests for GET/POST, 200 OK, 503 response, custom User-Agent header presence
-- [X] T020 [P] [US2] Create `TimeoutIT.java` — verify `TransportTimeoutException` on delayed Wiremock response exceeding configured timeout
-- [X] T021 [P] [US2] Create `ProxyRoutingIT.java` — verify traffic routes through Wiremock-configured proxy
-- [X] T022 [P] [US2] Create `MutualTlsIT.java` — use `core-crypto` test-jar fixtures to configure test keystore and verify TLS handshake (or mock at socket layer if embedded server mTLS is infeasible)
+- [X] T019 [P] [US2] Create Wiremock tests in `ApacheHttpClientRestTransportTest.java` for GET/POST, 200 OK, retryable 503 responses, and custom User-Agent behavior
+- [X] T020 [P] [US2] Create `TimeoutTest.java` — verify `TransportTimeoutException` on delayed Wiremock response exceeding configured timeout
+- [X] T021 [P] [US2] Create `ProxyRoutingTest.java` — verify traffic routes through Wiremock-configured proxy
+- [X] T022 [P] [US2] Create `MutualTlsTest.java` — use `core-crypto` test fixtures to configure test keystore and verify TLS handshake (or mock at socket layer if embedded server mTLS is infeasible)
 
 ### Implementation for User Story 2
 
@@ -105,7 +105,7 @@
 
 **Goal**: Provide a `RetryPolicy` SPI and `ExponentialBackoff` implementation that wraps `RestTransport`.
 
-**Independent Test**: Mock transport fails N times before succeeding; retry policy executes correct number of attempts with expected delays. No-retry policy fails immediately.
+**Independent Test**: Mock transport fails N times before succeeding; retry policy executes correct number of attempts with expected delays. Without retry, the first response/exception is returned immediately.
 
 ### Tests for User Story 3 (Write First — Must Fail)
 
@@ -117,7 +117,7 @@
 
 - [X] T035 [US3] Create `RetryPolicy.java` SPI interface in `src/main/java/br/uem/npd/govcore/transport/`
 - [X] T036 [US3] Create `ExponentialBackoff.java` in `src/main/java/br/uem/npd/govcore/transport/`
-- [X] T037 [US3] Implement retry wrapper logic inside `ApacheHttpClientRestTransport` (or decorator) that consults `RetryPolicy.shouldRetry()` and `delayMillis()`
+- [X] T037 [US3] Implement retry wrapper logic inside `ApacheHttpClientRestTransport` (or decorator) that consults `RetryPolicy.shouldRetry()` and `delayMillis()` for both transport exceptions and retryable HTTP responses
 - [X] T038 [US3] Ensure retry wrapper does NOT retry on non-retryable status codes (e.g., 400, 404) per `ExponentialBackoff` defaults
 
 **Checkpoint**: User Story 3 is independently testable. Retry delays and attempt counts are deterministic. SC-002 (coverage for policy classes) on track.
@@ -131,7 +131,7 @@
 - [X] T039 [P] Run `mvn -B verify` in the transport module and confirm JaCoCo line ≥ 90% and branch ≥ 90% for non-excluded classes
 - [X] T040 [P] Add Javadoc in Portuguese for all public API classes (`HttpRequest`, `HttpResponse`, `ProxyConfig`, `RestTransport`, `RetryPolicy`, `ExponentialBackoff`, `TransportException` hierarchy)
 - [X] T041 [P] Add AI-facing English documentation in `.context/knowledge/` or update `.context/README.md` referencing the new transport module
-- [X] T042 Update `declaracoes-gov-core-bom/pom.xml` publication order: domain → format → crypto → xml → **transport** → bom (verify SC-005)
+- [X] T042 Update `declaracoes-gov-core-bom/pom.xml` to include `declaracoes-gov-core-transport` and keep the reactor build green (verify SC-005)
 - [X] T043 [P] Update root `MEMORY.md` to mark Feature 002 as completed
 - [X] T044 [P] Sync `.kimi/memory/agent-local-memory.md` with final implementation notes
 - [X] T045 Validate `quickstart.md` examples compile against the final API (copy to a scratch test if needed)
@@ -179,10 +179,10 @@
 
 ```bash
 # Launch all integration tests for User Story 2 together:
-Task: "ApacheHttpClientRestTransportIT.java — Wiremock core behavior"
-Task: "TimeoutIT.java — delayed response timeout"
-Task: "ProxyRoutingIT.java — proxy routing"
-Task: "MutualTlsIT.java — mTLS handshake"
+Task: "ApacheHttpClientRestTransportTest.java — Wiremock core behavior"
+Task: "TimeoutTest.java — delayed response timeout"
+Task: "ProxyRoutingTest.java — proxy routing"
+Task: "MutualTlsTest.java — mTLS handshake"
 
 # Launch implementation pieces in parallel after tests exist:
 Task: "Request conversion logic in ApacheHttpClientRestTransport"

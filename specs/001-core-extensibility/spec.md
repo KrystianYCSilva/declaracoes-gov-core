@@ -1,78 +1,84 @@
-# Feature Specification: Core Extensibility and Composition
+# Feature Specification: Core Audit and Composition Boundaries
 
 **Feature Branch**: `feature/001-core-extensibility`
 **Created**: 2026-04-20
-**Status**: Draft
+**Status**: Recalibrated
 **Input**: User description: "Auditoria e ajustes do core atual para garantir composição e extensibilidade sem quebrar defaults"
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Custom Validator Chain (Priority: P1)
+### User Story 1 - Audit Existing Core Defaults (Priority: P1)
 
-As a developer integrating a specific fiscal layout, I need to compose a custom chain of validators using a ValidatorRegistry without modifying the default GovValidators, so that I can apply domain-specific rules on top of standard validation.
+As a maintainer of the core library, I need to validate whether the current `domain`, `format`, `crypto`, and `xml` modules are already sufficient for release in their declared scope, so that we do not introduce unnecessary abstractions or fake extension points.
 
-**Why this priority**: Opening the validation chain is the primary rigidity point identified in the audit.
-**Independent Test**: Can be fully tested by instantiating a custom registry with a mocked validator and asserting it executes without affecting the static `GovValidators` behavior.
+**Why this priority**: The core must remain stable, agnostic, and official-first before any new extensibility hook is added.
+**Independent Test**: Review the public APIs and confirm the documentation references only classes and methods that actually exist in the codebase.
 
 **Acceptance Scenarios**:
-1. **Given** a new ValidatorRegistry instance, **When** I register a custom NisValidator, **Then** the registry uses my custom validator for NIS checks.
-2. **Given** existing code calling `GovValidators.isNisStructureValid()`, **When** executed, **Then** it still uses the default validation logic (backward compatibility).
+1. **Given** the current core modules, **When** the audit is complete, **Then** the documentation reflects only the APIs that already exist.
+2. **Given** the current public defaults (`GovValidators`, `Nis`, `GovJsonFactory`, `SslContextBuilder`), **When** existing tests are executed, **Then** behavior remains unchanged.
 
 ---
 
-### User Story 2 - Decouple from Deprecated IdentificadorEmpregador (Priority: P2)
+### User Story 2 - Preserve Composition at Consumer Boundary (Priority: P2)
 
-As a developer maintaining the domain models, I need to ensure new integrations do not rely on the deprecated `IdentificadorEmpregador` interface, so that we can safely phase it out in the future without breaking new flows.
+As a developer consuming the library, I need clear guidance for composing custom validation, JSON, and TLS flows outside the core defaults, so that I can support edge cases without forcing new internal registries or SPI layers into the shared foundation.
 
-**Why this priority**: Prevents technical debt accumulation in new features.
-**Independent Test**: Can be tested by verifying that core domain objects (Cnpj, Cpf, etc.) can be used in validation flows without requiring casts or references to `IdentificadorEmpregador`.
+**Why this priority**: Composition remains mandatory, but it must be introduced where real reuse exists rather than inside every helper by default.
+**Independent Test**: Demonstrate custom validation, JSON configuration, and TLS setup using only existing public APIs plus consumer-side wrappers/services.
 
 **Acceptance Scenarios**:
-1. **Given** a validation flow requiring an employer identifier, **When** passing a `Cnpj` object, **Then** the validation succeeds via a generic or composable contract, not the deprecated interface.
+1. **Given** a custom validation rule for NIS, **When** a consumer wraps `Nis`/`GovValidators` in its own service, **Then** the custom rule can be applied without modifying the core library.
+2. **Given** a consumer-specific JSON requirement, **When** the consumer needs its own mapper, **Then** it can build or copy an `ObjectMapper` without changing `GovJsonFactory`.
+3. **Given** a consumer-specific TLS requirement, **When** the default `SslContextBuilder` is insufficient, **Then** the consumer can build its own `SSLContext` externally.
 
 ---
 
-### User Story 3 - Extensible Format and Crypto Helpers (Priority: P3)
+### User Story 3 - Contain Deprecated Domain Contracts (Priority: P3)
 
-As a developer consuming the core library, I need to inject custom configurations into JSON serialization and SSL contexts via interfaces/factories, so that I am not locked into the opinionated utility defaults.
+As a maintainer of the domain model, I need to ensure no new validation or utility flows are introduced around the deprecated `IdentificadorEmpregador`, so that backward compatibility is preserved without spreading a legacy contract into new shared abstractions.
 
-**Why this priority**: Improves flexibility for edge cases (e.g., custom trust stores or specific date formats).
-**Independent Test**: Can be tested by injecting a custom `CertificateProvider` into a TLS setup flow and verifying it is called.
+**Why this priority**: The deprecated type can remain for compatibility, but it should not drive new API design.
+**Independent Test**: Static analysis confirms the deprecated interface remains contained to existing compatibility implementations only.
 
 **Acceptance Scenarios**:
-1. **Given** a requirement for a custom SSL context, **When** I provide a custom implementation of the new SSL factory interface, **Then** the crypto layer uses my custom context.
+1. **Given** the current domain module, **When** the audit runs, **Then** no new validators, registries, or helpers depend on `IdentificadorEmpregador`.
+2. **Given** legacy consumers of `Cnpj` and `Cpf`, **When** they continue using the current APIs, **Then** backward compatibility is preserved.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUST provide a `ValidatorRegistry` or `ValidatorComposer` that allows registering and executing validation chains.
-- **FR-002**: `GovValidators` and `Nis` MUST be refactored to use the registry internally while preserving their existing public static signatures.
-- **FR-003**: System MUST expose interfaces or factories for JSON serialization (`GovJsonFactory` equivalents) and SSL context building (`SslContextBuilder` equivalents) to allow dependency injection.
-- **FR-004**: System MUST NOT alter the behavior of existing public methods (Minor or Patch release scope).
+- **FR-001**: System MUST preserve the current public behavior of `GovValidators`, `Nis`, `GovJsonFactory`, `SslContextBuilder`, and the existing XML utilities.
+- **FR-002**: Feature documentation MUST NOT advertise registries, factories, setters, or SPIs that do not exist in the codebase.
+- **FR-003**: Composition for consumer-specific rules MUST be supported at the integration boundary, using existing core APIs plus consumer-side services/wrappers/builders.
+- **FR-004**: System MUST NOT introduce new dependencies on `IdentificadorEmpregador` outside the existing compatibility types that already implement it.
+- **FR-005**: Internal extension points such as `ValidatorRegistry`, `SslContextFactory`, and mutable `GovJsonFactory` hooks are explicitly deferred until multi-project reuse justifies them.
 
 ### Key Entities
 
-- **ValidatorRegistry**: A composable registry that holds and executes a chain of validators for domain objects.
-- **Domain Value Objects**: Cnpj, Cpf, Nis, etc. (existing).
+- **Core Defaults**: `GovValidators`, `Nis`, `GovJsonFactory`, `SslContextBuilder`, XML helpers, and value objects already published by the core.
+- **Consumer Composition Layer**: Custom services, wrappers, factories, or builders created outside the core to adapt the defaults to a specific declaration flow.
+- **Deprecated Compatibility Types**: Existing domain classes that still implement `IdentificadorEmpregador` for legacy interoperability.
 
 ### Non-Functional Requirements
 
-- **NFR-001**: Implementation MUST be strictly Java 8 compliant.
-- **NFR-002**: Unit/Integration tests MUST maintain project-wide 90% JaCoCo coverage.
-- **NFR-003**: All workflow steps MUST sync state to `MEMORY.md` and agent-local memory.
-- **NFR-004**: Code MUST remain declaration-agnostic and framework-agnostic.
+- **NFR-001**: Implementation and documentation MUST remain strictly Java 8 compliant.
+- **NFR-002**: Unit/Integration tests MUST continue satisfying the project-wide 90% JaCoCo gate.
+- **NFR-003**: The core MUST remain declaration-agnostic and framework-agnostic.
+- **NFR-004**: The audit MUST prefer YAGNI over speculative abstraction.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: 100% of existing unit tests pass without modification (ensuring absolute backward compatibility).
-- **SC-002**: The new `ValidatorRegistry` can be instantiated and executed independently from static contexts.
-- **SC-003**: JaCoCo reports at least 90% line and branch coverage for the new registry and factory classes.
-- **SC-004**: Static analysis shows 0 new dependencies on `IdentificadorEmpregador`.
+- **SC-001**: `mvn verify` passes without changing the existing public behavior of the current core modules.
+- **SC-002**: The `001-core-extensibility` documentation contains only APIs that actually exist in the codebase.
+- **SC-003**: Static analysis shows no new dependencies on `IdentificadorEmpregador`; only the legacy compatibility implementations remain.
+- **SC-004**: Consumer-facing examples show composition using current public APIs rather than nonexistent internal registries or SPIs.
 
 ## Assumptions
 
-- The existing `GovValidators` rules are correct and only the composition mechanism needs changing.
-- Consumers of the library rely heavily on the static methods, hence the strict backward compatibility requirement.
+- The existing defaults in `domain`, `format`, `crypto`, and `xml` are already sufficient for the current release scope.
+- Not every opinionated helper in the core needs an internal SPI; some extension points belong in consuming modules instead.
+- If future reuse across multiple projects proves the need, dedicated extensibility hooks can be introduced later in a separate feature.

@@ -1,21 +1,31 @@
-# Data Model: Validator Registry
+# Data Model: Current Core Surface and Extension Boundaries
 
 ## Entities
 
-### ValidatorRegistry (Singleton)
-- **Role**: Holds the mapping between document types and their respective validation chains.
-- **Key Methods**:
-  - `register(Class<? extends Validator> validator)`
-  - `getValidator(DocumentType type)`
-  - `validate(String value, DocumentType type)`
+### Core Defaults
+- **Role**: Stable, shared implementations already shipped by the core.
+- **Examples**:
+  - `GovValidators`
+  - `Nis`
+  - `GovJsonFactory`
+  - `SslContextBuilder`
+  - XML helpers in `declaracoes-gov-core-xml`
 
-### Validator (Interface)
-- **Methods**:
-  - `boolean isValid(String value)`
-  - `ValidationMetadata getMetadata()`
+### Consumer Composition Layer
+- **Role**: Project-specific services, builders, and wrappers created outside the core.
+- **Examples**:
+  - Service that applies extra validation after `Nis.of(...)`
+  - Custom `ObjectMapper` derived from `GovJsonFactory.getMapper().copy()`
+  - Custom TLS bootstrap that bypasses `SslContextBuilder` when needed
+
+### Deprecated Compatibility Types
+- **Role**: Legacy contracts preserved for backward compatibility only.
+- **Examples**:
+  - `IdentificadorEmpregador`
+  - Existing implementing types such as `Cnpj` and `Cpf`
 
 ## Interaction Pattern
 
-1. **Initialization**: `ValidatorRegistry` loads default validators (`CpfValidator`, `NisValidator`, etc.).
-2. **Static Delegation**: `GovValidators.isNisStructureValid(nis)` calls `ValidatorRegistry.getInstance().validate(nis, NIS_STRUCTURE)`.
-3. **Customization**: A consumer calls `ValidatorRegistry.getInstance().register(new CustomNisValidator())` before calling the static helper.
+1. **Default Path**: Consumers use the current core defaults directly.
+2. **Customization Path**: Consumers wrap or extend behavior in their own module instead of mutating global core state.
+3. **Future Extraction Rule**: Internal registries or SPIs are introduced only when reuse across multiple declaration projects proves the need.

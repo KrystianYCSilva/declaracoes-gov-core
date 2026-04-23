@@ -1,30 +1,41 @@
-# Quickstart: Extensible Core
+# Quickstart: Compose Around the Existing Core
 
-## Using a Custom Validator
+## Custom Validation Without Changing the Core
 
 ```java
-// 1. Define your custom validator
-public class MyNisValidator extends NisValidator {
-    @Override
-    public boolean isValid(String value) {
-        // custom logic here
-        return super.isValid(value) && value.startsWith("1");
+public final class MeuNisService {
+
+    public Nis parse(String raw) {
+        Nis nis = Nis.ofProvisionallyValidated(raw);
+
+        if (!nis.getUnformatted().startsWith("1")) {
+            throw new InvalidDocumentException("Regra local: NIS deve iniciar com 1");
+        }
+
+        return nis;
     }
 }
-
-// 2. Register it in the singleton
-ValidatorRegistry.getInstance().register(Nis.class, new MyNisValidator());
-
-// 3. Existing static calls now use your logic!
-Nis.of("12345678901"); 
 ```
 
-## Injecting a Custom JSON Mapper
+The core keeps the official/default validation behavior. Consumer-specific rules are applied in an external service instead of replacing `GovValidators` or `Nis` internals.
+
+## Custom JSON Mapper Without Mutating `GovJsonFactory`
 
 ```java
-// Provide your own factory implementation
-GovJsonFactory.setFactory(new MyCustomJsonFactory());
-
-// Subsequent calls return your configured mapper
-ObjectMapper mapper = GovJsonFactory.getMapper();
+ObjectMapper mapper = GovJsonFactory.getMapper().copy();
+mapper.findAndRegisterModules();
+mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 ```
+
+Use the core mapper as a safe baseline and compose the consumer-specific mapper outside the shared singleton.
+
+## Custom TLS Without Introducing a Core SPI
+
+```java
+SSLContext defaultContext = SslContextBuilder.build(certificateProvider, trustStore);
+
+SSLContext customContext = SSLContext.getInstance("TLSv1.2");
+customContext.init(keyManagers, trustManagers, null);
+```
+
+The core helper covers the shared default path. If an integration needs specialized TLS behavior, it should own that composition in the consuming module.

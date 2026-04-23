@@ -2,7 +2,7 @@
 
 **Feature Branch**: `feature/002-core-transport`
 **Created**: 2026-04-20
-**Status**: Draft
+**Status**: Recalibrated
 **Input**: User description: "Extração prioritária para novo módulo declaracoes-gov-core-transport baseado em SPI e Apache HttpClient 5"
 **Alignment**: ADR-008 (Neutral Transport Module in Core Reactor), AR-001 exception.
 
@@ -54,8 +54,8 @@ As a developer dealing with unstable government endpoints, I need a composable r
 **Independent Test**: Can be tested using a mock transport that fails N times before succeeding, verifying the retry policy executes the correct number of attempts with expected delays.
 
 **Acceptance Scenarios**:
-1. **Given** a retry policy configured for 3 attempts with exponential backoff, **When** the server returns 503 Service Unavailable, **Then** the transport retries the request up to 3 times before throwing an exception.
-2. **Given** a no-retry policy, **When** the server returns 503, **Then** the transport fails immediately.
+1. **Given** a retry policy configured for 3 attempts with exponential backoff, **When** the server returns 503 Service Unavailable, **Then** the transport retries the request up to 3 times and returns the first non-retryable response or the final retryable response after exhaustion.
+2. **Given** no retry policy, **When** the server returns 503, **Then** the transport returns that first response immediately.
 
 ---
 
@@ -78,7 +78,7 @@ As a developer dealing with unstable government endpoints, I need a composable r
 | `ProxyConfig` | Proxy host, port, optional credentials. Immutable builder. |
 | `RestTransport` | Core SPI for executing requests. Extends `Closeable`. |
 | `RetryPolicy` | Strategy interface for retry decisions. |
-| `TransportException` | Checked/runtime exception for transport failures. |
+| `TransportException` | Checked exception for transport failures. |
 
 ### Non-Functional Requirements
 
@@ -98,7 +98,7 @@ As a developer dealing with unstable government endpoints, I need a composable r
 - **SC-002**: JaCoCo reports at least 90% line and branch coverage for the module **or** 90% for all non-I/O-boundary classes with documented integration-test coverage for `ApacheHttpClientRestTransport`.
 - **SC-003**: The SPI can be implemented by a simple mock class in under 50 lines of code, proving its decoupling from Apache HttpClient.
 - **SC-004**: Integration tests demonstrate successful proxy routing using the default implementation (mTLS via embedded server if feasible; otherwise mocked at TLS socket layer).
-- **SC-005**: The module is added to `declaracoes-gov-core-bom` and follows the publication order: domain → format → crypto → xml → **transport** → bom.
+- **SC-005**: The module is added to the parent reactor and to `declaracoes-gov-core-bom` without breaking the green build.
 
 ---
 
