@@ -1,35 +1,42 @@
 package br.com.contabilizei.obrigacoes.govcore.ext
 
-import br.com.contabilizei.obrigacoes.govcore.util.GovTextNormalizer
+import br.com.contabilizei.obrigacoes.govcore.util.GovStringUtils
+import br.com.contabilizei.obrigacoes.govcore.util.GovStringUtils.alphanumericOnly
+import br.com.contabilizei.obrigacoes.govcore.util.GovStringUtils.digitsOnly
 
-// ---------------------------------------------------------------------------
-// Normalização de texto — GovTextNormalizer
-// ---------------------------------------------------------------------------
+/**
+ * Extensões fluídas para String focadas em normalização e sanitização governamental.
+ * Delega para [GovStringUtils] do módulo format.
+ */
 
-/** Remove todos os caracteres não-dígitos. Retorna string vazia se [this] for nulo. */
-fun String?.digitsOnly(): String = if (this == null) "" else GovTextNormalizer.digitsOnly(this)
+/** Retorna apenas os dígitos da string. Se nula, retorna string vazia. */
+val String?.digitsOnly: String
+    get() = digitsOnly(this) ?: ""
 
-/** Retorna a string ou vazio se nula. */
+/** Retorna apenas caracteres alfanuméricos da string. Se nula, retorna string vazia. */
+val String?.alphanumericOnly: String
+    get() = alphanumericOnly(this) ?: ""
+
+/** Remove acentos da string. */
+fun String?.removeAcentos(): String? = GovStringUtils.removeAcentos(this)
+
+/** Sanitiza a string para uso em XML 1.0. */
+fun String?.sanitizeForXml(): String? = GovStringUtils.sanitizeForXml(this)
+
+/** Remove todas as tags HTML. */
+fun String?.stripHtmlTags(): String? = GovStringUtils.stripHtmlTags(this)
+
+/** Trunca a string para o tamanho máximo informado. */
+fun String?.truncate(maxLength: Int): String? = GovStringUtils.truncate(this, maxLength)
+
+/** Formata para o padrão SPED (Sem acentos, caixa alta, truncado e preenchido à direita). */
+fun String?.toSpedFormat(length: Int): String = GovStringUtils.toSpedFormat(this, length)
+
+/** Preenche à esquerda com [padChar] até [length]. */
+fun String?.padLeft(length: Int, padChar: Char = ' '): String = GovStringUtils.lpad(this, length, padChar)
+
+/** Preenche à direita com [padChar] até [length]. */
+fun String?.padRight(length: Int, padChar: Char = ' '): String = GovStringUtils.rpad(this, length, padChar)
+
+/** Retorna a string ou vazia se nula. */
 fun String?.emptyIfNull(): String = this ?: ""
-
-/** Retorna [GovTextNormalizer.emptyIfNull] — alias null-safe com semântica governamental. */
-fun String?.normalizeToEmpty(): String = GovTextNormalizer.emptyIfNull(this)
-
-/** Completa à esquerda com zeros até [length]. Ex: "5".padLeftZeros(3) → "005". */
-fun String.padLeftZeros(length: Int): String = GovTextNormalizer.padLeftZeros(this, length)
-
-/** Completa à esquerda com [pad] até [length]. */
-fun String.padLeft(length: Int, pad: Char): String = GovTextNormalizer.lpad(this, length, pad)
-
-/** Completa à direita com [pad] até [length]. */
-fun String.padRight(length: Int, pad: Char): String = GovTextNormalizer.rpad(this, length, pad)
-
-/** Trunca ao comprimento máximo [maxLength]. Retorna a própria string se já for menor. */
-fun String.truncate(maxLength: Int): String =
-    GovTextNormalizer.truncate(this, maxLength) ?: this
-
-/** Remove os caracteres de máscara usuais (`. / - ( ) espaço`). */
-fun String.removeMask(): String = GovTextNormalizer.removeMascara(this)
-
-/** Normaliza para integração governamental: compacta espaços, remove acentos, caixa alta. */
-fun String.toGovUpper(): String = GovTextNormalizer.toGovUpper(this) ?: ""
