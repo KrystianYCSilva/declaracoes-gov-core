@@ -1,0 +1,17 @@
+{
+  "target_branch": "develop",
+  "mission": "software-dev",
+  "friendly_name": "Arcabouço Financeiro e Monetário",
+  "source_description": "Value classes financeiras (ValorMonetario, Aliquota, Percentual, BaseCalculo), formatação BRL/SPED, constantes fiscais (ROUNDING_FISCAL), enums de domínio (RegimeTributario, SituacaoCadastral), extensões de coleção para agregação fiscal, e validação composta.",
+  "discovery_mode": "external",
+  "discovery_source": {
+    "type": "generic-discovery",
+    "path": null,
+    "date": "2026-04-24"
+  },
+  "complexity_level": "complex",
+  "implementation_path": "full",
+  "prd_content": "Gap analysis sobre 7 módulos + 5 projetos consumidores identificou 15+ gaps P1/P2 no domínio financeiro-monetário. Inclui value classes para quantias monetárias e alíquotas, formatação BRL e SPED, constantes ABNT NBR 5891, enums tributários, extensões de coleção para agregação fiscal, e validação composta acumulativa.",
+  "prd_id": null,
+  "vcs": "git"
+}

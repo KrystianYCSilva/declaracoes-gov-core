@@ -66,6 +66,9 @@ class NumberExtensionsTest {
     @Test fun `max retorna o maior valor`() {
         assertEquals(BigDecimal("9"), BigDecimal("9").max(BigDecimal("3")))
     }
+    @Test fun `max com receptor nulo retorna o outro`() {
+        assertEquals(BigDecimal("5"), (null as BigDecimal?).max(BigDecimal("5")))
+    }
 
     // percentageOf
     @Test fun `percentageOf calcula percentual`() {
