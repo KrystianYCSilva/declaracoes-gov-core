@@ -35,3 +35,14 @@
 - [ ] T010 [US3] Criar `TextExtensions.kt` com as extension functions para strings
 - [ ] T011 [US3] Criar catálogo de Value Classes `FiscalTypes.kt` (`@JvmInline value class`) implementando chamadas `require()`
 - [ ] T012 [US3] Criar testes unitários Kotlin para cobrir as extensões
+
+---
+
+## Phase 4: Adendo — Masks, Booleanos SPED e Domain Types (WP04)
+
+> **Addendum** adicionado por Claude Opus em 2026-04-24. Não modifica WP01-WP03.
+
+- [ ] T013 Adicionar mask application em `TextExtensions.kt` (`applyCnpjMask`, `applyCpfMask`, `applyCepMask`, `applyTelefoneMask`, `applyNisMask` + aliases semânticos)
+- [ ] T014 Adicionar booleanos SPED em `TextExtensions.kt` (`Boolean?.toStringSimNao`, `String?.toBooleanSimNao`, `Int.toBooleanSped`, `Boolean.toIntSped`)
+- [ ] T015 Adicionar `CodigoReceita` value class em `FiscalTypes.kt` (regex `\d{4}`, constantes IRPJ/PIS/COFINS/CSLL, `GovRegexPatterns.CODIGO_RECEITA`)
+- [ ] T016 Adicionar `CFOP` value class em `FiscalTypes.kt` (regex `[1-35-7]\d{3}`, `isEntrada/isSaida/isEstadual/isInterestadual/isExterior`, `GovRegexPatterns.CFOP`)

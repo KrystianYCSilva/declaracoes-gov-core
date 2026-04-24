@@ -2,7 +2,7 @@
   "target_branch": "develop",
   "mission": "software-dev",
   "friendly_name": "Kotlin Guava Extensions Module",
-  "source_description": "Novo modulo Maven declaracoes-gov-core-kotlin-guava com wrappers idiomaticos Kotlin sobre Google Guava: ImmutableCollections, RangeSet para periodos fiscais, Table para dados multi-dimensionais, Multimap, Cache DSL, e hashing.",
+  "source_description": "Novo módulo Maven declaracoes-gov-core-kotlin-guava com wrappers idiomáticos Kotlin sobre Google Guava: ImmutableCollections, RangeSet para períodos fiscais, Table para dados multi-dimensionais, Multimap, Cache DSL e hashing.",
   "discovery_mode": "external",
   "discovery_source": {
     "type": "generic-discovery",
@@ -11,7 +11,7 @@
   },
   "complexity_level": "complex",
   "implementation_path": "full",
-  "prd_content": "Gap analysis identificou necessidade de colecoes imutaveis para tabelas de aliquotas, RangeSet para analise de lacunas em periodos fiscais, Table para dados multi-dimensionais (UF x imposto x aliquota), e cache para memoizacao de validacoes.",
+  "prd_content": "Gap analysis identificou necessidade de coleções imutáveis para tabelas de alíquotas, RangeSet para análise de lacunas em períodos fiscais, Table para dados multi-dimensionais (UF x imposto x alíquota), e cache para memoização de validações.",
   "prd_id": null,
   "vcs": "git"
 }

@@ -1,3 +1,17 @@
 {
-  "target_branch": "develop"
+  "target_branch": "develop",
+  "mission": "software-dev",
+  "friendly_name": "Kotlin Apache Commons Extensions Module",
+  "source_description": "Novo módulo Maven declaracoes-gov-core-kotlin-apache com wrappers idiomáticos Kotlin sobre Apache Commons: escape XML robusto, fuzzy matching de razões sociais, conversões booleanas SPED (S/N), estatísticas financeiras e encoding.",
+  "discovery_mode": "external",
+  "discovery_source": {
+    "type": "generic-discovery",
+    "path": null,
+    "date": "2026-04-24"
+  },
+  "complexity_level": "complex",
+  "implementation_path": "full",
+  "prd_content": "Gap analysis identificou ausência de escape XML robusto para web services governamentais (eSocial, Reinf), necessidade de fuzzy matching para reconciliação de razões sociais entre sistemas, convenções booleanas SPED (S/N e 1/0) sem utilitário central, e estatísticas financeiras para dashboards contábeis.",
+  "prd_id": null,
+  "vcs": "git"
 }

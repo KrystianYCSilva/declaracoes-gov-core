@@ -14,6 +14,7 @@
 | WP04 | Expansão DateExtensions.kt (kotlin) | T013-T016 | WP02, WP03 | planned |
 | WP05 | TemporalValueTypes.kt (kotlin) | T017-T019 | WP04 | planned |
 | WP06 | DateStringTypes.kt (kotlin) | T020-T023 | WP04 | planned |
+| WP07 | Períodos Fiscais Avançados: Trimestre, Semestre, CompetenciaRange, ExercicioFiscal (kotlin) | T025-T029 | WP04 | planned |
 
 ## Dependency Graph
 
@@ -21,16 +22,18 @@
 WP01 → WP02 → WP04 → WP05
              ↗            ↘
 WP01 → WP03 → WP04 → WP06
+                   ↘
+                    WP07
 ```
 
-WP05 and WP06 can run in parallel after WP04.
+WP05, WP06 e WP07 podem rodar em paralelo após WP04.
 
 ## Implementation Order
 
 1. `flow build WP01` (no deps)
 2. `flow build WP02 --base WP01` and `flow build WP03 --base WP01` (parallel)
 3. `flow build WP04 --base WP02,WP03`
-4. `flow build WP05 --base WP04` and `flow build WP06 --base WP04` (parallel)
+4. `flow build WP05 --base WP04`, `flow build WP06 --base WP04`, `flow build WP07 --base WP04` (parallel)
 
 ## Validation Gate
 
