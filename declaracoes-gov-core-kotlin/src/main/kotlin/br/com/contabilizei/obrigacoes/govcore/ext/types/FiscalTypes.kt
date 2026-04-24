@@ -21,11 +21,10 @@ value class TelefoneBR(val value: String) {
     }
 
     /** Retorna o telefone formatado: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX. */
-    fun formatted(): String = when (value.length) {
-        10 -> "(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}"
-        11 -> "(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}"
-        else -> value
-    }
+    fun formatted(): String = if (value.length == 10)
+        "(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}"
+    else
+        "(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}"
 }
 
 @JvmInline

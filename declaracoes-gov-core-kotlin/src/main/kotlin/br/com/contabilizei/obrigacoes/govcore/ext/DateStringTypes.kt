@@ -94,13 +94,12 @@ value class DataCompacta(val value: String) {
     }
 
     /** Converte para [LocalDate]. */
-    fun toLocalDate(): LocalDate = LocalDate.parse(value, FORMATTER_YYYYMMDD)
+    fun toLocalDate(): LocalDate = LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyyMMdd"))
 
     override fun toString(): String = value
 
     companion object {
         val REGEX = Regex("""\d{8}""")
-        private val FORMATTER_YYYYMMDD: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
         fun of(s: String): DataCompacta = DataCompacta(s)
 

@@ -4,6 +4,12 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.math.BigDecimal
 
+/** Bean cujo getter sempre lança exceção — força JsonMappingException em writeValueAsString. */
+private class BeanQueDisparaExcecaoAoSerializar {
+    @Suppress("unused")
+    fun getCampoDiabolico(): Any = throw RuntimeException("falha intencional de serialização")
+}
+
 class JsonExtensionsTest {
 
     @Test fun `toJsonOrNull serializa mapa`() {
@@ -45,5 +51,9 @@ class JsonExtensionsTest {
     @Test fun `fromJsonOrNull desserializa lista`() {
         val lista = """["a","b"]""".fromJsonOrNull<List<String>>()
         assertNotNull(lista); assertEquals(2, lista!!.size)
+    }
+
+    @Test fun `toJsonOrNull retorna null quando serializacao lanca excecao`() {
+        assertNull(BeanQueDisparaExcecaoAoSerializar().toJsonOrNull())
     }
 }
