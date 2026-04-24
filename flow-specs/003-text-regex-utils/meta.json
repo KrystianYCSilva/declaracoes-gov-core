@@ -1,0 +1,16 @@
+{
+  "target_branch": "master-ctbz",
+  "friendly_name": "Text and Regex Utils",
+  "source_description": "Criação de arcabouço abrangente de regex, utilitários de texto em Java e Value Classes idiomáticas em Kotlin para dados de contato, fiscais e jurídicos.",
+  "discovery_mode": "external",
+  "discovery_source": {
+    "type": "generic-discovery",
+    "path": null,
+    "date": "2026-04-24"
+  },
+  "complexity_level": "complex",
+  "implementation_path": "full",
+  "prd_content": "Extração de complexidade do manuseio de strings, conversões, sanitização e regex no contexto fiscal brasileiro (ex: SPED, REINF, eSocial, notas fiscais). Módulo domain para padrões RegEx compilados, módulo format para manipulação de String (GovStringUtils) e módulo kotlin para extensions e Value Classes.",
+  "prd_id": null,
+  "vcs": "git"
+}
