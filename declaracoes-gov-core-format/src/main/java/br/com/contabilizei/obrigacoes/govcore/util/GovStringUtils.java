@@ -11,13 +11,41 @@ public final class GovStringUtils {
 
     private static final Pattern DIACRITICS = Pattern.compile("\\p{M}+");
     private static final Pattern HTML_TAGS = Pattern.compile("<[^>]*>");
+    private static final Pattern NON_DIGITS = Pattern.compile("[^0-9]");
+    private static final Pattern NON_ALPHANUMERIC = Pattern.compile("[^a-zA-Z0-9]");
 
     private GovStringUtils() {
-        // Classe utilitária, não instanciável.
+        // Classe utilitÃ¡ria, nÃ£o instanciÃ¡vel.
     }
 
     /**
-     * Remove acentos e caracteres especiais de uma string usando normalização NFD.
+     * Remove todos os caracteres nÃ£o numÃ©ricos da string.
+     *
+     * @param text texto original
+     * @return string contendo apenas dÃ­gitos, ou null se a entrada for null
+     */
+    public static String digitsOnly(String text) {
+        if (text == null) {
+            return null;
+        }
+        return NON_DIGITS.matcher(text).replaceAll("");
+    }
+
+    /**
+     * Remove todos os caracteres nÃ£o alfanumÃ©ricos (mantÃ©m apenas A-Z, a-z e 0-9).
+     *
+     * @param text texto original
+     * @return string contendo apenas caracteres alfanumÃ©ricos, ou null se a entrada for null
+     */
+    public static String alphanumericOnly(String text) {
+        if (text == null) {
+            return null;
+        }
+        return NON_ALPHANUMERIC.matcher(text).replaceAll("");
+    }
+
+    /**
+     * Remove acentos e caracteres especiais de uma string usando normalizaÃ§Ã£o NFD.
      *
      * @param text texto original
      * @return texto sem acentos, ou null se a entrada for null

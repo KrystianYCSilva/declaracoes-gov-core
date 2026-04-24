@@ -1,49 +1,73 @@
 package br.com.contabilizei.obrigacoes.govcore.ext
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TextExtensionsTest {
 
-    // digitsOnly
-    @Test fun `digitsOnly com null retorna vazio`() { assertEquals("", (null as String?).digitsOnly()) }
-    @Test fun `digitsOnly remove mascara CNPJ`() {
-        assertEquals("12345678000195", "12.345.678/0001-95".digitsOnly())
-    }
-    @Test fun `digitsOnly string sem mascara retorna a mesma`() {
-        assertEquals("123", "123".digitsOnly())
+    @Test
+    fun `digitsOnly deve retornar apenas digitos`() {
+        assertEquals("12345678000190", "12.345.678/0001-90".digitsOnly)
+        assertEquals("", (null as String?).digitsOnly)
+        assertEquals("123", "abc123def".digitsOnly)
     }
 
-    // emptyIfNull
-    @Test fun `emptyIfNull com null retorna vazio`() { assertEquals("", (null as String?).emptyIfNull()) }
-    @Test fun `emptyIfNull com valor retorna o valor`() { assertEquals("abc", "abc".emptyIfNull()) }
-
-    // normalizeToEmpty
-    @Test fun `normalizeToEmpty com null retorna vazio`() { assertEquals("", (null as String?).normalizeToEmpty()) }
-    @Test fun `normalizeToEmpty com valor retorna o valor`() { assertEquals("abc", "abc".normalizeToEmpty()) }
-
-    // padLeftZeros
-    @Test fun `padLeftZeros completa com zeros a esquerda`() { assertEquals("005", "5".padLeftZeros(3)) }
-    @Test fun `padLeftZeros nao altera string maior que length`() { assertEquals("1234", "1234".padLeftZeros(3)) }
-
-    // padLeft / padRight
-    @Test fun `padLeft completa com caractere customizado`() { assertEquals("##abc", "abc".padLeft(5, '#')) }
-    @Test fun `padRight completa com caractere customizado`() { assertEquals("abc##", "abc".padRight(5, '#')) }
-
-    // truncate
-    @Test fun `truncate corta string longa`() { assertEquals("abc", "abcdef".truncate(3)) }
-    @Test fun `truncate nao altera string curta`() { assertEquals("ab", "ab".truncate(5)) }
-
-    // removeMask
-    @Test fun `removeMask remove pontos barras traco espaco`() {
-        assertEquals("12345678000195", "12.345.678/0001-95".removeMask())
+    @Test
+    fun `alphanumericOnly deve retornar apenas caracteres alfanumericos`() {
+        assertEquals("abc123ABC", "abc-123.ABC!".alphanumericOnly)
+        assertEquals("", (null as String?).alphanumericOnly)
     }
 
-    // toGovUpper
-    @Test fun `toGovUpper remove acentos e converte para maiusculo`() {
-        assertEquals("JOAO", "joão".toGovUpper())
+    @Test
+    fun `removeAcentos deve remover acentos`() {
+        assertEquals("AEIOUaeiouCc", "ÁÉÍÓÚáéíóúÇç".removeAcentos())
+        assertEquals(null, (null as String?).removeAcentos())
     }
-    @Test fun `toGovUpper compacta espacos multiplos`() {
-        assertEquals("A B", "a  b".toGovUpper())
+
+    @Test
+    fun `sanitizeForXml deve remover caracteres invalidos`() {
+        // \u0000 é inválido no XML 1.0
+        assertEquals("valid", "valid\u0000".sanitizeForXml())
+        assertEquals(null, (null as String?).sanitizeForXml())
+    }
+
+    @Test
+    fun `stripHtmlTags deve remover tags html`() {
+        assertEquals("texto", "<p>texto</p>".stripHtmlTags())
+        assertEquals(null, (null as String?).stripHtmlTags())
+    }
+
+    @Test
+    fun `truncate deve truncar string`() {
+        assertEquals("abc", "abcdef".truncate(3))
+        assertEquals("abc", "abc".truncate(5))
+        assertEquals(null, (null as String?).truncate(5))
+    }
+
+    @Test
+    fun `toSpedFormat deve formatar corretamente`() {
+        // SPED: uppercase, no accents, rpad with spaces, truncated
+        assertEquals("JOAO      ", "João".toSpedFormat(10))
+        assertEquals("CONTABILID", "Contabilidade".toSpedFormat(10))
+    }
+
+    @Test
+    fun `padLeft deve preencher a esquerda`() {
+        assertEquals("00123", "123".padLeft(5, '0'))
+        assertEquals("  123", "123".padLeft(5))
+        assertEquals("12345", "12345".padLeft(3))
+    }
+
+    @Test
+    fun `padRight deve preencher a direita`() {
+        assertEquals("12300", "123".padRight(5, '0'))
+        assertEquals("123  ", "123".padRight(5))
+        assertEquals("12345", "12345".padRight(3))
+    }
+
+    @Test
+    fun `emptyIfNull deve retornar vazio se nulo`() {
+        assertEquals("", (null as String?).emptyIfNull())
+        assertEquals("abc", "abc".emptyIfNull())
     }
 }
