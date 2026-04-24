@@ -1,7 +1,7 @@
 ---
 name: declaracoes-gov-core
 description: |
-  Shared Java 8 foundation library for the declaracoes-* workspace.
+  Shared Java 11 foundation library for the declaracoes-* workspace.
   Use when: any AI agent starts a session in this repository.
 ---
 
@@ -9,7 +9,7 @@ description: |
 
 ## What This Project Is
 
-Shared Java 8 foundation library for the `declaracoes-*` workspace. It provides immutable fiscal identifiers, a public validator confidence policy, text/number/date/JSON formatting utilities, secure XML parsing and XMLDSIG signing, and certificate/SSLContext abstractions for the Brazilian government declarations ecosystem.
+Shared Java 11 foundation library for the `declaracoes-*` workspace. It provides immutable fiscal identifiers, a public validator confidence policy, text/number/date/JSON formatting utilities, secure XML parsing and XMLDSIG signing, certificate/SSLContext abstractions, and a neutral HTTP transport SPI for the Brazilian government declarations ecosystem.
 
 - **GroupId:** `br.uem.npd`
 - **ArtifactId:** `declaracoes-gov-core-parent`
@@ -19,7 +19,7 @@ Shared Java 8 foundation library for the `declaracoes-*` workspace. It provides 
 
 ## Tech Stack
 
-- **Java 8** (`source` and `target` `1.8`)
+- **Java 11** (`maven.compiler.release` `11`)
 - **Maven 3.x** multi-module reactor
 - **JUnit 4.13.2** for unit tests
 - **Mockito 4.11.0** for mocking
@@ -39,6 +39,7 @@ Shared Java 8 foundation library for the `declaracoes-*` workspace. It provides 
 | `declaracoes-gov-core-format` | `jar` | `domain` + optional Jackson | `GovTextNormalizer`, `GovNumberFormats`, `GovCompetenceFormats`, `XmlDates`, `GovJsonFactory`, delimited/fixed-length parsers and serializers. |
 | `declaracoes-gov-core-crypto` | `jar` | `domain` | `CertificateProvider`, `AbstractKeyStoreProvider`, `Pkcs12Provider`, `Pkcs11Provider`, `SslContextBuilder`. Publishes a `test-jar` for reuse by `xml` tests. |
 | `declaracoes-gov-core-xml` | `jar` | `domain`, `crypto`, `xmlsec`, `crypto` `test-jar` (tests) | `XmlDocuments` (secure DOM parsing), `XmlSigner`, `XmlDsigSigner`, `XmlSignatureOptions`. |
+| `declaracoes-gov-core-transport` | `jar` | `crypto`, Apache HttpClient 5, WireMock (tests) | `HttpRequest`, `HttpResponse`, `RestTransport`, `RetryPolicy`, `ProxyConfig`, `TransportException`, `ApacheHttpClientRestTransport`. |
 
 ### Dependency Rules
 
@@ -46,6 +47,7 @@ Shared Java 8 foundation library for the `declaracoes-*` workspace. It provides 
 - `format` may depend on `domain`.
 - `crypto` may depend on `domain`.
 - `xml` may depend on `domain` and `crypto`.
+- `transport` may depend on `crypto` and its own isolated HTTP stack.
 - Heavy dependencies (Jackson, xmlsec) must not leak outside their owning module.
 
 ## Build and Test Commands
@@ -111,7 +113,7 @@ br.uem.npd.govcore
 
 | Module | Line Minimum | Branch Minimum |
 |--------|-------------|----------------|
-| `domain`, `format`, `xml` | 90% | 90% |
+| `domain`, `format`, `xml`, `transport` | 90% | 90% |
 | `crypto` | 85% | 90% |
 | `bom` | skipped | skipped |
 
@@ -167,7 +169,7 @@ Consumers should import the BOM and then pick only the modules they need:
 
 1. Align versions in parent and all child POMs.
 2. Run `mvn verify`.
-3. Publish concrete JARs (`domain`, `format`, `crypto`, `xml`).
+3. Publish concrete JARs (`domain`, `format`, `crypto`, `xml`, `transport`).
 4. Publish `declaracoes-gov-core-bom` last.
 
 ## What Is Out of Scope
@@ -209,7 +211,7 @@ The following must **never** be added to this repository:
 - `.context/standards/testing-strategy.md` — T1 test framework, coverage gates, patterns.
 - `.context/_meta/project-overview.md` — T2 project identity, scope, module map, boundaries.
 - `.context/_meta/tech-stack.md` — T2 exact dependency/plugin versions and constraints.
-- `.context/_meta/key-decisions.md` — T2 consolidated ADRs (Java 8, framework-agnostic, confidence model, etc.).
+- `.context/_meta/key-decisions.md` — T2 consolidated ADRs (Java 11 baseline, framework-agnostic, confidence model, etc.).
 - `.context/patterns/architecture.md` — T1 design blueprints (value objects, validator tiers, options objects).
 - `.context/knowledge/domain-concepts.md` — T3 Brazilian fiscal identifiers, Modulo 11, XMLDSIG profile.
 - `.context/workflows/development-workflows.md` — T2 build, test, publish, and troubleshooting flows.

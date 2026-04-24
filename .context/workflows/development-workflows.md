@@ -9,7 +9,7 @@ description: |
 ## Onboarding
 
 1. Clone repository.
-2. Ensure Java 8 and Maven 3.x are installed.
+2. Ensure Java 11 and Maven 3.x are installed.
 3. Run `mvn -q verify` to validate the full reactor.
 4. Read `AGENTS.md` and `.context/README.md`.
 5. Check `MEMORY.md` for active work.
@@ -74,7 +74,7 @@ If `mvn -q verify` fails on JaCoCo:
 
 1. Align versions in parent and all child POMs.
 2. Run `mvn verify`.
-3. Publish concrete JARs (`domain`, `format`, `crypto`, `xml`).
+3. Publish concrete JARs (`domain`, `format`, `crypto`, `xml`, `transport`).
 4. Publish `declaracoes-gov-core-bom` last.
 
 ## Troubleshooting

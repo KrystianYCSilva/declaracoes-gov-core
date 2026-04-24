@@ -15,7 +15,7 @@
     <name>Declaracoes Gov - Core Transport</name>
 
     <properties>
-        <httpclient5.version>5.2.1</httpclient5.version>
+        <httpclient5.version>5.3.1</httpclient5.version>
         <wiremock.version>2.35.2</wiremock.version>
     </properties>
 

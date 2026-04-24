@@ -57,11 +57,12 @@ public class Cpf { }
 | `format` | `domain`, Jackson (optional) |
 | `xml` | `domain`, `crypto`, `xmlsec` |
 | `crypto` | `domain`, BouncyCastle (test scope) |
+| `transport` | `crypto`, HttpClient 5, WireMock (test scope) |
 | `bom` | none |
 
-## AR-004 — Keep the Java 8 Baseline
+## AR-004 — Keep the Java 11 Baseline
 
-**Rule**: Source and target at Java 8. No Java 9+ language features (`var`, `Optional.ifPresentOrElse`, modules) or APIs.
+**Rule**: Compile with `maven.compiler.release=11`. No Java 12+ language features or APIs in the `v1.1.x` line.
 
 ## AR-005 — Preserve the Validator Confidence Model
 
@@ -87,7 +88,7 @@ Use `XmlSignatureOptions` for target selection. Never use heuristics. Preserve X
 ## AR-008 — Build and Coverage Gates
 
 **Rule**: `mvn -q verify` is the validation gate. JaCoCo thresholds:
-- `domain`, `format`, `xml`: 90% line / 90% branch
+- `domain`, `format`, `xml`, `transport`: 90% line / 90% branch
 - `crypto`: 85% line / 90% branch
 
 ## AR-009 — Keep Context in Sync
