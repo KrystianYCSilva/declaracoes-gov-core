@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: GovTimeConstants + JavaTimeConversions (domain)
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-24T13:51:14.642700+00:00'
 subtasks:
@@ -11,6 +11,12 @@ subtasks:
 - T004
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-24T13:54:23.680482+00:00"
+loops_doing_to_for_review: "1"
+for_review_started_at: "2026-04-24T13:57:20.905318+00:00"
+loops_for_review_to_done: "1"
+ended_at: "2026-04-24T13:57:25.696868+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP01 — GovTimeConstants + JavaTimeConversions (domain)
@@ -606,3 +612,5 @@ public void toInstant_toLocalDateTime_roundtrip() {
 ## Activity Log
 
 - 2026-04-24T13:54:23Z – unknown – lane=doing – Moved to doing
+- 2026-04-24T13:57:20Z – unknown – lane=for_review – Moved to for_review
+- 2026-04-24T13:57:26Z – unknown – lane=done – Moved to done

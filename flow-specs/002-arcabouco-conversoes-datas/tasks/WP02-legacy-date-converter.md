@@ -1,13 +1,15 @@
 ---
 work_package_id: WP02
 title: LegacyDateConverter (domain)
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-24T13:51:14.658200+00:00'
 subtasks:
 - T005
 - T006
 - T007
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-24T13:57:43.905534+00:00"
 ---
 
 # WP02 — LegacyDateConverter (domain)
@@ -406,3 +408,7 @@ public void toCalendar_ZonedDateTime_preservaFuso() {
 - [ ] Y2038 (2038-01-19) não lança exceção
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-domain` passa sem erros
 - [ ] JaCoCo 90% linha e 90% branch no módulo `domain`
+
+## Activity Log
+
+- 2026-04-24T13:57:43Z – unknown – lane=doing – Moved to doing
