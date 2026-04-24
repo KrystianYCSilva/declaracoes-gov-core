@@ -1,0 +1,17 @@
+{
+  "target_branch": "master-ctbz",
+  "mission": "software-dev",
+  "friendly_name": "Arcabouço de Conversões de Datas",
+  "source_description": "Criação de API centralizada e robusta para conversões java.time ↔ java.util.Date/Calendar, conversões internas java.time, constantes de fuso horário/formatters, parsing de strings, value classes Kotlin tipadas (temporais e strings formatadas) — eliminando 78+ ocorrências de boilerplate identificadas em 5 projetos.",
+  "discovery_mode": "external",
+  "discovery_source": {
+    "type": "generic-discovery",
+    "path": "C:/Users/krystian.silva_conta/.copilot/session-state/07f6024f-55c4-4382-a77c-c2de1f1938e4/plan.md",
+    "date": "2026-04-24"
+  },
+  "complexity_level": "complex",
+  "implementation_path": "full",
+  "prd_content": "Análise de 5 projetos do ecossistema revelou: 78 ocorrências de DateTimeFormatter.ofPattern sem constantes, 59 de toLocalDateTime sem utilitário comum, 35 de new SimpleDateFormat criando instâncias não reutilizáveis, 20+ arquivos com 'America/Sao_Paulo' hardcoded, 15 de Calendar.getInstance verboso. Solução: 4 classes Java em domain (LegacyDateConverter, JavaTimeConversions, GovTimeConstants, GovDateParser), 1 em format (GovDateFormats), expansão de DateExtensions.kt + 2 novas classes Kotlin (TemporalValueTypes, DateStringTypes) com @JvmInline value classes tipadas.",
+  "prd_id": null,
+  "vcs": "git"
+}
