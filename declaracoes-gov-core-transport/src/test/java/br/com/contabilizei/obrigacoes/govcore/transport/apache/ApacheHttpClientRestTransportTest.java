@@ -1,10 +1,14 @@
 package br.com.contabilizei.obrigacoes.govcore.transport.apache;
 
+import br.com.contabilizei.obrigacoes.govcore.transport.ExponentialBackoff;
 import br.com.contabilizei.obrigacoes.govcore.transport.HttpRequest;
 import br.com.contabilizei.obrigacoes.govcore.transport.HttpResponse;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
@@ -61,7 +65,7 @@ public class ApacheHttpClientRestTransportTest {
     }
 
     @Test
-    public void returns503() throws Exception {
+    public void returns503WithoutRetryPolicy() throws Exception {
         stubFor(get(urlEqualTo("/unavailable"))
                 .willReturn(aResponse().withStatus(503)));
 
@@ -75,6 +79,59 @@ public class ApacheHttpClientRestTransportTest {
 
         HttpResponse response = transport.execute(request);
         assertEquals(503, response.statusCode());
+        verify(1, getRequestedFor(urlEqualTo("/unavailable")));
+
+        transport.close();
+    }
+
+    @Test
+    public void retries503UntilSuccessWhenRetryPolicyIsConfigured() throws Exception {
+        stubFor(get(urlEqualTo("/flaky"))
+                .inScenario("retry-success")
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willSetStateTo("recovered")
+                .willReturn(aResponse().withStatus(503)));
+
+        stubFor(get(urlEqualTo("/flaky"))
+                .inScenario("retry-success")
+                .whenScenarioStateIs("recovered")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("OK")));
+
+        ApacheHttpClientRestTransport transport = ApacheHttpClientRestTransport.builder()
+                .retryPolicy(new ExponentialBackoff(0, 0, 3, Collections.singleton(503)))
+                .build();
+
+        HttpRequest request = HttpRequest.builder()
+                .method("GET")
+                .uri("http://localhost:" + wireMockRule.port() + "/flaky")
+                .build();
+
+        HttpResponse response = transport.execute(request);
+        assertEquals(200, response.statusCode());
+        verify(2, getRequestedFor(urlEqualTo("/flaky")));
+
+        transport.close();
+    }
+
+    @Test
+    public void returnsFinal503AfterMaxAttempts() throws Exception {
+        stubFor(get(urlEqualTo("/still-unavailable"))
+                .willReturn(aResponse().withStatus(503)));
+
+        ApacheHttpClientRestTransport transport = ApacheHttpClientRestTransport.builder()
+                .retryPolicy(new ExponentialBackoff(0, 0, 3, Collections.singleton(503)))
+                .build();
+
+        HttpRequest request = HttpRequest.builder()
+                .method("GET")
+                .uri("http://localhost:" + wireMockRule.port() + "/still-unavailable")
+                .build();
+
+        HttpResponse response = transport.execute(request);
+        assertEquals(503, response.statusCode());
+        verify(3, getRequestedFor(urlEqualTo("/still-unavailable")));
 
         transport.close();
     }
