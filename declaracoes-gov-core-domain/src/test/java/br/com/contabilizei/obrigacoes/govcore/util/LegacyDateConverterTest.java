@@ -142,6 +142,40 @@ public class LegacyDateConverterTest {
     }
 
     // -------------------------------------------------------------------------
+    // Sobrecargas systemDefault — branch não-null
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void toLocalDate_Date_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toLocalDate(new Date()));
+    }
+
+    @Test
+    public void toLocalDateTime_Date_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toLocalDateTime(new Date()));
+    }
+
+    @Test
+    public void toDate_LocalDate_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toDate(LocalDate.of(2025, 6, 1)));
+    }
+
+    @Test
+    public void toDate_LocalDateTime_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toDate(LocalDateTime.of(2025, 6, 1, 10, 0)));
+    }
+
+    @Test
+    public void toCalendar_LocalDate_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toCalendar(LocalDate.of(2025, 6, 1)));
+    }
+
+    @Test
+    public void toCalendar_LocalDateTime_systemDefault_naoNulo() {
+        assertNotNull(LegacyDateConverter.toCalendar(LocalDateTime.of(2025, 6, 1, 10, 0)));
+    }
+
+    // -------------------------------------------------------------------------
     // Epoch: Date(0) = 1970-01-01 em UTC
     // -------------------------------------------------------------------------
 

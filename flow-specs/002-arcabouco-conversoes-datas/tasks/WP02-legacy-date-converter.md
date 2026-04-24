@@ -1,7 +1,7 @@
 ---
 work_package_id: WP02
 title: LegacyDateConverter (domain)
-lane: "doing"
+lane: "done"
 dependencies: []
 created_at: '2026-04-24T13:51:14.658200+00:00'
 subtasks:
@@ -10,6 +10,12 @@ subtasks:
 - T007
 loops_planned_to_doing: "1"
 doing_started_at: "2026-04-24T13:57:43.905534+00:00"
+loops_doing_to_for_review: "1"
+for_review_started_at: "2026-04-24T14:00:39.346772+00:00"
+loops_for_review_to_done: "1"
+ended_at: "2026-04-24T14:00:50.198527+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP02 — LegacyDateConverter (domain)
@@ -412,3 +418,5 @@ public void toCalendar_ZonedDateTime_preservaFuso() {
 ## Activity Log
 
 - 2026-04-24T13:57:43Z – unknown – lane=doing – Moved to doing
+- 2026-04-24T14:00:39Z – unknown – lane=for_review – Moved to for_review
+- 2026-04-24T14:00:50Z – unknown – lane=done – Moved to done

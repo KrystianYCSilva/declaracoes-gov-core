@@ -1,7 +1,7 @@
 ---
 work_package_id: WP03
 title: GovDateParser + GovDateFormats (domain + format)
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-24T13:51:14.675181+00:00'
 subtasks:
@@ -10,6 +10,8 @@ subtasks:
 - T010
 - T011
 - T012
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-24T14:01:31.997479+00:00"
 ---
 
 # WP03 — GovDateParser + GovDateFormats (domain + format)
@@ -576,3 +578,7 @@ public void parseDataCompetencia_formatoCompacto() {
 - [ ] `GovDateParser` NÃO importa `GovCompetenceFormats` (está em `domain`, dependência proibida)
 - [ ] `mvn -q verify` em `declaracoes-gov-core-domain` e `declaracoes-gov-core-format` passa
 - [ ] JaCoCo 90% linha e 90% branch em ambos os módulos
+
+## Activity Log
+
+- 2026-04-24T14:01:31Z – unknown – lane=doing – Moved to doing
