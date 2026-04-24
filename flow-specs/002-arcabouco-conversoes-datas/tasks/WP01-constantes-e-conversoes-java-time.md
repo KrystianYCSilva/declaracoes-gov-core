@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: GovTimeConstants + JavaTimeConversions (domain)
-lane: planned
+lane: "doing"
 dependencies: []
 created_at: '2026-04-24T13:51:14.642700+00:00'
 subtasks:
@@ -9,6 +9,8 @@ subtasks:
 - T002
 - T003
 - T004
+loops_planned_to_doing: "1"
+doing_started_at: "2026-04-24T13:54:23.680482+00:00"
 ---
 
 # WP01 — GovTimeConstants + JavaTimeConversions (domain)
@@ -600,3 +602,7 @@ public void toInstant_toLocalDateTime_roundtrip() {
 - [ ] Todos os métodos retornam `null` para entrada `null`
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-domain` passa sem erros
 - [ ] JaCoCo 90% linha e 90% branch para o módulo `domain`
+
+## Activity Log
+
+- 2026-04-24T13:54:23Z – unknown – lane=doing – Moved to doing
