@@ -1,13 +1,17 @@
 ---
 work_package_id: WP05
 title: TemporalValueTypes.kt (kotlin)
-lane: planned
+lane: "done"
 dependencies: []
 created_at: '2026-04-24T13:51:14.706700+00:00'
 subtasks:
 - T017
 - T018
 - T019
+loops_planned_to_done: "1"
+ended_at: "2026-04-24T15:14:28.858904+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP05 — TemporalValueTypes.kt (kotlin)
@@ -408,3 +412,7 @@ fun roundtrip_epochDay_localDate() {
 - [ ] `EpochDay(-1L).toLocalDate()` == `LocalDate.of(1969, 12, 31)`
 - [ ] `Instant.EPOCH.epochMillisValue` == `EpochMillis(0L)`
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-kotlin` passa sem erros
+
+## Activity Log
+
+- 2026-04-24T15:14:29Z – unknown – lane=done – Moved to done

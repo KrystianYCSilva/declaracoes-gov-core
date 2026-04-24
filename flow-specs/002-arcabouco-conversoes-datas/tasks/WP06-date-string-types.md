@@ -1,7 +1,7 @@
 ---
 work_package_id: WP06
 title: DateStringTypes.kt (kotlin)
-lane: planned
+lane: "done"
 dependencies: []
 created_at: '2026-04-24T13:51:14.721925+00:00'
 subtasks:
@@ -9,6 +9,10 @@ subtasks:
 - T021
 - T022
 - T023
+loops_planned_to_done: "1"
+ended_at: "2026-04-24T15:14:37.706430+00:00"
+reviewed_by: "krystian.silva_conta"
+review_status: "approved"
 ---
 
 # WP06 — DateStringTypes.kt (kotlin)
@@ -615,3 +619,7 @@ fun dataISO_toString_preservaValue() {
 - [ ] `CompetenciaCompacta.of("202506").toPeriodo() == 202506`
 - [ ] Todos os roundtrips `java.time → DateStringType → java.time` preservam o valor
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-kotlin` passa sem erros
+
+## Activity Log
+
+- 2026-04-24T15:14:38Z – unknown – lane=done – Moved to done
