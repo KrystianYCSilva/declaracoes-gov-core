@@ -246,6 +246,10 @@ O módulo `format` precisa de quatro grupos de utilitários desacoplados de Spri
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP07
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:34:59Z – unknown – lane=doing – Moved to doing

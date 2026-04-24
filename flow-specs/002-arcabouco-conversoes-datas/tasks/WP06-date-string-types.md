@@ -620,6 +620,10 @@ fun dataISO_toString_preservaValue() {
 - [ ] Todos os roundtrips `java.time → DateStringType → java.time` preservam o valor
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-kotlin` passa sem erros
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-24T15:14:38Z – unknown – lane=done – Moved to done

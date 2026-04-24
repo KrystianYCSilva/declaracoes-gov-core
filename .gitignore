@@ -92,3 +92,5 @@ test-output/
 .flowflow/
 .idea/
 .github/*.agent.md
+flow-specs/
+.claudeignore

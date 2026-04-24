@@ -20,3 +20,8 @@ Criar o catálogo estático de expressões regulares pré-compiladas (`java.util
 ## Validation
 - As variáveis DEVEM ser `public static final Pattern`.
 - O teste Junit 4 deve passar com 100% nas constantes.
+
+## Review Feedback
+
+TBD
+

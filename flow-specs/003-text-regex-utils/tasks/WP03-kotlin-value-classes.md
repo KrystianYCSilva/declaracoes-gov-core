@@ -24,3 +24,8 @@ Construir em `declaracoes-gov-core-kotlin` as extensões fluidas e as tipagens r
 ## Validation
 - O projeto Kotlin compila com Target Java 8.
 - Gate do JaCoCo (90%+) no módulo Kotlin.
+
+## Review Feedback
+
+TBD
+

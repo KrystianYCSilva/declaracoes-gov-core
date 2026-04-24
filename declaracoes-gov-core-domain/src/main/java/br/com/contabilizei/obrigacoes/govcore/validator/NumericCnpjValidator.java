@@ -40,7 +40,8 @@ public class NumericCnpjValidator implements DocumentValidator {
      */
     @Override
     public String strip(String value) {
-        return value == null ? "" : value.replaceAll("[^0-9]", "");
+        return value == null ? "" :
+                value.replaceAll("[^0-9]", "");
     }
 
     private int[] toNumericValues(String digits) {

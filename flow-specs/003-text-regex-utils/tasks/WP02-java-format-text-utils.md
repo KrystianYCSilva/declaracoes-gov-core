@@ -26,3 +26,8 @@ Criar uma suíte de utilitários `GovStringUtils` no módulo `declaracoes-gov-co
 ## Validation
 - Não ter quebra em strings unicode (e.g., emojis na descrição).
 - Gate do JaCoCo (90%+) passa em `mvn -q verify -pl declaracoes-gov-core-format`.
+
+## Review Feedback
+
+TBD
+

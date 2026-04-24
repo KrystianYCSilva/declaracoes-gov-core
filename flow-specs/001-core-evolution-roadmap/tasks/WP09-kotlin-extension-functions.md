@@ -227,6 +227,10 @@ Projetos consumidores em Kotlin (`obrigacoes-service-reinf`, `gateway-bardo`, `o
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP09
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:58:28Z – unknown – lane=doing – Moved to doing

@@ -206,6 +206,10 @@ A Receita Federal publicou a Instrução Normativa RF 2026 definindo o novo form
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP02
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:16:49Z – unknown – lane=doing – Moved to doing

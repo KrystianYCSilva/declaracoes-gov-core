@@ -193,6 +193,10 @@ Contratos genéricos e tipos de suporte (`CallbackAsync`, `CertificadoDTO`, `Fil
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP05
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:47:36Z – unknown – lane=doing – Moved to doing

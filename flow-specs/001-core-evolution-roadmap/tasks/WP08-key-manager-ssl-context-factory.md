@@ -155,6 +155,10 @@ O módulo `crypto` possui `Pkcs12Provider` e `SslContextBuilder` para acesso a c
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP08
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:47:39Z – unknown – lane=doing – Moved to doing

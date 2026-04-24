@@ -579,6 +579,10 @@ public void parseDataCompetencia_formatoCompacto() {
 - [ ] `mvn -q verify` em `declaracoes-gov-core-domain` e `declaracoes-gov-core-format` passa
 - [ ] JaCoCo 90% linha e 90% branch em ambos os módulos
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-24T14:01:31Z – unknown – lane=doing – Moved to doing

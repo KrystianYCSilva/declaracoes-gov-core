@@ -610,6 +610,10 @@ public void toInstant_toLocalDateTime_roundtrip() {
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-domain` passa sem erros
 - [ ] JaCoCo 90% linha e 90% branch para o módulo `domain`
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-24T13:54:23Z – unknown – lane=doing – Moved to doing

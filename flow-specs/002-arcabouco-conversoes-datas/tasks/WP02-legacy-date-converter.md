@@ -415,6 +415,10 @@ public void toCalendar_ZonedDateTime_preservaFuso() {
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-domain` passa sem erros
 - [ ] JaCoCo 90% linha e 90% branch no módulo `domain`
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-24T13:57:43Z – unknown – lane=doing – Moved to doing

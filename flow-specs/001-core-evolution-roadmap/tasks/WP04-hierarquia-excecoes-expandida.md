@@ -189,6 +189,10 @@ A hierarquia de exceções atual do domínio (`GovCoreException` e derivadas) n�
 flow agent feature implement --feature 001-core-evolution-roadmap --wp WP04
 ```
 
+## Review Feedback
+
+TBD
+
 ## Activity Log
 
 - 2026-04-20T21:34:55Z – unknown – lane=doing – Moved to doing

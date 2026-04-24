@@ -510,3 +510,8 @@ fun yearMonth_lastDay_fevereiro_bissexto() {
 - [ ] `LocalDate.of(2024,2,29).atEndOfDay()` tem `nano == 999_999_999`
 - [ ] Conteúdo existente de `DateExtensions.kt` INTACTO (sem nenhuma linha removida ou modificada)
 - [ ] `mvn -q verify` no módulo `declaracoes-gov-core-kotlin` passa sem erros
+
+## Review Feedback
+
+TBD
+
