@@ -1,11 +1,11 @@
 # declaracoes-gov-core
 
-Reator Maven e fundação Java 8 do ecossistema `declaracoes-*`. Este diretório mantém o parent `br.com.contabilizei.obrigacoes:declaracoes-gov-core-parent:1.0.0` e os módulos manuais reutilizados por leiautes, transmissores e consumidores Java.
+Reator Maven e fundação Java 11 da linha `v1.1.x` do ecossistema `declaracoes-*`. Este diretório mantém o parent `br.com.contabilizei.obrigacoes:declaracoes-gov-core-parent:1.1.0-SNAPSHOT` e os módulos manuais reutilizados por leiautes, transmissores e consumidores Java.
 
 ## Papel no portfólio
 
 - concentrar tipos brasileiros, validadores e exceções transversais;
-- separar formatação, XML e criptografia em módulos opcionais;
+- separar formatação, XML, criptografia e transporte neutro em módulos opcionais;
 - publicar um BOM interno (`declaracoes-gov-core-bom`) para consumidores que precisam só da fundação.
 
 ## Módulos do reator
@@ -17,6 +17,7 @@ Reator Maven e fundação Java 8 do ecossistema `declaracoes-*`. Este diretório
 | `declaracoes-gov-core-format` | normalização textual, formatos numéricos e de competência, datas XML, `GovJsonFactory` e parsers/serializers delimitados e posicionais. |
 | `declaracoes-gov-core-crypto` | abstrações de certificado (`CertificateProvider`), PKCS#12, PKCS#11 e `SSLContext`. |
 | `declaracoes-gov-core-xml` | parsing XML seguro, utilitários DOM, `XmlSigner`, `XmlDsigSigner` e `XmlSignatureOptions`. |
+| `declaracoes-gov-core-transport` | SPI HTTP neutra, retry/policy, proxy e implementação padrão com Apache HttpClient 5 para transmissores. |
 
 ## Escopo
 
@@ -25,11 +26,11 @@ Entram no core:
 - domínio brasileiro reutilizável (`Cnpj`, `Cpf`, `Nis`, `PeriodoApuracao`, `Vigencia`, `CodigoMunicipio`, `TipoInscricao`, `Uf`);
 - política pública de validadores (`OFFICIAL`, `PROVISIONAL`, `STRUCTURAL`);
 - utilitários de formatação e serialização voltados ao contexto governamental;
-- infraestrutura transversal de XML e certificados.
+- infraestrutura transversal de XML, certificados e transporte neutro.
 
 Ficam fora do core:
 
-- transporte HTTP, SOAP ou REST;
+- clientes HTTP/SOAP/REST específicos de declaração;
 - OAuth2, filas, polling e orquestração de entrega;
 - regras negociais específicas de cada declaração;
 - código gerado por esquemas oficiais.
@@ -44,7 +45,7 @@ Consumidores do ecossistema normalmente importam o BOM interno do core e escolhe
         <dependency>
             <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -62,6 +63,10 @@ Consumidores do ecossistema normalmente importam o BOM interno do core e escolhe
         <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-xml</artifactId>
     </dependency>
+    <dependency>
+        <groupId>br.uem.npd</groupId>
+        <artifactId>declaracoes-gov-core-transport</artifactId>
+    </dependency>
 </dependencies>
 ```
 
@@ -73,7 +78,7 @@ Da raiz deste módulo, rode:
 mvn verify
 ```
 
-Esse comando valida o reator inteiro (`domain`, `format`, `crypto`, `xml` e o BOM interno).
+Esse comando valida o reator inteiro (`domain`, `format`, `crypto`, `xml`, `transport` e o BOM interno).
 
 ## Mapa da documentação
 

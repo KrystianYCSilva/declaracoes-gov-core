@@ -19,12 +19,13 @@ description: |
 
 ## Purpose
 
-Shared Java 8 foundation library for the `declaracoes-*` workspace. Provides:
+Shared Java 11 foundation library for the `declaracoes-*` workspace. Provides:
 - Immutable fiscal identifiers (`Cnpj`, `Cpf`, `Nis`, `Caepf`, `Cno`, `Cei`, `Recibo`, `PeriodoApuracao`, `CodigoMunicipio`).
 - Validator confidence policy (`OFFICIAL`, `PROVISIONAL`, `STRUCTURAL`).
 - Text, number, date, and JSON formatting utilities.
 - Secure XML parsing and XMLDSIG signing.
 - Certificate provider abstractions (PKCS#12 / PKCS#11) and `SSLContext` builders.
+- Neutral HTTP transport SPI plus a default Apache HttpClient implementation.
 - Internal BOM for version alignment across the workspace.
 
 ## Module Map
@@ -35,6 +36,7 @@ Shared Java 8 foundation library for the `declaracoes-*` workspace. Provides:
 | `declaracoes-gov-core-format` | `core-format` | Text/number/date normalizers, `GovJsonFactory`, record parsers/serializers | `core-domain` + optional Jackson |
 | `declaracoes-gov-core-xml` | `core-xml` | Secure DOM parsing (`XmlDocuments`), XMLDSIG signing (`XmlDsigSigner`) | `core-domain`, `core-crypto`, `xmlsec` |
 | `declaracoes-gov-core-crypto` | `core-crypto` | `CertificateProvider`, `Pkcs12Provider`, `Pkcs11Provider`, `SslContextBuilder` | `core-domain` |
+| `declaracoes-gov-core-transport` | `core-transport` | HTTP SPI, retry/proxy policy and Apache HttpClient adapter | `core-crypto`, `httpclient5` |
 | `declaracoes-gov-core-bom` | `core-bom` | Internal BOM (`dependencyManagement`) | none (POM-only) |
 
 ### Dependency Graph
@@ -42,10 +44,10 @@ Shared Java 8 foundation library for the `declaracoes-*` workspace. Provides:
 domain ← format
    ↑
 domain ← crypto → xml
-   ↑___________↑
+             └→ transport
 ```
 - `domain` must remain JDK-only.
-- Heavy deps (Jackson, xmlsec) must not leak outside their owning module.
+- Heavy deps (Jackson, xmlsec, HttpClient) must not leak outside their owning module.
 
 ## In Scope
 
@@ -57,10 +59,10 @@ domain ← crypto → xml
 ## Out of Scope (Never Add)
 
 - Declaration-specific schemas or payload DTOs (e.g., eSocial, EFD-Reinf).
-- SOAP, REST, OAuth2, or HTTP clients.
+- declaration-specific SOAP, REST, OAuth2, or HTTP clients.
 - Tax calculation or declaration-specific business rules.
 - Code generated from official government XSDs/Schemas.
-- Endpoint catalogues, retry policies, or rate-limiting.
+- Endpoint catalogues, declaration-specific retry policies, or rate-limiting.
 
 ## Consumers
 
@@ -72,7 +74,7 @@ domain ← crypto → xml
 
 ## Baseline
 
-- **Java**: 8 (source/target `1.8`). No Java 9+ features.
+- **Java**: 11 (`maven.compiler.release=11`). No Java 12+ features in the `v1.1.x` line.
 - **Build**: Maven 3.x multi-module reactor.
 - **Test**: JUnit 4.13.2 + Mockito 4.11.0.
 - **Coverage**: JaCoCo 0.8.11 with gates.

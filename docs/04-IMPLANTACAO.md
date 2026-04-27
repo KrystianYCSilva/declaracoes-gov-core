@@ -2,7 +2,7 @@
 
 ## 1. Pré-requisitos
 
-- JDK 8;
+- JDK 11;
 - Maven compatível com o workspace;
 - acesso aos artefatos publicados ou ao checkout do reator.
 
@@ -24,7 +24,7 @@ Para consumidores externos, o ponto de entrada normal é o BOM interno do core:
         <dependency>
             <groupId>br.com.contabilizei.obrigacoes</groupId>
             <artifactId>declaracoes-gov-core-bom</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -48,6 +48,10 @@ Depois disso, cada aplicação escolhe apenas o que precisa:
         <groupId>br.com.contabilizei.obrigacoes</groupId>
         <artifactId>declaracoes-gov-core-xml</artifactId>
     </dependency>
+    <dependency>
+        <groupId>br.uem.npd</groupId>
+        <artifactId>declaracoes-gov-core-transport</artifactId>
+    </dependency>
 </dependencies>
 ```
 
@@ -55,7 +59,7 @@ Depois disso, cada aplicação escolhe apenas o que precisa:
 
 1. manter a mesma versão no parent e nos módulos filhos;
 2. validar o reator com `mvn verify`;
-3. publicar os artefatos concretos (`domain`, `format`, `crypto`, `xml`);
+3. publicar os artefatos concretos (`domain`, `format`, `crypto`, `xml`, `transport`);
 4. publicar `declaracoes-gov-core-bom` como ponto de importação do conjunto.
 
 ## 5. Cuidados de adoção
@@ -64,6 +68,7 @@ Depois disso, cada aplicação escolhe apenas o que precisa:
 - `GovJsonFactory` representa um mapper governamental do projeto, não um `ObjectMapper` genérico para qualquer domínio;
 - `Pkcs11Provider` depende do provider e do driver nativo do ambiente do consumidor;
 - assinatura XML deve preferir `XmlSignatureOptions` explícitas em vez de heurística.
+- `declaracoes-gov-core-transport` fornece infraestrutura HTTP neutra; endpoints, autenticação e contratos de declaração continuam fora do core.
 
 ## 6. Documentos relacionados
 

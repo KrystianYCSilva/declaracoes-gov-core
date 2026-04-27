@@ -6,13 +6,13 @@ description: |
 
 # Key Decisions — declaracoes-gov-core
 
-## ADR-001: Java 8 Baseline
+## ADR-001: Java 11 Baseline
 
 **Status**: Accepted  
-**Date**: 2024-01  
-**Context**: Government infrastructure and consumer modules still run on Java 8 JVMs.  
-**Decision**: Lock source/target to `1.8`. Prohibit Java 9+ language features and APIs.  
-**Consequences**: + Compatibility with legacy runtimes. − Cannot use `var`, `Optional` enhancements, or new time APIs.
+**Date**: 2026-04  
+**Context**: The `v1.0.x` line is frozen on Java 8 for maintenance only, while `v1.1.x` becomes the active `javax` line for forward evolution.  
+**Decision**: Lock the active branch baseline to Java 11 using `maven.compiler.release=11`. Prohibit Java 12+ language features and APIs in the `v1.1.x` line.  
+**Consequences**: + Aligns the core with the next supported runtime of the ecosystem. + Keeps the `v1` series on `javax` while unlocking newer dependency lines. − Java 8 compatibility moves to the maintenance branch only.
 
 ## ADR-002: Framework-Agnostic Core
 
@@ -38,7 +38,7 @@ description: |
 **Status**: Accepted  
 **Date**: 2024-01  
 **Context**: Heavy dependencies (Jackson, xmlsec) must not leak to consumers that only need domain objects.  
-**Decision**: Five-module reactor with `core-bom` for version alignment. `domain` stays JDK-only.  
+**Decision**: Six-module reactor with `core-bom` for version alignment. `domain` stays JDK-only, and `core-transport` isolates the neutral HTTP infrastructure.  
 **Consequences**: + Clean dependency graph. − More modules to publish and version.
 
 ## ADR-005: XMLDSIG Defaults (RSA-SHA256)
@@ -65,7 +65,7 @@ description: |
 
 **Decision**: Permit a `declaracoes-gov-core-transport` module in the same reactor, with strict boundaries:
 - SPI-first: `RestTransport`, `HttpRequest`, `HttpResponse`, `ProxyConfig`, `RetryPolicy`, `TransportException`.
-- Default implementation: Apache HttpClient 5 (Java 8 compatible).
+- Default implementation: Apache HttpClient 5.3.x for the Java 11 line.
 - No declaration-specific endpoints, no OAuth2, no SOAP envelopes, no government contracts.
 - Heavy deps (HttpClient 5) confined to `core-transport` only; must not leak to other core modules.
 

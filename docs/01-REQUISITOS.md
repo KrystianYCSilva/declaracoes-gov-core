@@ -2,7 +2,7 @@
 
 ## 1. Propósito
 
-Definir o estado atual da fundação manual `declaracoes-gov-core`, organizada como reator Maven para reutilização em módulos de leiaute, transmissor e consumidores Java 8.
+Definir o estado atual da fundação manual `declaracoes-gov-core`, organizada como reator Maven para reutilização em módulos de leiaute, transmissor e consumidores Java 11 da linha `v1.1.x`.
 
 ## 2. Público e consumidores
 
@@ -14,15 +14,15 @@ Definir o estado atual da fundação manual `declaracoes-gov-core`, organizada c
 
 ### Em escopo
 
-- reator `declaracoes-gov-core-parent` com cinco módulos filhos;
+- reator `declaracoes-gov-core-parent` com seis módulos filhos;
 - value objects, exceções e enums brasileiros;
 - metadados manuais de leiaute em `br.com.contabilizei.obrigacoes.govcore.model.layout`;
 - catálogo público de validadores e níveis de confiança;
-- utilitários manuais de formatação, JSON, XML e certificados.
+- utilitários manuais de formatação, JSON, XML, certificados e transporte neutro.
 
 ### Fora de escopo
 
-- transporte, autenticação de canal e orquestração de entrega;
+- transporte específico de declaração, autenticação de canal e orquestração de entrega;
 - regras específicas de eSocial, EFD-Reinf, Integra Contador ou outras famílias;
 - código gerado por esquema oficial.
 
@@ -36,11 +36,12 @@ Definir o estado atual da fundação manual `declaracoes-gov-core`, organizada c
 | `declaracoes-gov-core-format` | `jar` | formatação, parsers manuais e `GovJsonFactory` |
 | `declaracoes-gov-core-crypto` | `jar` | certificados e `SSLContext` |
 | `declaracoes-gov-core-xml` | `jar` | DOM seguro e assinatura XML |
+| `declaracoes-gov-core-transport` | `jar` | SPI HTTP neutra, retry, proxy e adaptador Apache HttpClient |
 
 ## 5. Requisitos funcionais
 
 ### RF-01 — Reator multi-módulo
-O parent deve continuar publicando os módulos `domain`, `format`, `crypto`, `xml` e o BOM interno a partir de um único diretório raiz.
+O parent deve continuar publicando os módulos `domain`, `format`, `crypto`, `xml`, `transport` e o BOM interno a partir de um único diretório raiz.
 
 ### RF-02 — Domínio brasileiro reutilizável
 `declaracoes-gov-core-domain` deve manter os tipos manuais hoje usados pelo ecossistema, incluindo documentos, períodos, vigências, enums de inscrição/ambiente, exceções-base e metadados de leiaute.
@@ -57,13 +58,16 @@ O core deve manter `GovValidationCatalog` e `GovValidators` como fonte pública 
 ### RF-06 — XML seguro e configurável
 `declaracoes-gov-core-xml` deve manter parsing XML seguro, utilitários DOM, `XmlSigner`, `XmlDsigSigner` e `XmlSignatureOptions` como fronteira genérica de assinatura.
 
-### RF-07 — Consumo incremental
+### RF-07 — Transporte neutro por composição
+`declaracoes-gov-core-transport` deve manter uma SPI HTTP neutra, com `HttpRequest`, `HttpResponse`, `RestTransport`, `ProxyConfig`, `RetryPolicy`, `TransportException` e implementação Apache desacoplada de regra negocial.
+
+### RF-08 — Consumo incremental
 Consumidores do core devem poder importar somente os módulos necessários, preferencialmente via `declaracoes-gov-core-bom` quando quiserem uma matriz interna de versões.
 
 ## 6. Requisitos não funcionais
 
-### RNF-01 — Compatibilidade Java 8
-O reator deve continuar compilando com `maven.compiler.source` e `target` em `1.8`.
+### RNF-01 — Compatibilidade Java 11
+O reator deve continuar compilando com `maven.compiler.release` em `11`.
 
 ### RNF-02 — Agnosticidade de framework
 Nenhum módulo do core deve exigir Spring, Jakarta EE, Bean Validation ou runtime equivalente para cumprir seu contrato.
@@ -88,6 +92,7 @@ Value objects e validadores manuais devem permanecer imutáveis ou stateless, e 
 - `declaracoes-gov-core-format/pom.xml`
 - `declaracoes-gov-core-crypto/pom.xml`
 - `declaracoes-gov-core-xml/pom.xml`
+- `declaracoes-gov-core-transport/pom.xml`
 - `README.md`
 - `docs/05-MATRIZ-VALIDADORES.md`
 - `docs/06-GUIA-MIGRACAO-0.1.x-1.0.0.md`

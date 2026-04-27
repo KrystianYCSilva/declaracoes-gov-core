@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, master-v2, develop-v2 ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, master-v2, develop-v2 ]
 
 permissions:
   contents: read
@@ -19,10 +19,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'temurin'
           cache: 'maven'
 

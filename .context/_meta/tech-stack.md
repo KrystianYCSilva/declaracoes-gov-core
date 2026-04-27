@@ -10,7 +10,7 @@ description: |
 
 | Component | Version | Notes |
 |-----------|---------|-------|
-| Java | `1.8` (source/target) | Hard baseline; no Java 9+ APIs |
+| Java | `11` (`maven.compiler.release`) | Hard baseline for the `v1.1.x` line |
 | Maven | `3.x` | Multi-module reactor parent |
 
 ## Module Dependencies
@@ -21,13 +21,14 @@ description: |
 | `format` | `core-domain`, optional `jackson-databind:2.16.1`, `jackson-datatype-jsr310:2.16.1` | JUnit, Mockito |
 | `xml` | `core-domain`, `core-crypto`, `xmlsec:3.0.3` (Apache Santuario) | JUnit, Mockito, `core-crypto` test-jar |
 | `crypto` | `core-domain`, `bcpkix-jdk18on:1.78.1` (test scope) | JUnit, Mockito |
+| `transport` | `core-crypto`, `httpclient5:5.3.1` | JUnit, Mockito, `wiremock-jre8:2.35.2`, Jackson test helpers |
 | `bom` | none (POM-only) | none (`jacoco.skip=true`) |
 
 ## Build Plugins
 
 | Plugin | Version | Purpose |
 |--------|---------|---------|
-| `maven-compiler-plugin` | `3.12.1` | Java 8 compilation |
+| `maven-compiler-plugin` | `3.12.1` | Java 11 compilation (`release=11`) |
 | `jacoco-maven-plugin` | `0.8.11` | Coverage reporting and gating |
 | `maven-jar-plugin` | `3.4.2` | Publishes `test-jar` from `crypto` module |
 
